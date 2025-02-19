@@ -60,9 +60,9 @@ final class TutorialGuideViewController: UIViewController {
         navigationController?.navigationBar.tintColor = .asBlack
 
         if type == .lobby || type == .finished {
-            self.navigationController?.navigationBar.isHidden = true
+            navigationController?.navigationBar.isHidden = true
         } else {
-            self.navigationController?.navigationBar.isHidden = false
+            navigationController?.navigationBar.isHidden = false
         }
         view.backgroundColor = .asLightGray
 
@@ -159,14 +159,14 @@ final class TutorialGuideViewController: UIViewController {
         ])
     }
 
-    private func setupImageView(){
+    private func setupImageView() {
         if let imageContainerView {
             view.addSubview(imageContainerView)
             NSLayoutConstraint.activate([
                 imageContainerView.widthAnchor.constraint(equalToConstant: 32),
                 imageContainerView.heightAnchor.constraint(equalToConstant: 32),
-                imageContainerView.bottomAnchor.constraint(equalTo: titleLabel.topAnchor,constant: -4),
-                imageContainerView.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor,constant: 4),
+                imageContainerView.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: -4),
+                imageContainerView.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 4),
             ])
         }
     }
@@ -195,6 +195,8 @@ final class TutorialGuideViewController: UIViewController {
                     navigateToSelectMusic()
                 case .humming:
                     navigateToHumming()
+                case .rehumming:
+                    navigateToRehumming()
                 case .submitAnswer:
                     navigateToResultGuide()
                 case .result:
@@ -233,7 +235,8 @@ private extension TutorialGuideViewController {
         navigationController.interactivePopGestureRecognizer?.isEnabled = false
 
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = windowScene.windows.first {
+           let window = windowScene.windows.first
+        {
             window.rootViewController = navigationController
             window.makeKeyAndVisible()
         }
@@ -247,7 +250,7 @@ private extension TutorialGuideViewController {
             avatarData: avatarData,
             inviteCode: inviteCode
         )
-        self.navigationController?.pushViewController(tutorialViewController, animated: true)
+        navigationController?.pushViewController(tutorialViewController, animated: true)
     }
 
     func navigateToSelectMusic() {
@@ -257,7 +260,7 @@ private extension TutorialGuideViewController {
             avatarData: avatarData,
             inviteCode: inviteCode
         )
-        self.navigationController?.pushViewController(selectMusicViewController, animated: true)
+        navigationController?.pushViewController(selectMusicViewController, animated: true)
     }
 
     func navigateToHumming() {
@@ -270,7 +273,18 @@ private extension TutorialGuideViewController {
             aiPlayer1: aiPlayer1,
             aiPlayer2: aiPlayer2
         )
-        self.navigationController?.pushViewController(hummingViewController, animated: true)
+        navigationController?.pushViewController(hummingViewController, animated: true)
+    }
+
+    func navigateToRehumming() {
+        let rehummingViewController = RehummingTutorialViewController(
+            avatars: avatars,
+            selectedAvatar: selectedAvatar,
+            avatarData: avatarData,
+            inviteCode: inviteCode,
+            selectedMusic: player?.selectedMusic
+        )
+        navigationController?.pushViewController(rehummingViewController, animated: true)
     }
 
     // TODO: -
@@ -283,7 +297,7 @@ private extension TutorialGuideViewController {
             avatarData: avatarData,
             inviteCode: inviteCode
         )
-        self.navigationController?.pushViewController(tutorialViewController, animated: true)
+        navigationController?.pushViewController(tutorialViewController, animated: true)
     }
 
     func navigateToResult() {
@@ -298,6 +312,6 @@ private extension TutorialGuideViewController {
             aiPlayer1: aiPlayer1,
             aiPlayer2: aiPlayer2
         )
-        self.navigationController?.pushViewController(hummingResultViewController, animated: true)
+        navigationController?.pushViewController(hummingResultViewController, animated: true)
     }
 }

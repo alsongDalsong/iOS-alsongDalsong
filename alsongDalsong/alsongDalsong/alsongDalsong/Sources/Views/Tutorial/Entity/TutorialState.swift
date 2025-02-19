@@ -6,6 +6,7 @@ enum TutorialViewType {
     case lobby
     case selectMusic
     case humming
+    case rehumming
     case submitAnswer
     case result
     case finished
@@ -18,6 +19,8 @@ enum TutorialViewType {
                 "노래 선택"
             case .humming:
                 "허밍"
+            case .rehumming:
+                "리허밍"
             case .submitAnswer:
                 "정답 맞추기"
             case .result:
@@ -32,6 +35,7 @@ enum TutorialViewType {
             case .lobby: "알쏭달쏭에 오신걸 환영합니다~🎉"
             case .selectMusic: "문제로 제출할 노래를 고르세요."
             case .humming: "다음 사람에게 고른 노래를 전달하세요."
+            case .rehumming: "허밍을 듣고 따라 허밍해 보세요."
             case .submitAnswer: "허밍을 듣고 무슨 노래인지 맞춰 보세요."
             case .result: "결과 화면으로 이동합니다."
             case .finished: "축하합니다! 모든 단계를 마쳤습니다~🎉"
@@ -71,6 +75,10 @@ enum TutorialViewType {
                 
                 물도 마시고 목소리도 가다듬었다면 시작해볼까요?
                 """
+            case .rehumming:
+                """
+                리허밍 설명이다
+                """
             case .submitAnswer:
                 """
                 허밍 제출 후에는 친구의 허밍을 듣고 노래를 맞춥니다.
@@ -109,6 +117,8 @@ enum TutorialViewType {
                 (systemName: "music.note.list", color: "508DFD")
             case .humming:
                 (systemName: "microphone", color: "FD5050")
+            case .rehumming:
+                (systemName: "microphone", color: "FD5050")
             case .submitAnswer:
                 (systemName: "music.note.list", color: "508DFD")
             case .result:
@@ -135,6 +145,8 @@ enum TutorialViewType {
                 TutorialButtonStyle(text: "선택하기!")
             case .humming:
                 TutorialButtonStyle(text: "녹음하기!")
+            case .rehumming:
+                TutorialButtonStyle(text: "다시 녹음하기!")
             case .submitAnswer:
                 TutorialButtonStyle(text: "다음으로!")
             case .result:

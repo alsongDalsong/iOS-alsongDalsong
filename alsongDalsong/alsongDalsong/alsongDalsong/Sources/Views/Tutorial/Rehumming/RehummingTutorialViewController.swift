@@ -1,7 +1,7 @@
 import ASEntity
 import UIKit
 
-final class HummingTutorialViewController: UIViewController {
+final class RehummingTutorialViewController: UIViewController {
     private let progressBar = ProgressBar()
     private let scrollView = UIScrollView()
     private let musicPanel = MusicPanel()
@@ -10,33 +10,26 @@ final class HummingTutorialViewController: UIViewController {
     private let submitButton = ASButton()
     private let buttonStack = UIStackView()
 
-    private let viewModel: HummingTutorialViewModel
+    private let viewModel: RehummingTutorialViewModel
     private let avatars: [URL]?
     private let selectedAvatar: URL?
     private let avatarData: Data?
     private let inviteCode: String?
-
-    private var player: TutorialPlayer?
-    private var aiPlayer1: TutorialPlayer?
-    private var aiPlayer2: TutorialPlayer?
+    private let selectedMusic: Music?
 
     init(
         avatars: [URL]?,
         selectedAvatar: URL?,
         avatarData: Data?,
         inviteCode: String?,
-        player: TutorialPlayer?,
-        aiPlayer1: TutorialPlayer?,
-        aiPlayer2: TutorialPlayer?
+        selectedMusic: Music?
     ) {
         self.avatars = avatars
         self.selectedAvatar = selectedAvatar
         self.avatarData = avatarData
         self.inviteCode = inviteCode
-        self.player = player
-        self.aiPlayer1 = aiPlayer1
-        self.aiPlayer2 = aiPlayer2
-        self.viewModel = HummingTutorialViewModel(selectedMusic: player?.selectedMusic)
+        self.selectedMusic = selectedMusic
+        self.viewModel = RehummingTutorialViewModel(selectedMusic: Music(id: "", title: nil, artist: nil, artworkUrl: Bundle.main.url(forResource: "AreYouCrazyHuman", withExtension: "png"), previewUrl: Bundle.main.url(forResource: "Super Shy", withExtension: "mid"), artworkBackgroundColor: nil))
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -65,7 +58,7 @@ final class HummingTutorialViewController: UIViewController {
 
     private func setupUI() {
         view.backgroundColor = .asLightGray
-        title = "허밍"
+        title = "리허밍"
 
         recordButton.updateButton(.startRecord)
         submitButton.updateButton(.submit)
@@ -151,39 +144,26 @@ final class HummingTutorialViewController: UIViewController {
             self?.viewModel.isRecording = true
         }, for: .touchUpInside)
 
-        // TODO: - updatePlayers
-
         submitButton.addAction(UIAction { [weak self] _ in
             let tutorialViewController = TutorialGuideViewController(
-                type: .rehumming,
+                type: .submitAnswer,
                 avatars: self?.avatars,
                 selectedAvatar: self?.selectedAvatar,
                 avatarData: self?.avatarData,
-                inviteCode: self?.inviteCode,
-                player: self?.player,
-                aiPlayer1: self?.aiPlayer1,
-                aiPlayer2: self?.aiPlayer2
+                inviteCode: self?.inviteCode
             )
             self?.navigationController?.pushViewController(tutorialViewController, animated: true)
         }, for: .touchUpInside)
     }
 }
 
-private extension HummingTutorialViewController {
-    func updatePlayers() {
-
-    }
-}
-
 @available(iOS 17, *)
 #Preview {
-    UINavigationController(rootViewController: HummingTutorialViewController(
+    UINavigationController(rootViewController: RehummingTutorialViewController(
         avatars: nil,
         selectedAvatar: nil,
         avatarData: nil,
         inviteCode: nil,
-        player: TutorialPlayer(),
-        aiPlayer1: TutorialPlayer(),
-        aiPlayer2: TutorialPlayer()
+        selectedMusic: nil
     ))
 }

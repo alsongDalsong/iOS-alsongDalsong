@@ -24,13 +24,22 @@ struct MappedAnswer: Hashable, PlayerInfo {
 }
 
 struct MappedRecord: Hashable, PlayerInfo {
-    var recordData: Data
+    var recordData: Data?
+    var midiURL: URL?
     var recordAmplitudes: [CGFloat]
     var playerName: String
     var playerAvatarData: Data
 
     init(_ recordData: Data?, _ recordAmplitudes: [CGFloat], _ playerName: String?, _ playerAvatarData: Data?) {
-        self.recordData = recordData ?? Data()
+        self.recordData = recordData
+        self.recordAmplitudes = recordAmplitudes
+        self.playerName = playerName ?? ""
+        self.playerAvatarData = playerAvatarData ?? Data()
+    }
+    
+    init(_ midiURL: URL, _ recordAmplitudes: [CGFloat], _ playerName: String?, _ playerAvatarData: Data?) {
+        self.midiURL = midiURL
+        self.recordData = nil
         self.recordAmplitudes = recordAmplitudes
         self.playerName = playerName ?? ""
         self.playerAvatarData = playerAvatarData ?? Data()
@@ -45,7 +54,7 @@ enum ResultPhase: Equatable {
 
     var playOption: PlayType {
         switch self {
-            case .record: .full
+            case .record: .partial(time: 6)
             default: .partial(time: 10)
         }
     }

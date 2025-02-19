@@ -25,7 +25,10 @@ final class HummingResultTutorialViewController: UIViewController {
         avatarData: Data?,
         inviteCode: String?,
         selectedMusic: Music?,
-        recordedData: Data?
+        recordedData: Data?,
+        player: TutorialPlayer?,
+        aiPlayer1: TutorialPlayer?,
+        aiPlayer2: TutorialPlayer?
     ) {
         self.avatars = avatars
         self.selectedAvatar = selectedAvatar
@@ -34,9 +37,9 @@ final class HummingResultTutorialViewController: UIViewController {
         self.selectedMusic = selectedMusic
         self.recordedData = recordedData
         self.viewModel = HummingResultTutorialViewModel(
-            avatars: avatars,
-            selectedMusic: selectedMusic,
-            recordedData: recordedData
+            player: player,
+            aiPlayer1: aiPlayer1,
+            aiPlayer2: aiPlayer2
         )
         super.init(nibName: nil, bundle: nil)
     }
@@ -49,11 +52,10 @@ final class HummingResultTutorialViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupBind()
-        setupAction()
+        setButton()
         setupUI()
         setupLayout()
-        
-        viewModel.updateResult()
+        viewModel.setDatasource()
     }
     
     private func setupBind() {
@@ -66,6 +68,9 @@ final class HummingResultTutorialViewController: UIViewController {
             .sink { [weak self] phase, result in
                 guard let self else { return }
                 addDataSource(phase, result: result)
+                if result.answer != nil {
+                    self.changeButton(phase)
+                }
             }
             .store(in: &cancellables)
         
@@ -73,11 +78,7 @@ final class HummingResultTutorialViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isFinished in
                 if isFinished {
-                    self?.nextButton.setConfiguration(
-                        text: String(localized: "튜토리얼 완료"),
-                        backgroundColor: .asMint
-                    )
-                    self?.nextButton.isEnabled = true
+                    self?.setupEndButton()
                 }
             }
             .store(in: &cancellables)
@@ -103,12 +104,6 @@ final class HummingResultTutorialViewController: UIViewController {
         resultTableView.allowsSelection = false
         resultTableView.backgroundColor = .asLightGray
         resultTableView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
-        
-        nextButton.setConfiguration(
-            text: String(localized: "튜토리얼 완료"),
-            backgroundColor: .asMint
-        )
-        nextButton.updateButton(.disabled)
         
         view.addSubview(answerView)
         view.addSubview(resultTableView)
@@ -138,7 +133,8 @@ final class HummingResultTutorialViewController: UIViewController {
         ])
     }
     
-    private func setupAction() {
+    private func setupEndButton() {
+        nextButton.removeTarget(nil, action: nil, for: .touchUpInside)
         nextButton.addAction(UIAction { [weak self] _ in
             let tutorialViewController = TutorialGuideViewController(
                 type: .finished,
@@ -149,6 +145,12 @@ final class HummingResultTutorialViewController: UIViewController {
             )
             self?.navigationController?.pushViewController(tutorialViewController, animated: true)
         }, for: .touchUpInside)
+        
+        nextButton.setConfiguration(
+            text: String(localized: "튜토리얼 완료"),
+            backgroundColor: .asMint
+        )
+        nextButton.isEnabled = true
     }
     
     func addDataSource(_ phase: ResultPhase, result: Result) {
@@ -168,6 +170,33 @@ final class HummingResultTutorialViewController: UIViewController {
             resultTableViewDiffableDataSource.applySnapshot((result.answer, [], nil))
         }
     }
+    
+    private func changeButton(_ phase: ResultPhase) {
+        if case .none = phase {
+            nextButton.setConfiguration(
+            systemImageName: "play.fill",
+            text: String(localized: "다음으로"),
+            backgroundColor: .asMint
+        )
+            nextButton.isEnabled = true
+            nextButton.removeTarget(nil, action: nil, for: .touchUpInside)
+            nextButton.addAction(UIAction { [weak self] _ in
+                guard let self else { return }
+                viewModel.updateResult()
+            }, for: .touchUpInside)
+        } else {
+            nextButton.updateButton(.disabled)
+        }
+    }
+    
+    private func setButton() {
+        nextButton.setConfiguration(
+            systemImageName: "play.fill",
+            text: String(localized: "다음으로"),
+            backgroundColor: .asMint
+        )
+        nextButton.updateButton(.disabled)
+    }
 }
 
 @available(iOS 17, *)
@@ -178,6 +207,9 @@ final class HummingResultTutorialViewController: UIViewController {
         avatarData: nil,
         inviteCode: nil,
         selectedMusic: nil,
-        recordedData: nil
+        recordedData: nil,
+        player: nil,
+        aiPlayer1: nil,
+        aiPlayer2: nil
     ))
 }

@@ -8,7 +8,16 @@ public enum ASAIAnalyzer {
         let startTime: Double
         let velocity: UInt7
     }
-
+    
+    public static func m4aToMIDI(audioURL: URL?) -> URL? {
+        let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString).appendingPathExtension("mid")
+        guard let audioURL, let noteCreation = try? BasicPitch.predict(audioURL),
+              let midiFile = try? noteCreation.genMidiFile() else { return nil }
+        let data = try? midiFile.rawData()
+        try? data?.write(to: outputURL)
+        return outputURL
+    }
+    
     public static func analyzeAudioFile(audioData: Data) async -> [TimedNote] {
         guard let fileURL = makeFile(audioData),
               let noteCreation = try? BasicPitch.predict(fileURL),

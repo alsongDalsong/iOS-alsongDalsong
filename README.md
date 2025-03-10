@@ -2,8 +2,9 @@
   
 ## 알쏭달쏭 🎶
 
-| 📚 바로가기 | [팀 Notion](https://mature-browser-f84.notion.site/12ee7c2fd62b80c196a2eef239b0b884?pvs=4) | [팀 Wiki](https://github.com/boostcampwm-2024/iOS07-alsongDalsong/wiki) | [팀 Figma](https://www.figma.com/design/Pv9SVfpYLjeRE00yMT4OF1/%EA%B0%88%ED%8B%B1%ED%8F%B0?node-id=0-1&t=eTWR2a895ooGgznA-1) | [팀 그라운드 룰](https://github.com/boostcampwm-2024/iOS07-boostproject/wiki/%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C-%EB%A3%B0) | [팀 협업 룰](https://www.notion.so/12ee7c2fd62b81729f0fd278209d6ed8?pvs=4) |
-| :---------: | :----------------------------------------------------------------------------------------: | :---------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------: | :------------------------------------------------------------------------: |
+
+| 📚 바로가기  | [팀 Wiki](https://github.com/alsongDalsong/iOS-alsongDalsong/wiki) | [팀 Figma](https://www.figma.com/design/Pv9SVfpYLjeRE00yMT4OF1/%EA%B0%88%ED%8B%B1%ED%8F%B0?node-id=0-1&t=eTWR2a895ooGgznA-1) | 
+| :---------: | :----------------------------------------------------------------------------------------: | :---------------------------------------------------------------------: | 
 
 <img width=300 src="https://github.com/user-attachments/assets/84a6172f-a4d2-4aed-a9c6-79c4a10a497b">
 <br/>

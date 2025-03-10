@@ -25,6 +25,15 @@ final class ASRefreshButton: UIButton {
         let imageConfig = UIImage.SymbolConfiguration(pointSize: size, weight: .bold)
         config.preferredSymbolConfigurationForImage = imageConfig
         config.cornerStyle = .capsule
+        
+        configurationUpdateHandler = { [weak self] _ in
+            guard let self else { return }
+            if isHighlighted {
+                transform = CGAffineTransform(scaleX: 0.96, y: 0.96)
+            } else {
+                transform = .identity
+            }
+        }
 
         configuration = config
     }

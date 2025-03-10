@@ -60,6 +60,7 @@ final class MainRepository: MainRepositoryProtocol {
     }
 
     func disconnectRoom() {
+        databaseManager.removeRoomListener()
         update(\.number, with: nil)
         update(\.host, with: nil)
         update(\.players, with: nil)
@@ -72,7 +73,6 @@ final class MainRepository: MainRepositoryProtocol {
         update(\.submits, with: nil)
         update(\.records, with: nil)
         update(\.selectedRecords, with: nil)
-        databaseManager.removeRoomListener()
     }
 
     private func update<Value: Equatable>(

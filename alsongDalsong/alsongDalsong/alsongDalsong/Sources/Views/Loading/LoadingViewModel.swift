@@ -45,10 +45,4 @@ final class LoadingViewModel: @unchecked Sendable {
             }
         }
     }
-    
-    func requestMicrophonePermission() {
-        Task {
-            await AVCaptureDevice.requestAccess(for: .audio)
-        }
-    }
 }

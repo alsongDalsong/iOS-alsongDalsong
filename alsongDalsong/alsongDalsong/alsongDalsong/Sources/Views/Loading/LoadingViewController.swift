@@ -24,7 +24,7 @@ final class LoadingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel?.requestMicrophonePermission()
+        requestMicrophonePermission()
         setupUI()
         setupLayout()
         bindViewModel()
@@ -138,6 +138,12 @@ final class LoadingViewController: UIViewController {
            let window = windowScene.windows.first {
             window.rootViewController = navigationController
             window.makeKeyAndVisible()
+        }
+    }
+    
+    func requestMicrophonePermission() {
+        Task {
+            await AVCaptureDevice.requestAccess(for: .audio)
         }
     }
 }

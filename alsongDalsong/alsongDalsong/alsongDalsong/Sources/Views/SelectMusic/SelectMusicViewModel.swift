@@ -137,12 +137,23 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
     @MainActor
     func randomMusic() async throws {
         do {
-            selectedMusic = try await musicAPI.randomSong(from: "pl.u-aZb00o7uPlzMZzr")
+            let randomSongId = try await getPlaylist().randomElement()!
+            selectedMusic = try await musicAPI.getSong(from: randomSongId)
         } catch {
             let error = ASErrors(type: .randomMusic, reason: error.localizedDescription, file: #file, line: #line)
             LogHandler.handleError(error)
             throw error
         }
+    }
+    
+    func getPlaylist() async throws -> [String] {
+        let playlistURL = URL(string: "https://firebasestorage.googleapis.com/v0/b/alsongdalsong-boostcamp.firebasestorage.app/o/audios%2FselectMusicRandom%2FselectMusicPlayList.txt?alt=media&token=5f4e4b74-fd32-487a-a894-b93afa1dae70")!
+        guard let musicList = await dataDownloadRepository.downloadData(url: playlistURL) else {
+            return []
+        }
+            
+        let musicListString = String(data: musicList, encoding: .utf8)!
+        return musicListString.components(separatedBy: "\n")
     }
     
     func downloadMusic(url: URL) {

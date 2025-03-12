@@ -1,5 +1,4 @@
 import ASRepositoryProtocol
-import AVFoundation
 import Foundation
 
 final class LoadingViewModel: @unchecked Sendable {

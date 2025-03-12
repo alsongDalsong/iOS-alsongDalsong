@@ -41,7 +41,6 @@ final class SubmitAnswerViewController: UIViewController {
         musicPanel.bind(to: viewModel.$music)
         selectedMusicPanel.bind(to: viewModel.$selectedMusic)
         submitButton.bind(to: viewModel.$musicData)
-
     }
 
     private func setupUI() {
@@ -75,7 +74,7 @@ final class SubmitAnswerViewController: UIViewController {
             progressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             progressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             progressBar.heightAnchor.constraint(equalToConstant: 16),
-            
+
             scrollView.topAnchor.constraint(equalTo: progressBar.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
@@ -99,6 +98,14 @@ final class SubmitAnswerViewController: UIViewController {
             buttonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             buttonStack.heightAnchor.constraint(greaterThanOrEqualToConstant: 64),
         ])
+    }
+
+    private func pickRandomMusic() async throws {
+        do {
+            try await viewModel.randomMusic()
+        } catch {
+            throw error
+        }
     }
 
     private func submitAnswer() async throws {
@@ -137,6 +144,10 @@ final class SubmitAnswerViewController: UIViewController {
         )
 
         progressBar.setCompletionHandler { [weak self] in
+            guard self?.viewModel.selectedMusic != nil else {
+                self?.showSubmitRandomMusicLoading()
+                return
+            }
             self?.showSubmitAnswerLoading()
         }
     }
@@ -154,6 +165,20 @@ extension SubmitAnswerViewController {
         ) { [weak self] error in
             self?.showFailSubmitMusic(error)
         }
+        presentAlert(alert)
+    }
+
+    private func showSubmitRandomMusicLoading() {
+        let alert = LoadingAlertController(
+            progressText: .submitMusic,
+            loadAction: { [weak self] in
+                try await self?.pickRandomMusic()
+                try await self?.submitAnswer()
+            },
+            errorCompletion: { [weak self] error in
+                self?.showFailSubmitMusic(error)
+            }
+        )
         presentAlert(alert)
     }
 

@@ -1,4 +1,5 @@
 import ASRepositoryProtocol
+import AVFoundation
 import Foundation
 
 final class LoadingViewModel: @unchecked Sendable {
@@ -42,6 +43,12 @@ final class LoadingViewModel: @unchecked Sendable {
                 let error = ASErrors(type: .fetchAvatars, reason: error.localizedDescription, file: #file, line: #line)
                 LogHandler.handleError(error)
             }
+        }
+    }
+    
+    func requestMicrophonePermission() {
+        Task {
+            await AVCaptureDevice.requestAccess(for: .audio)
         }
     }
 }

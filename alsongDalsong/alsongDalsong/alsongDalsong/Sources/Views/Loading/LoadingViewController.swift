@@ -1,3 +1,4 @@
+import AVFoundation
 import ASContainer
 import ASRepositoryProtocol
 import Combine
@@ -23,6 +24,7 @@ final class LoadingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel?.requestMicrophonePermission()
         setupUI()
         setupLayout()
         bindViewModel()

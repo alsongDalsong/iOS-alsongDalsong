@@ -32,6 +32,7 @@ struct AsyncImageView: View {
 struct ProfileView: View {
     let imagePublisher: (URL?) async -> Data?
     let name: String?
+    let isMyId: Bool
     let isHost: Bool
     let imageUrl: URL?
 
@@ -41,7 +42,9 @@ struct ProfileView: View {
                 .background(Color.asMint)
                 .frame(width: 75, height: 75)
                 .clipShape(Circle())
-                .overlay(Circle().stroke(Color.white, lineWidth: 5))
+                .overlay(
+                    Circle().stroke(isMyId ? Color.asYellow : Color.white, lineWidth: 5)
+                )
                 .overlay(alignment: .top) {
                     isHost ? Image(systemName: "crown.fill")
                         .foregroundStyle(.asYellow)

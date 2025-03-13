@@ -241,7 +241,7 @@ extension AudioHelper {
             visualize()
             LogHandler.handleDebug("녹음 시작")
 
-            try await Task.sleep(nanoseconds: 6 * 1_000_000_000)
+            try await Task.sleep(for: .seconds(6))
             let recordedData = await stopRecording()
             sendDataThrough(recorderDataSubject, recordedData ?? Data())
             if recordedData != nil {

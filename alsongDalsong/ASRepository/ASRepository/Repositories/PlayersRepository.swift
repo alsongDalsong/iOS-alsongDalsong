@@ -11,10 +11,7 @@ final class PlayersRepository: PlayersRepositoryProtocol {
         self.mainRepository = mainRepository
     }
 
-    func getMyID() -> String? {
-        guard let myId = ASFirebaseAuth.myID else { return nil }
-        return myId
-    }
+    func getMyID() -> String? { ASFirebaseAuth.myID }
 
     func getPlayers() -> AnyPublisher<[Player], Never> {
         mainRepository.players

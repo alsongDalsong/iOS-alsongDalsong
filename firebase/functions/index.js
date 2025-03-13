@@ -14,6 +14,7 @@ const { submitMusicV2 } = require('./api/SubmitMusicV2.js');
 const { submitAnswerV2 } = require('./api/SubmitAnswerV2.js');
 const { uploadRecordingV2 } = require('./api/UploadRecordV2.js');
 const { uploadRecordingV3 } = require('./api/UploadRecordV3.js');
+const { kickPlayer } = require('./api/KickPlayer.js');
 
 // 방 관련 API
 exports.createRoom = createRoom;
@@ -29,6 +30,7 @@ exports.resetGame = resetGame;
 exports.onRemovePlayer = onRemovePlayer;
 exports.startGame = startGame;
 exports.uploadRecording = uploadRecord;
+exports.kickPlayer = kickPlayer;
 
 exports.V2 = {
   uploadRecording: uploadRecordingV2,

@@ -1,5 +1,6 @@
 import ASContainer
 import ASRepositoryProtocol
+import AVFoundation
 import Combine
 import UIKit
 
@@ -99,6 +100,11 @@ final class OnboardingViewController: UIViewController {
     private func setAction() {
         createRoomButton.addAction(
             UIAction { [weak self] _ in
+                guard self?.isMicrophoneAuthorized() ?? false else {
+                    self?.showMicrophonePermissionAlert()
+                    return
+                }
+                
                 self?.showCreateRoomLoading()
             },
             for: .touchUpInside
@@ -106,6 +112,11 @@ final class OnboardingViewController: UIViewController {
 
         joinRoomButton.addAction(
             UIAction { [weak self] _ in
+                guard self?.isMicrophoneAuthorized() ?? false else {
+                    self?.showMicrophonePermissionAlert()
+                    return
+                }
+                
                 guard let inviteCode = self?.inviteCode else { return }
                 inviteCode.isEmpty ?
                     self?.showRoomNumerInputAlert() : self?.autoJoinRoom()
@@ -213,6 +224,12 @@ final class OnboardingViewController: UIViewController {
             throw error
         }
     }
+    
+    private func isMicrophoneAuthorized() -> Bool {
+        let status = AVCaptureDevice.authorizationStatus(for: .audio)
+        
+        return status == .authorized
+    }
 }
 
 extension OnboardingViewController {
@@ -247,6 +264,17 @@ extension OnboardingViewController {
         presentAlert(alert)
     }
 
+    private func showMicrophonePermissionAlert() {
+        let alert = DefaultAlertController(titleText: .permissionDenied, primaryButtonText: .setting, secondaryButtonText: .cancel) { _ in
+            guard let settingsURL = URL(string: UIApplication.openSettingsURLString),
+                  UIApplication.shared.canOpenURL(settingsURL) else { return }
+            
+            UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
+        }
+        
+        presentAlert(alert)
+    }
+    
     private func showCreateRoomLoading() {
         let alert = LoadingAlertController(
             progressText: .joinRoom,

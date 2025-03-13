@@ -1,3 +1,4 @@
+import AVFoundation
 import ASContainer
 import ASRepositoryProtocol
 import Combine
@@ -23,6 +24,7 @@ final class LoadingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        requestMicrophonePermission()
         setupUI()
         setupLayout()
         bindViewModel()
@@ -136,6 +138,12 @@ final class LoadingViewController: UIViewController {
            let window = windowScene.windows.first {
             window.rootViewController = navigationController
             window.makeKeyAndVisible()
+        }
+    }
+    
+    func requestMicrophonePermission() {
+        Task {
+            await AVCaptureDevice.requestAccess(for: .audio)
         }
     }
 }

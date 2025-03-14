@@ -16,6 +16,7 @@ struct LobbyView: View {
                                     await viewModel.getAvatarData(url: url)
                                 },
                                 name: player.nickname,
+                                isMyId: player.id == viewModel.myId,
                                 isHost: player.id == viewModel.host?.id,
                                 imageUrl: player.avatarUrl
                             )
@@ -25,6 +26,7 @@ struct LobbyView: View {
                                     await viewModel.getAvatarData(url: url)
                                 },
                                 name: nil,
+                                isMyId: false,
                                 isHost: false,
                                 imageUrl: nil
                             )

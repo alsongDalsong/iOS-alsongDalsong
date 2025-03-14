@@ -14,7 +14,11 @@ public final class PlayersMockRepository: PlayersRepositoryProtocol {
     public init() {
         playersPublisher.send(playersStub)
     }
-    
+
+    public func getMyID() -> String? {
+        Player.playerStub1.id
+    }
+
     public func getPlayers() -> AnyPublisher<[Player], Never> {
         playersPublisher
             .compactMap { $0 }

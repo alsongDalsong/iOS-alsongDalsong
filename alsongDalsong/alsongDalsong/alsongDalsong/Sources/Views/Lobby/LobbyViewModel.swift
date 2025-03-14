@@ -11,6 +11,7 @@ final class LobbyViewModel: ObservableObject, @unchecked Sendable {
 
     let playerMaxCount = 4
     private(set) var roomNumber: String = ""
+    @Published var myId: String?
     @Published var players: [Player] = []
     @Published var host: Player?
     @Published var isHost: Bool = false
@@ -43,6 +44,8 @@ final class LobbyViewModel: ObservableObject, @unchecked Sendable {
     }
 
     func fetchData() {
+        self.myId = playersRepository.getMyID()
+
         playersRepository.getPlayers()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] players in

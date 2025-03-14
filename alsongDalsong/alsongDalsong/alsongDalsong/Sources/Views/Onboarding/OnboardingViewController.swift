@@ -15,7 +15,7 @@ final class OnboardingViewController: UIViewController {
     private var viewModel: OnboardingViewModel?
     private var gameNavigationController: GameNavigationController?
     private var cancellables = Set<AnyCancellable>()
-    var shouldMoveKeyboard: Bool = true
+    private var shouldMoveKeyboard: Bool = true
 
     init(viewModel: OnboardingViewModel, inviteCode: String) {
         self.viewModel = viewModel

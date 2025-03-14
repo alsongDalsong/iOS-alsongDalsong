@@ -15,6 +15,7 @@ final class MusicPanel: UIView {
     private let titleLabel = UILabel()
     private let artistLabel = UILabel()
     private let labelStack = UIStackView()
+    
     private var cancellables = Set<AnyCancellable>()
     private var viewModel: MusicPanelViewModel? = nil
     private var panelType: MusicPanelType = .large

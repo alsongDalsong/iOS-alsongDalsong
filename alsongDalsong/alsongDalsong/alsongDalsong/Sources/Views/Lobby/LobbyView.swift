@@ -4,6 +4,7 @@ struct LobbyView: View {
     @ObservedObject var viewModel: LobbyViewModel
     @State var isPresented = false
     @Environment(\.dismiss) var dismiss
+    
     var body: some View {
         VStack {
             ScrollView(.horizontal) {

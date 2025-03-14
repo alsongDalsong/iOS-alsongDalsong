@@ -44,13 +44,7 @@ final class GameNavigationController: @unchecked Sendable {
     private func setupNavigationBar(for viewController: UIViewController) {
         navigationController.navigationBar.isHidden = false
         navigationController.navigationBar.tintColor = .asBlack
-        let defaultFontSize = UIFont.preferredFont(forTextStyle: .headline).pointSize as CGFloat?
-        var fontStyle = UIFont()
-        if let defaultFontSize {
-            fontStyle = .font(setFont(), ofSize: defaultFontSize)
-        } else {
-            fontStyle = .font(setFont(), ofSize: 18)
-        }
+        let fontStyle = setFont()
         navigationController.navigationBar.titleTextAttributes = [.font: fontStyle]
         let backButtonImage = setImage()
 
@@ -97,14 +91,9 @@ final class GameNavigationController: @unchecked Sendable {
                 return ""
         }
     }
-    
-    private func setFont() -> FontName {
-        let viewType = gameInfo?.resolveViewType()
-        if case .lobby = viewType {
-            return .neoDunggeunmoPro
-        } else {
-            return .dohyeon
-        }
+
+    private func setFont() -> UIFont {
+        return .font(.dohyeon, forTextStyle: .headline)
     }
 
     private func setImage() -> UIImage? {

@@ -10,7 +10,9 @@ final class PlayersRepository: PlayersRepositoryProtocol {
     init(mainRepository: MainRepositoryProtocol) {
         self.mainRepository = mainRepository
     }
-    
+
+    func getMyID() -> String? { ASFirebaseAuth.myID }
+
     func getPlayers() -> AnyPublisher<[Player], Never> {
         mainRepository.players
             .receive(on: DispatchQueue.main)
@@ -25,7 +27,7 @@ final class PlayersRepository: PlayersRepositoryProtocol {
             .map { $0.count }
             .eraseToAnyPublisher()
     }
-    
+
     func getHost() -> AnyPublisher<Player, Never> {
         mainRepository.host
             .receive(on: DispatchQueue.main)

@@ -53,6 +53,7 @@ final class ASButton: UIButton {
         config.cornerStyle = cornerStyle
 
         setShadow()
+        
         config.background.backgroundColorTransformer = UIConfigurationColorTransformer { color in
             color.withAlphaComponent(1.0)
         }
@@ -61,9 +62,10 @@ final class ASButton: UIButton {
             guard let self else { return }
             if isHighlighted {
                 transform = CGAffineTransform(translationX: 3, y: 3)
-            }
-            else {
+                layer.shadowOffset = .zero
+            } else {
                 transform = .identity
+                layer.shadowOffset = CGSize(width: 4, height: 4)
             }
         }
         configuration = config

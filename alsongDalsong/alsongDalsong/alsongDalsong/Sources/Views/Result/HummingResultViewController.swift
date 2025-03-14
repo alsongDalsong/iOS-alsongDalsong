@@ -9,7 +9,7 @@ class HummingResultViewController: UIViewController {
     private let answerView = MusicPanelView()
     private let resultTableView = UITableView()
     private let nextButton = ASButton()
-
+    private var submissionStatus = SubmissionStatusView()
     private var resultTableViewDiffableDataSource: HummingResultTableViewDiffableDataSource?
     private var viewModel: HummingResultViewModel?
     private var cancellables = Set<AnyCancellable>()
@@ -46,6 +46,7 @@ class HummingResultViewController: UIViewController {
         view.addSubview(resultTableView)
         view.addSubview(nextButton)
         view.addSubview(answerView)
+        view.addSubview(submissionStatus)
     }
 
     private func setResultTableView() {
@@ -68,7 +69,8 @@ class HummingResultViewController: UIViewController {
     private func setAction() {
         nextButton.addAction(UIAction { [weak self] _ in
             guard let self else { return }
-            showNextResultLoading()
+            showSubmitResultLoading()
+//            showNextResultLoading()
         }, for: .touchUpInside)
     }
 
@@ -76,6 +78,7 @@ class HummingResultViewController: UIViewController {
         answerView.translatesAutoresizingMaskIntoConstraints = false
         resultTableView.translatesAutoresizingMaskIntoConstraints = false
         nextButton.translatesAutoresizingMaskIntoConstraints = false
+        submissionStatus.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             answerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
@@ -87,6 +90,9 @@ class HummingResultViewController: UIViewController {
             resultTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             resultTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             resultTableView.bottomAnchor.constraint(equalTo: nextButton.topAnchor, constant: -30),
+            // TODO: -
+            submissionStatus.topAnchor.constraint(equalTo: nextButton.topAnchor, constant: -16),
+            submissionStatus.trailingAnchor.constraint(equalTo: nextButton.trailingAnchor, constant: 16),
 
             nextButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             nextButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
@@ -114,7 +120,7 @@ class HummingResultViewController: UIViewController {
             resultTableViewDiffableDataSource?.applySnapshot((result.answer, [], nil))
         }
     }
-
+    // TODO: -
     private func changeButton(_ phase: ResultPhase) {
         if case .none = phase {
             nextButton.setConfiguration(
@@ -124,24 +130,34 @@ class HummingResultViewController: UIViewController {
             )
             nextButton.isEnabled = true
             nextButton.removeTarget(nil, action: nil, for: .touchUpInside)
-            nextButton.addAction(UIAction { _ in
-                self.showNextResultLoading()
-            }, for: .touchUpInside)
+//            nextButton.addAction(UIAction { _ in
+//                self.showNextResultLoading()
+//            }, for: .touchUpInside)
         } else {
             nextButton.updateButton(.disabled)
+        }
+    }
+
+    private func submitResult() async throws {
+        do {
+            try await viewModel?.submitResult()
+            nextButton.updateButton(.submitted)
+        } catch {
+            throw error
         }
     }
 
     private func bindViewModel() {
         guard let viewModel else { return }
         answerView.bind(to: viewModel.$result)
-
+        submissionStatus.bind(to: viewModel.$submissionStatus)
+        // TODO: -
         viewModel.$resultPhase
             .combineLatest(viewModel.$result, viewModel.$isHost)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] phase, result, isHost in
                 self?.addDataSource(phase, result: result)
-                if result.answer != nil, isHost {
+                if result.answer != nil {
                     self?.changeButton(phase)
                 }
             }
@@ -162,10 +178,40 @@ class HummingResultViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
+
+        viewModel.$submissionStatus
+            .combineLatest(viewModel.$isHost)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] status, isHost in
+                if status.total != "0",
+                   status.submits == status.total,
+                   isHost {
+                    self?.showNextResultLoading()
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
 extension HummingResultViewController {
+    // TODO: -
+    private func showSubmitResultLoading() {
+        let alert = LoadingAlertController(
+            progressText: .submitResult,
+            loadAction: { [weak self] in
+                try await self?.submitResult()
+            }
+        ) { [weak self] error in
+            self?.showFailSubmitResult(error)
+        }
+        presentAlert(alert)
+    }
+
+    private func showFailSubmitResult(_ error: Error) {
+        let alert = SingleButtonAlertController(titleText: .error(error))
+        presentAlert(alert)
+    }
+
     private func showNextResultLoading() {
         let alert = LoadingAlertController(
             progressText: .nextResult,

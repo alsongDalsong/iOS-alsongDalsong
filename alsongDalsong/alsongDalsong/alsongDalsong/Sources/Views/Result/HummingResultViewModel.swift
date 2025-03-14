@@ -18,6 +18,8 @@ final class HummingResultViewModel: @unchecked Sendable {
     private var dataDownloadRepository: DataDownloadRepositoryProtocol
     private var cancellables = Set<AnyCancellable>()
 
+    @Published private(set) var submissionStatus: (submits: String, total: String) = ("0", "0")
+
     @Published var isHost: Bool = false
     @Published var result: Result = (nil, [], nil)
     @Published var resultPhase: ResultPhase = .none
@@ -181,6 +183,7 @@ extension HummingResultViewModel {
                 guard let self else { return }
                 LogHandler.handleDebug("recordOrder changed \(recordOrder)")
                 updateCurrentResult()
+                bindSubmissionStatus()
             }
             .store(in: &cancellables)
     }
@@ -210,6 +213,28 @@ extension HummingResultViewModel {
                     }
                 }
                 .store(in: &cancellables)
+        }
+    }
+    // TODO: -
+    private func bindSubmissionStatus() {
+        let playerPublisher = playerRepository.getPlayersCount()
+        let resultsPublisher = hummingResultRepository.getResultsCount()
+
+        playerPublisher.combineLatest(resultsPublisher)
+            .sink { [weak self] playersCount, resultsCount in
+                let submitStatus = (submits: String(resultsCount), total: String(playersCount))
+                self?.submissionStatus = submitStatus
+            }
+            .store(in: &cancellables)
+    }
+
+    func submitResult() async throws {
+        do {
+            let _ = try await hummingResultRepository.submitResult(isFinished: true)
+        } catch {
+            let error = ASErrors(type: .submitResult, reason: error.localizedDescription, file: #file, line: #line)
+            LogHandler.handleError(error)
+            throw error
         }
     }
 

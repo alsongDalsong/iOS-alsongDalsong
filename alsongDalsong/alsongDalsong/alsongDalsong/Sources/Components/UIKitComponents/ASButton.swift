@@ -101,14 +101,13 @@ final class ASButton: UIButton {
         case disabled
         case needMorePlayers
         case idle(String, UIColor?)
-        case startRecord
-        case recording
-        case reRecord
+        case startRecord, recording, reRecord
         case complete
-        case submit
-        case submitted
+        case submit, submitted
         case startGame
-        case hostSelecting
+        case startWaiting, endWaiting
+        case next
+        case nextResultWaiting
 
         var text: String? {
             switch self {
@@ -122,13 +121,16 @@ final class ASButton: UIButton {
                 case .submit: String(localized: "제출하기")
                 case .submitted: String(localized: "제출 완료")
                 case .startGame: String(localized: "시작하기!")
-                case .hostSelecting: String(localized: "시작 대기 중")
-                }
+                case .startWaiting: String(localized: "시작 대기 중")
+                case .endWaiting: String(localized: "종료 대기 중")
+                case .next: String(localized: "다음으로")
+                case .nextResultWaiting: String(localized: "다음 결과 대기 중")
+            }
         }
 
         var systemImage: String? {
             switch self {
-                case .startGame: "play.fill"
+                case .startGame, .next: "play.fill"
                 case .reRecord: "arrow.clockwise"
                 default: nil
             }
@@ -143,7 +145,8 @@ final class ASButton: UIButton {
                 case .reRecord: .asOrange
                 case .complete: .asYellow
                 case .submit: .asGreen
-                case .startGame: .asMint
+                case .startGame, .next: .asMint
+                case .endWaiting, .nextResultWaiting: .systemGray2
                 default: nil
             }
         }

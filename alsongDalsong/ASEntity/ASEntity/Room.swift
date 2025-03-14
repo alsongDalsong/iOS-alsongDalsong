@@ -13,4 +13,5 @@ public struct Room: Codable {
     public var dueTime: Date?
     public var selectedRecords: [UInt8]?
     public var submits: [Answer]?
+    public var results: [Bool]?
 }

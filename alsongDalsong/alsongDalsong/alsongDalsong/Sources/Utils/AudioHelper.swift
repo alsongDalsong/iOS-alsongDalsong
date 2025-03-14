@@ -285,7 +285,7 @@ extension AudioHelper {
             try FileManager.default.removeItem(at: url)
             LogHandler.handleDebug("임시 파일 삭제 완료 \(url.path)")
         } catch {
-            LogHandler.handleError(ASErrors(type: .fileDelete, reason: error.localizedDescription, file: #file, line: #line))
+            LogHandler.handleError(ASErrors(type: .deleteFile, reason: error.localizedDescription, file: #file, line: #line))
         }
     }
 

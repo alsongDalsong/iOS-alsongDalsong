@@ -1,14 +1,14 @@
 import UIKit
 
 final class RehummingViewController: UIViewController {
-    private var progressBar = ProgressBar()
+    private let progressBar = ProgressBar()
     private let scrollView = UIScrollView()
-    private var musicPanel = MusicPanel()
-    private var hummingPanel = RecordingPanel(.asMint)
-    private var recordButton = ASButton()
-    private var submitButton = ASButton()
-    private var submissionStatus = SubmissionStatusView()
-    private var buttonStack = UIStackView()
+    private let musicPanel = MusicPanel()
+    private let hummingPanel = RecordingPanel(.asMint)
+    private let recordButton = ASButton()
+    private let submitButton = ASButton()
+    private let submissionStatus = SubmissionStatusView()
+    private let buttonStack = UIStackView()
     private let viewModel: RehummingViewModel
 
     init(viewModel: RehummingViewModel) {

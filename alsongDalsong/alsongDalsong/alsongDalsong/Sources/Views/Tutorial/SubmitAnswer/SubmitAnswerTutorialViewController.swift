@@ -2,13 +2,13 @@ import SwiftUI
 import ASEntity
 
 final class SubmitAnswerTutorialViewController: UIViewController {
-    private var progressBar = ProgressBar()
+    private let progressBar = ProgressBar()
     private let scrollView = UIScrollView()
-    private var musicPanel = MusicPanel()
-    private var selectedMusicPanel = MusicPanel(.compact)
-    private var selectAnswerButton = ASButton()
+    private let musicPanel = MusicPanel()
+    private let selectedMusicPanel = MusicPanel(.compact)
+    private let selectAnswerButton = ASButton()
     private let submitButton = ASButton()
-    private var buttonStack = UIStackView()
+    private let buttonStack = UIStackView()
     
     private let viewModel: SubmitAnswerTutorialViewModel
     

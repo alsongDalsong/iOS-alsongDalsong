@@ -1,14 +1,14 @@
 import UIKit
 
 final class HummingViewController: UIViewController {
-    private var progressBar = ProgressBar()
+    private let progressBar = ProgressBar()
     private let scrollView = UIScrollView()
-    private var musicPanel = MusicPanel()
-    private var hummingPanel = RecordingPanel(.asYellow)
-    private var recordButton = ASButton()
-    private var submitButton = ASButton()
-    private var submissionStatus = SubmissionStatusView()
-    private var buttonStack = UIStackView()
+    private let musicPanel = MusicPanel()
+    private let hummingPanel = RecordingPanel(.asYellow)
+    private let recordButton = ASButton()
+    private let submitButton = ASButton()
+    private let submissionStatus = SubmissionStatusView()
+    private let buttonStack = UIStackView()
     private let viewModel: HummingViewModel
 
     init(viewModel: HummingViewModel) {

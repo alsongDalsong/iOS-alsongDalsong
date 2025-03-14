@@ -25,7 +25,7 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
     private let answersRepository: AnswersRepositoryProtocol
     private let gameStatusRepository: GameStatusRepositoryProtocol
     private let dataDownloadRepository: DataDownloadRepositoryProtocol
-    
+
     private let musicAPI = ASMusicAPI()
     private var cancellables = Set<AnyCancellable>()
     

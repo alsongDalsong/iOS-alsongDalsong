@@ -5,9 +5,9 @@ import Combine
 import UIKit
 
 final class LoadingViewController: UIViewController {
-    private var logoImageView = UIImageView(image: UIImage(named: "logo"))
-    private var activityIndicatorView = UIActivityIndicatorView(style: .large)
-    private var loadingStatusLabel = UILabel()
+    private let logoImageView = UIImageView(image: UIImage(named: "logo"))
+    private let activityIndicatorView = UIActivityIndicatorView(style: .large)
+    private let loadingStatusLabel = UILabel()
     private var viewModel: LoadingViewModel?
     private var inviteCode = ""
     private var cancellables = Set<AnyCancellable>()

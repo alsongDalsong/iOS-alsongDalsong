@@ -10,12 +10,12 @@ typealias Result = (
 )
 
 final class HummingResultViewModel: @unchecked Sendable {
-    private var hummingResultRepository: HummingResultRepositoryProtocol
-    private var gameStatusRepository: GameStatusRepositoryProtocol
-    private var playerRepository: PlayersRepositoryProtocol
-    private var roomActionRepository: RoomActionRepositoryProtocol
-    private var roomInfoRepository: RoomInfoRepositoryProtocol
-    private var dataDownloadRepository: DataDownloadRepositoryProtocol
+    private let hummingResultRepository: HummingResultRepositoryProtocol
+    private let gameStatusRepository: GameStatusRepositoryProtocol
+    private let playerRepository: PlayersRepositoryProtocol
+    private let roomActionRepository: RoomActionRepositoryProtocol
+    private let roomInfoRepository: RoomInfoRepositoryProtocol
+    private let dataDownloadRepository: DataDownloadRepositoryProtocol
     private var cancellables = Set<AnyCancellable>()
 
     @Published var isHost: Bool = false

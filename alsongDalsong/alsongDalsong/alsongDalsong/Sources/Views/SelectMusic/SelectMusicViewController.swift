@@ -1,11 +1,11 @@
 import SwiftUI
 
 final class SelectMusicViewController: UIViewController {
-    private var progressBar = ProgressBar()
-    private var selectMusicView = UIViewController()
+    private let progressBar = ProgressBar()
     private let submitButton = ASButton()
-    private var submissionStatus = SubmissionStatusView()
+    private let submissionStatus = SubmissionStatusView()
     private let viewModel: SelectMusicViewModel
+    private var selectMusicView = UIViewController()
     
     init(selectMusicViewModel: SelectMusicViewModel) {
         self.viewModel = selectMusicViewModel

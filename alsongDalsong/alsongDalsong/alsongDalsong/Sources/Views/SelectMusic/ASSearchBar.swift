@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ASSearchBar: View {
     @Binding var text: String
-    var placeHolder: String
+    let placeHolder: String
     
     var body: some View {
         HStack {

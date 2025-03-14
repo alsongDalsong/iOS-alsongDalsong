@@ -5,14 +5,14 @@ import Combine
 import UIKit
 
 final class OnboardingViewController: UIViewController {
-    private var logoImageView = UIImageView(image: UIImage(named: Constants.logoImageName))
-    private var createRoomButton = ASButton()
-    private var joinRoomButton = ASButton()
-    private var avatarView = ASAvatarCircleView()
-    private var nickNamePanel = NicknamePanel()
-    private var avatarRefreshButton = ASRefreshButton(size: 28)
+    private let logoImageView = UIImageView(image: UIImage(named: Constants.logoImageName))
+    private let createRoomButton = ASButton()
+    private let joinRoomButton = ASButton()
+    private let avatarView = ASAvatarCircleView()
+    private let nickNamePanel = NicknamePanel()
+    private let avatarRefreshButton = ASRefreshButton(size: 28)
+    private let inviteCode: String
     private var viewModel: OnboardingViewModel?
-    private var inviteCode: String
     private var gameNavigationController: GameNavigationController?
     private var cancellables = Set<AnyCancellable>()
     var shouldMoveKeyboard: Bool = true

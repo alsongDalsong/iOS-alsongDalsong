@@ -2,10 +2,10 @@ import Combine
 import UIKit
 
 final class ASMusicPlayerView: UIView {
-    private var backgroundImageView = UIImageView()
+    private let backgroundImageView = UIImageView()
     private var blurView = UIVisualEffectView()
-    private var playButton = UIButton()
-    private var panelType: MusicPanelType
+    private let playButton = UIButton()
+    private let panelType: MusicPanelType
     var onPlayButtonTapped: ((MusicPanelType) -> Void)?
     private var cancellables = Set<AnyCancellable>()
 

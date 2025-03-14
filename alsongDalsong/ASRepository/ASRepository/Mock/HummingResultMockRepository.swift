@@ -3,6 +3,16 @@ import ASRepositoryProtocol
 import Combine
 
 public final class HummingResultMockRepository: HummingResultRepositoryProtocol {
+
+    public func getResultsCount() -> AnyPublisher<Int, Never> {
+        Just(3)
+            .eraseToAnyPublisher()
+    }
+    
+    public func submitResult(isFinished: Bool) async throws -> Bool {
+        true
+    }
+    
     private let answers = [
         Answer.answerStub1,
         Answer.answerStub2,

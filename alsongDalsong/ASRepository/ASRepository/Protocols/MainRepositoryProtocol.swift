@@ -15,6 +15,7 @@ public protocol MainRepositoryProtocol {
     var answers: CurrentValueSubject<[Answer]?, Never> { get }
     var dueTime: CurrentValueSubject<Date?, Never> { get }
     var submits: CurrentValueSubject<[Answer]?, Never> { get }
+    var results: CurrentValueSubject<[Bool]?, Never> { get }
 
     func connectRoom(roomNumber: String)
     func disconnectRoom()

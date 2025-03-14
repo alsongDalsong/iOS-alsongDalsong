@@ -19,6 +19,7 @@ final class MainRepository: MainRepositoryProtocol {
     var dueTime = CurrentValueSubject<Date?, Never>(nil)
     var submits = CurrentValueSubject<[ASEntity.Answer]?, Never>(nil)
     var records = CurrentValueSubject<[ASEntity.Record]?, Never>(nil)
+    var results = CurrentValueSubject<[Bool]?, Never>(nil)
     var selectedRecords = CurrentValueSubject<[UInt8]?, Never>(nil)
 
     private let databaseManager: ASFirebaseDatabaseProtocol
@@ -54,6 +55,7 @@ final class MainRepository: MainRepositoryProtocol {
                 update(\.dueTime, with: room.dueTime)
                 update(\.submits, with: room.submits)
                 update(\.records, with: room.records)
+                update(\.results, with: room.results)
                 update(\.selectedRecords, with: room.selectedRecords)
             }
             .store(in: &cancellables)
@@ -71,6 +73,7 @@ final class MainRepository: MainRepositoryProtocol {
         update(\.dueTime, with: nil)
         update(\.submits, with: nil)
         update(\.records, with: nil)
+        update(\.results, with: nil)
         update(\.selectedRecords, with: nil)
         databaseManager.removeRoomListener()
     }

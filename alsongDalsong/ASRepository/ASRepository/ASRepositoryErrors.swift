@@ -13,6 +13,7 @@ struct ASRepositoryErrors: LocalizedError {
         case uploadRecording
         case createRoom, joinRoom, leaveRoom, startGame, changeMode, changeRecordOrder, resetGame, sendRequest
         case submitAnswer
+        case submitResult
     }
 
     var errorDescription: String? {

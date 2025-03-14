@@ -1,15 +1,47 @@
+import ASDecoder
+import ASEncoder
 import ASEntity
+import ASNetworkKit
 import ASRepositoryProtocol
 import Combine
 import Foundation
 
 final class HummingResultRepository: HummingResultRepositoryProtocol {
     private var mainRepository: MainRepositoryProtocol
+    private var networkManager: ASNetworkManagerProtocol
 
     init(
-        mainRepository: MainRepositoryProtocol
+        mainRepository: MainRepositoryProtocol,
+        networkManager: ASNetworkManagerProtocol
     ) {
         self.mainRepository = mainRepository
+        self.networkManager = networkManager
+    }
+
+    func submitResult(isFinished: Bool) async throws -> Bool {
+        do {
+            let queryItems = [
+                URLQueryItem(name: "userId", value: ASFirebaseAuth.myID),
+                URLQueryItem(name: "roomNumber", value: mainRepository.number.value)
+            ]
+            let endPoint = FirebaseEndpoint(path: .submitResult, method: .post)
+                .update(\.queryItems, with: queryItems)
+                .update(\.headers, with: ["Content-Type": "application/json"])
+            let body = try ASEncoder.encode(isFinished)
+            let response = try await networkManager.sendRequest(to: endPoint, type: .json, body: body, option: .none)
+            let responseDict = try ASDecoder.decode([String: String].self, from: response)
+            return !responseDict.isEmpty
+        } catch {
+            throw ASRepositoryErrors(type: .submitResult, reason: error.localizedDescription, file: #file, line: #line)
+        }
+    }
+
+    func getResultsCount() -> AnyPublisher<Int, Never> {
+        mainRepository.results
+            .receive(on: DispatchQueue.main)
+            .compactMap { $0 }
+            .map { $0.count }
+            .eraseToAnyPublisher()
     }
 
     func getResult() ->

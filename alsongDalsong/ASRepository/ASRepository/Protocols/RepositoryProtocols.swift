@@ -57,6 +57,8 @@ public protocol GameStateRepositoryProtocol {
 
 public protocol HummingResultRepositoryProtocol {
     func getResult() -> AnyPublisher<[(answer: Answer, records: [ASEntity.Record], submit: Answer, recordOrder: UInt8)], Never>
+    func getResultsCount() -> AnyPublisher<Int, Never>
+    func submitResult(isFinished: Bool) async throws -> Bool
 }
 
 public protocol DataDownloadRepositoryProtocol {

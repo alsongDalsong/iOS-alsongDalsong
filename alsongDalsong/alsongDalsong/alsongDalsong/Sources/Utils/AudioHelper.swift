@@ -241,9 +241,12 @@ extension AudioHelper {
             visualize()
             LogHandler.handleDebug("녹음 시작")
 
-            try await Task.sleep(nanoseconds: 6 * 1_000_000_000)
+            try await Task.sleep(for: .seconds(6))
             let recordedData = await stopRecording()
             sendDataThrough(recorderDataSubject, recordedData ?? Data())
+            if recordedData != nil {
+                deleteFile(url: tempURL)
+            }
         } catch {
             let error = ASErrors(type: .startRecording, reason: error.localizedDescription, file: #file, line: #line)
             LogHandler.handleError(error)
@@ -275,6 +278,15 @@ extension AudioHelper {
         let key = UUID()
         return tempCacheDirectory
             .appendingPathComponent("\(key)")
+    }
+    
+    private func deleteFile(url: URL) {
+        do {
+            try FileManager.default.removeItem(at: url)
+            LogHandler.handleDebug("임시 파일 삭제 완료 \(url.path)")
+        } catch {
+            LogHandler.handleError(ASErrors(type: .deleteFile, reason: error.localizedDescription, file: #file, line: #line))
+        }
     }
 
     private func createCacheDirectory(with directory: URL) {

@@ -28,6 +28,7 @@ public struct FirebaseEndpoint: Endpoint, Equatable {
         case changeRecordOrder
         case submitMusic
         case submitAnswer
+        case submitResult
         case resetGame
       
         public var description: String {
@@ -48,6 +49,8 @@ public struct FirebaseEndpoint: Endpoint, Equatable {
                     "/v2-submitMusic"
                 case .submitAnswer:
                     "/v2-submitAnswer"
+                case .submitResult:
+                    "/v2-submitResult"
                 case .changeRecordOrder:
                     "/changeRecordOrder"
                 case .resetGame:

@@ -17,6 +17,7 @@ struct ASErrors: LocalizedError {
         case changeRecordOrder, navigateToLobby
         case submitMusic, searchMusicOnSelect, randomMusic
         case searchMusicOnSubmit, submitAnswer
+        case submitResult
     }
 
     var errorDescription: String? {

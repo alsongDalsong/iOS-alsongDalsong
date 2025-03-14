@@ -184,6 +184,7 @@ enum ASAlertText {
         case startGame
         case submitMusic
         case submitHumming
+        case submitResult
         case nextResult
         case toLobby
         
@@ -193,6 +194,7 @@ enum ASAlertText {
                 case .startGame: "게임을 시작하는 중..."
                 case .submitMusic: "노래를 전송하는 중..."
                 case .submitHumming: "허밍을 전송하는 중..."
+                case .submitResult: "결과 완료를 전송하는 중..."
                 case .nextResult: "다음 결과를 가져오는 중..."
                 case . toLobby: "로비로 이동하는 중..."
             }

@@ -36,7 +36,7 @@ function createRoomData(roomNumber, hostData) {
  * @returns roomNumber
  */
 async function generateRoomNumber() {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const characters = '123456789';
   let roomNumber;
   let roomExists = true;
 

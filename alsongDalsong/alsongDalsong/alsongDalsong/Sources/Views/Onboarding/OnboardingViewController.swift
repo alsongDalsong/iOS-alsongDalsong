@@ -247,8 +247,7 @@ extension OnboardingViewController {
         shouldMoveKeyboard = false
         let alert = InputAlertController(
             titleText: .joinRoom,
-            textFieldPlaceholder: .roomNumber,
-            isUppercased: true
+            textFieldPlaceholder: .roomNumber
         ) { [weak self] roomNumber in
             self?.setNicknameAndJoinRoom(with: roomNumber)
             self?.shouldMoveKeyboard = true

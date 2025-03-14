@@ -4,7 +4,6 @@ final class InputAlertController: ASAlertController {
     var textField = ASTextField()
     var textFieldPlaceholder: ASAlertText.Placeholder?
     var textMaxCount: Int = 6
-    var isUppercased: Bool = false
     var text: String {
         textField.text ?? ""
     }
@@ -37,11 +36,9 @@ final class InputAlertController: ASAlertController {
     }
 
     private func setTextField() {
+        textField.keyboardType = .numberPad
         textField.setConfiguration(placeholder: textFieldPlaceholder?.description)
         stackView.addArrangedSubview(textField)
-        if isUppercased {
-            textField.delegate = self
-        }
         textField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             textField.widthAnchor.constraint(equalTo: stackView.widthAnchor),
@@ -55,7 +52,6 @@ final class InputAlertController: ASAlertController {
         primaryButtonText: ASAlertText.ButtonText = .done,
         secondaryButtonText: ASAlertText.ButtonText = .cancel,
         textFieldPlaceholder: ASAlertText.Placeholder,
-        isUppercased: Bool = false,
         reversedColor: Bool = false,
         primaryButtonAction: ((String) -> Void)? = nil,
         secondaryButtonAction: (() -> Void)? = nil
@@ -68,27 +64,7 @@ final class InputAlertController: ASAlertController {
         self.reversedColor = reversedColor
         self.primaryButtonAction = primaryButtonAction
         self.secondaryButtonAction = secondaryButtonAction
-        self.isUppercased = isUppercased
-
         modalTransitionStyle = .crossDissolve
         modalPresentationStyle = .overFullScreen
-    }
-}
-
-extension InputAlertController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let uppercaseString = string.uppercased()
-
-        if let text = textField.text,
-           let textRange = Range(range, in: text)
-        {
-            let updatedText = text.replacingCharacters(in: textRange, with: uppercaseString)
-            if updatedText.count <= textMaxCount {
-                textField.text = updatedText
-            }
-            return false
-        }
-
-        return true
     }
 }

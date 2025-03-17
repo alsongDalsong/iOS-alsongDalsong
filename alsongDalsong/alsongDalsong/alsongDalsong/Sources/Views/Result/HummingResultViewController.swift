@@ -57,11 +57,9 @@ class HummingResultViewController: UIViewController {
     }
 
     private func setButton() {
-        nextButton.setConfiguration(
-            systemImageName: "play.fill",
-            text: String(localized: "다음으로"),
-            backgroundColor: .asMint
-        )
+        viewModel?.isHost == true
+        ? nextButton.updateButton(.next)
+        : nextButton.updateButton(.nextResultWaiting)
         nextButton.updateButton(.disabled)
     }
 
@@ -117,21 +115,21 @@ class HummingResultViewController: UIViewController {
 
     private func changeButton(_ phase: ResultPhase) {
         if case .none = phase {
-            nextButton.setConfiguration(
-                systemImageName: "play.fill",
-                text: String(localized: "다음으로"),
-                backgroundColor: .asMint
-            )
-            nextButton.isEnabled = true
-            nextButton.removeTarget(nil, action: nil, for: .touchUpInside)
-            nextButton.addAction(UIAction { _ in
-                self.showNextResultLoading()
-            }, for: .touchUpInside)
+            if viewModel?.totalResult.isEmpty == true {
+                nextButton.updateButton(.complete)
+            } else {
+                nextButton.updateButton(.next)
+                nextButton.isEnabled = true
+                nextButton.removeTarget(nil, action: nil, for: .touchUpInside)
+                nextButton.addAction(UIAction { _ in
+                    self.showNextResultLoading()
+                }, for: .touchUpInside)
+            }
         } else {
             nextButton.updateButton(.disabled)
         }
     }
-
+    
     private func bindViewModel() {
         guard let viewModel else { return }
         answerView.bind(to: viewModel.$result)
@@ -151,7 +149,10 @@ class HummingResultViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] canEndGame in
                 if canEndGame {
-                    self?.nextButton.updateButton(.complete)
+                    guard viewModel.isHost else {
+                        self?.nextButton.updateButton(.endWaiting)
+                        return
+                    }
                     self?.nextButton.isEnabled = true
                     self?.nextButton.removeTarget(nil, action: nil, for: .touchUpInside)
                     self?.nextButton.addAction(UIAction { _ in

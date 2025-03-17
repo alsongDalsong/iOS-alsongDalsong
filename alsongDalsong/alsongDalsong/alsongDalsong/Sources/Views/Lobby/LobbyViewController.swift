@@ -52,7 +52,7 @@ final class LobbyViewController: UIViewController {
                     }
                 }
                 else {
-                    self?.startButton.updateButton(.hostSelecting)
+                    self?.startButton.updateButton(.startWaiting)
                     self?.startButton.updateButton(.disabled)
                 }
             }

@@ -117,7 +117,7 @@ final class ASButton: UIButton {
                 case .needMorePlayers: String(localized: "게임 인원 부족")
                 case let .idle(string, _): string
                 case .startRecord: String(localized: "녹음하기")
-                case .recording: String(localized: "녹음중..")
+                case .recording: String(localized: "녹음중")
                 case .reRecord: String(localized: "재녹음")
                 case .complete: String(localized: "완료")
                 case .submit: String(localized: "제출하기")

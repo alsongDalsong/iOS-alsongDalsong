@@ -204,13 +204,12 @@
         }
       }
     },
-    "녹음중.." : {
-      "extractionState" : "manual",
+    "녹음중" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recording..."
+            "value" : "Recording"
           }
         }
       }
@@ -456,16 +455,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Are you sure you want to leave the room?"
-          }
-        }
-      }
-    },
-    "방장이 로비로 이동 중" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Host moving to the lobby"
           }
         }
       }
@@ -771,6 +760,9 @@
           }
         }
       }
+    },
+    "종료 대기 중" : {
+
     },
     "찰나의 순간" : {
       "extractionState" : "manual",

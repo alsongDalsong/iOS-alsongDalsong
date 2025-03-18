@@ -82,7 +82,7 @@ final class RoomActionRepository: RoomActionRepositoryProtocol {
                 endpointPath: .changeMode,
                 requestBody: ["roomNumber": roomNumber, "userId": ASFirebaseAuth.myID, "mode": mode.rawValue]
             )
-            guard let isSuccess = response["success"] as? Bool else {
+            guard let isSuccess = response["success"] else {
                 throw ASNetworkErrors(type: .responseError, reason: "", file: #file, line: #line)
             }
             return isSuccess
@@ -97,7 +97,7 @@ final class RoomActionRepository: RoomActionRepositoryProtocol {
                 endpointPath: .changeRecordOrder,
                 requestBody: ["roomNumber": roomNumber, "userId": ASFirebaseAuth.myID]
             )
-            guard let isSuccess = response["success"] as? Bool else {
+            guard let isSuccess = response["success"] else {
                 throw ASNetworkErrors(type: .responseError, reason: "", file: #file, line: #line)
             }
             return isSuccess
@@ -111,6 +111,21 @@ final class RoomActionRepository: RoomActionRepositoryProtocol {
             return try await mainRepository.postResetGame()
         } catch {
             throw ASRepositoryErrors(type: .resetGame, reason: error.localizedDescription, file: #file, line: #line)
+        }
+    }
+    
+    func kickPlayer(roomNumber: String, userID: String) async throws -> Bool {
+        do {
+            let response: [String: Bool] = try await self.sendRequest(
+                endpointPath: .kickPlayer,
+                requestBody: ["roomNumber": roomNumber, "hostId": ASFirebaseAuth.myID, "playerId": userID]
+            )
+            guard let isSuccess = response["success"] else {
+                throw ASNetworkErrors(type: .responseError, reason: "", file: #file, line: #line)
+            }
+            return isSuccess
+        } catch {
+            throw ASRepositoryErrors(type: .kickUser, reason: error.localizedDescription, file: #file, line: #line)
         }
     }
     

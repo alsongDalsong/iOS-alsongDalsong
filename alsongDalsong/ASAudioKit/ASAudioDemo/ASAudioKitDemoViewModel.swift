@@ -54,7 +54,7 @@ extension ASAudioKitDemoViewModel {
             if !granted { return }
         }
         Task {
-            await audioRecorder.startRecording(url: fileURL)
+            try await audioRecorder.startRecording(url: fileURL)
             isRecording = true
         }
         recordProgressTimer = Timer.scheduledTimer(withTimeInterval: 0.08, repeats: true, block: { [weak self] _ in
@@ -92,7 +92,7 @@ extension ASAudioKitDemoViewModel {
                 guard let self else { return }
                 await self.stopPlaying()
             }
-            await audioPlayer.startPlaying(data: recordedFile, option: playType)
+            try await audioPlayer.startPlaying(data: recordedFile, option: playType)
             isPlaying = true
         }
 
@@ -113,7 +113,7 @@ extension ASAudioKitDemoViewModel {
         guard let recordedFile else { return nil }
         var timeInterval: TimeInterval?
         Task {
-            timeInterval = await audioPlayer.getDuration(data: recordedFile)
+            timeInterval = try await audioPlayer.getDuration(data: recordedFile)
         }
         return timeInterval
     }

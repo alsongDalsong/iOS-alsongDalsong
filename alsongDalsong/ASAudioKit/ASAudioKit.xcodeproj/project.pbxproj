@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1B7EB01B2CFDA83B00B2BE2A /* ASAudioAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7EB01A2CFDA83B00B2BE2A /* ASAudioAnalyzer.swift */; };
 		1B7EB01C2CFDA83B00B2BE2A /* ASAudioAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7EB01A2CFDA83B00B2BE2A /* ASAudioAnalyzer.swift */; };
+		2939AE362D89711900B2893B /* ASAudioErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8593659C2D3F77F60086C8C4 /* ASAudioErrors.swift */; };
 		4E8907C22CE2489A00D5B547 /* ASAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; platformFilter = ios; };
 		4EB1ED372CE88E500012FFBA /* ASAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; };
 		4EB1ED382CE88E500012FFBA /* ASAudioKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -62,6 +63,14 @@
 			);
 			target = 4E89071D2CE23D1B00D5B547 /* ASAudioKit */;
 		};
+		2939AE382D89713100B2893B /* Exceptions for "ASAudioKit" folder in "ASAudioDemo" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ASAudioPlayer/ASAudioPlayer.swift,
+				ASMIDIPlayer/ASMIDIPlayer.swift,
+			);
+			target = 4EB1EC7F2CE7AA160012FFBA /* ASAudioDemo */;
+		};
 		4E8907C92CE24BA400D5B547 /* Exceptions for "ASAudioKit" folder in "ASAudioKitTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -78,6 +87,7 @@
 			exceptions = (
 				1BBE1CA72CE479950052A698 /* Exceptions for "ASAudioKit" folder in "ASAudioKit" target */,
 				4E8907C92CE24BA400D5B547 /* Exceptions for "ASAudioKit" folder in "ASAudioKitTests" target */,
+				2939AE382D89713100B2893B /* Exceptions for "ASAudioKit" folder in "ASAudioDemo" target */,
 			);
 			path = ASAudioKit;
 			sourceTree = "<group>";
@@ -322,6 +332,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1B7EB01B2CFDA83B00B2BE2A /* ASAudioAnalyzer.swift in Sources */,
+				2939AE362D89711900B2893B /* ASAudioErrors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

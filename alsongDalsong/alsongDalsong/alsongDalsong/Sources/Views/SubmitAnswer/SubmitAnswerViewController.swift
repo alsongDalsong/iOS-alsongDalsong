@@ -2,16 +2,16 @@ import Combine
 import SwiftUI
 
 final class SubmitAnswerViewController: UIViewController {
-    private var progressBar = ProgressBar()
+    private let progressBar = ProgressBar()
     private let scrollView = UIScrollView()
-    private var musicPanel = MusicPanel()
-    private var selectedMusicPanel = MusicPanel(.compact)
-    private var selectAnswerButton = ASButton()
-    private var submitButton = ASButton()
-    private var submissionStatus = SubmissionStatusView()
-    private var selectedAnswerView: UIHostingController<SelectAnswerView>?
-    private var buttonStack = UIStackView()
+    private let musicPanel = MusicPanel()
+    private let selectedMusicPanel = MusicPanel(.compact)
+    private let selectAnswerButton = ASButton()
+    private let submitButton = ASButton()
+    private let submissionStatus = SubmissionStatusView()
+    private let buttonStack = UIStackView()
     private let viewModel: SubmitAnswerViewModel
+    private var selectedAnswerView: UIHostingController<SelectAnswerView>?
 
     init(viewModel: SubmitAnswerViewModel) {
         self.viewModel = viewModel

@@ -4,10 +4,10 @@ import Combine
 import Foundation
 
 final class LobbyViewModel: ObservableObject, @unchecked Sendable {
-    private var playersRepository: PlayersRepositoryProtocol
-    private var roomInfoRepository: RoomInfoRepositoryProtocol
-    private var roomActionRepository: RoomActionRepositoryProtocol
-    private var dataDownloadRepository: DataDownloadRepositoryProtocol
+    private let playersRepository: PlayersRepositoryProtocol
+    private let roomInfoRepository: RoomInfoRepositoryProtocol
+    private let roomActionRepository: RoomActionRepositoryProtocol
+    private let dataDownloadRepository: DataDownloadRepositoryProtocol
 
     let playerMaxCount = 4
     private(set) var roomNumber: String = ""

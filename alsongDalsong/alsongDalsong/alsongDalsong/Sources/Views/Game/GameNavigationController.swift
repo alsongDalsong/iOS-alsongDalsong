@@ -10,6 +10,7 @@ final class GameNavigationController: @unchecked Sendable {
     private let gameStateRepository: GameStateRepositoryProtocol
     private let roomActionRepository: RoomActionRepositoryProtocol
     private var subscriptions: Set<AnyCancellable> = []
+    private let roomNumber: String
 
     private var gameInfo: GameState? {
         didSet {
@@ -17,8 +18,6 @@ final class GameNavigationController: @unchecked Sendable {
             updateViewControllers(state: gameInfo)
         }
     }
-
-    private let roomNumber: String
 
     init(navigationController: UINavigationController,
          gameStateRepository: GameStateRepositoryProtocol,

@@ -3,8 +3,8 @@ import ASRepositoryProtocol
 import Foundation
 
 final class OnboardingViewModel: @unchecked Sendable {
-    private var roomActionRepository: RoomActionRepositoryProtocol
-    private var dataDownloadRepository: DataDownloadRepositoryProtocol
+    private let roomActionRepository: RoomActionRepositoryProtocol
+    private let dataDownloadRepository: DataDownloadRepositoryProtocol
     private var avatars: [URL] = []
     private var selectedAvatar: URL?
 

@@ -2,11 +2,11 @@ import Combine
 import UIKit
 
 final class RecordingPanel: UIView {
-    private var playButton = UIButton()
-    private var waveFormView = WaveForm()
-    private var customBackgroundColor: UIColor
-    private var cancellables = Set<AnyCancellable>()
+    private let playButton = UIButton()
+    private let waveFormView = WaveForm()
+    private let customBackgroundColor: UIColor
     private let viewModel = RecordingPanelViewModel()
+    private var cancellables = Set<AnyCancellable>()
     var onRecordingFinished: ((Data) -> Void)?
 
     init(_ color: UIColor = .asMint) {

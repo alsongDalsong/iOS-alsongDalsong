@@ -6,10 +6,10 @@ protocol PlayerInfo {
 }
 
 struct MappedAnswer: Hashable, PlayerInfo {
-    var artworkData: Data
-    var previewData: Data
-    var title: String
-    var artist: String
+    let artworkData: Data
+    let previewData: Data
+    let title: String
+    let artist: String
     var playerName: String
     var playerAvatarData: Data
 
@@ -24,9 +24,9 @@ struct MappedAnswer: Hashable, PlayerInfo {
 }
 
 struct MappedRecord: Hashable, PlayerInfo {
-    var recordData: Data?
+    let recordData: Data?
     var midiURL: URL?
-    var recordAmplitudes: [CGFloat]
+    let recordAmplitudes: [CGFloat]
     var playerName: String
     var playerAvatarData: Data
 

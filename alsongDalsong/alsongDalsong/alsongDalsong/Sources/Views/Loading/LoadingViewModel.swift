@@ -2,8 +2,8 @@ import ASRepositoryProtocol
 import Foundation
 
 final class LoadingViewModel: @unchecked Sendable {
-    private var avatarRepository: AvatarRepositoryProtocol
-    private var dataDownloadRepository: DataDownloadRepositoryProtocol
+    private let avatarRepository: AvatarRepositoryProtocol
+    private let dataDownloadRepository: DataDownloadRepositoryProtocol
     private(set) var avatars: [URL] = []
     private(set) var selectedAvatar: URL?
 

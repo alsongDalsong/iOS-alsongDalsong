@@ -1,17 +1,17 @@
 import UIKit
 
-final class RehummingViewController: UIViewController {
-    private var progressBar = ProgressBar()
+final class HummingViewController: UIViewController {
+    private let progressBar = ProgressBar()
     private let scrollView = UIScrollView()
-    private var musicPanel = MusicPanel()
-    private var hummingPanel = RecordingPanel(.asMint)
-    private var recordButton = ASButton()
-    private var submitButton = ASButton()
-    private var submissionStatus = SubmissionStatusView()
-    private var buttonStack = UIStackView()
-    private let viewModel: RehummingViewModel
+    private let musicPanel = MusicPanel()
+    private let hummingPanel = RecordingPanel(.asYellow)
+    private let recordButton = ASButton()
+    private let submitButton = ASButton()
+    private let submissionStatus = SubmissionStatusView()
+    private let buttonStack = UIStackView()
+    private let viewModel: HummingViewModel
 
-    init(viewModel: RehummingViewModel) {
+    init(viewModel: HummingViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -27,10 +27,6 @@ final class RehummingViewController: UIViewController {
         setAction()
         bindToComponents()
     }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        viewModel.cancelSubscriptions()
-    }
 
     private func bindToComponents() {
         submissionStatus.bind(to: viewModel.$submissionStatus)
@@ -39,13 +35,13 @@ final class RehummingViewController: UIViewController {
         hummingPanel.bind(to: viewModel.$isRecording)
         hummingPanel.onRecordingFinished = { [weak self] recordedData in
             self?.recordButton.updateButton(.reRecord)
-            self?.viewModel.updateRecordedData(with: recordedData)
+            self?.viewModel.didRecordingFinished(recordedData)
         }
         submitButton.bind(to: viewModel.$recordedData)
     }
 
     private func setupUI() {
-        recordButton.updateButton(.idle("녹음하기", .systemRed))
+        recordButton.updateButton(.startRecord)
         submitButton.updateButton(.submit)
         submitButton.updateButton(.disabled)
         buttonStack.axis = .horizontal
@@ -64,7 +60,7 @@ final class RehummingViewController: UIViewController {
     private func setAction() {
         recordButton.addAction(UIAction { [weak self] _ in
             self?.recordButton.updateButton(.recording)
-            self?.viewModel.startRecording()
+            self?.viewModel.didTappedRecordButton()
         },
         for: .touchUpInside)
 
@@ -84,7 +80,7 @@ final class RehummingViewController: UIViewController {
         submissionStatus.translatesAutoresizingMaskIntoConstraints = false
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-
+    
         NSLayoutConstraint.activate([
             progressBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             progressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -97,7 +93,7 @@ final class RehummingViewController: UIViewController {
             scrollView.bottomAnchor.constraint(equalTo: buttonStack.topAnchor),
             scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: hummingPanel.bottomAnchor, constant: 16),
 
-            musicPanel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 32),
+            musicPanel.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: 32),
             musicPanel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
             musicPanel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
 
@@ -111,26 +107,22 @@ final class RehummingViewController: UIViewController {
 
             buttonStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            buttonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            buttonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
             buttonStack.heightAnchor.constraint(greaterThanOrEqualToConstant: 64),
         ])
     }
 
     private func submitHumming() async throws {
-        do {
-            progressBar.cancelCompletion()
-            try await viewModel.submitHumming()
-            submitButton.updateButton(.submitted)
-            recordButton.updateButton(.disabled)
-        } catch {
-            throw error
-        }
+        progressBar.cancelCompletion()
+        viewModel.didTappedSubmitButton()
+        submitButton.updateButton(.submitted)
+        recordButton.updateButton(.disabled)
     }
 }
 
 // MARK: - Alert
 
-extension RehummingViewController {
+extension HummingViewController {
     private func showSubmitHummingLoading() {
         let alert = LoadingAlertController(
             progressText: .submitHumming,

@@ -1,26 +1,43 @@
+import ASEntity
 import SwiftUI
 
 struct LobbyView: View {
     @ObservedObject var viewModel: LobbyViewModel
-    @State var isPresented = false
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
         VStack {
             ScrollView(.horizontal) {
                 HStack(alignment: .top, spacing: 16) {
-                    ForEach(0..<viewModel.playerMaxCount) { index in
+                    ForEach(0 ..< viewModel.playerMaxCount, id: \.self) { index in
                         if index < viewModel.players.count {
                             let player = viewModel.players[index]
-                            ProfileView(
-                                imagePublisher: { url in
-                                    await viewModel.getAvatarData(url: url)
-                                },
-                                name: player.nickname,
-                                isMyId: player.id == viewModel.myId,
-                                isHost: player.id == viewModel.host?.id,
-                                imageUrl: player.avatarUrl
-                            )
+                            if viewModel.isHost, player.id != viewModel.host?.id {
+                                Button {
+                                    presentKickAlert(player: player)
+                                } label: {
+                                    ProfileView(
+                                        imagePublisher: { url in
+                                            await viewModel.getAvatarData(url: url)
+                                        },
+                                        name: player.nickname,
+                                        isMyId: player.id == viewModel.myId,
+                                        isHost: player.id == viewModel.host?.id,
+                                        imageUrl: player.avatarUrl
+                                    )
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            } else {
+                                ProfileView(
+                                    imagePublisher: { url in
+                                        await viewModel.getAvatarData(url: url)
+                                    },
+                                    name: player.nickname,
+                                    isMyId: player.id == viewModel.myId,
+                                    isHost: player.id == viewModel.host?.id,
+                                    imageUrl: player.avatarUrl
+                                )
+                            }
                         } else {
                             ProfileView(
                                 imagePublisher: { url in
@@ -52,5 +69,21 @@ struct LobbyView: View {
             }
         }
         .background(Color.asLightGray)
+    }
+
+    func presentKickAlert(player: Player) {
+        let alertContrller = DefaultAlertController(
+            titleText: .kick(playerName: player.nickname ?? ""),
+            primaryButtonText: .kick,
+            secondaryButtonText: .cancel,
+            primaryButtonAction: { _ in
+                Task {
+                    try await viewModel.kickUser(userID: player.id)
+                }
+            }
+        )
+        if let topVC = UIApplication.shared.topViewController() {
+            topVC.presentAlert(alertContrller)
+        }
     }
 }

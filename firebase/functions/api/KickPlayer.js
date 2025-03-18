@@ -46,7 +46,7 @@ module.exports.kickPlayer = onRequest({ region: 'asia-southeast1' }, async (req,
       players: updatedPlayers,
     });
 
-    res.status(200).json({ message: 'Player successfully kicked from the room' });
+    res.status(200).json({ success: true });
   } catch (error) {
     console.error('Kick player error:', error);
     res.status(500).json({ error: 'Failed to kick player' });

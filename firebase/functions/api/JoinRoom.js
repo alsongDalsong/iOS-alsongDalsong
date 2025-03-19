@@ -9,7 +9,7 @@ const { FieldValue } = require('firebase-admin/firestore');
 /**
  * 방 참여를 요청하는 API
  * @param roomNumber - 방 번호
- * @param playerId - 참여자 id
+ * @param userId - 참여자 id
  * @returns playerData
  */
 module.exports.joinRoom = onRequest({ region: 'asia-southeast1' }, async (req, res) => {
@@ -30,6 +30,12 @@ module.exports.joinRoom = onRequest({ region: 'asia-southeast1' }, async (req, r
     }
 
     const roomData = roomSnapshot.data();
+
+    // bannedPlayers 체크: bannedPlayers 배열에 userId가 존재하면 에러 코드 453 반환
+    if (roomData.bannedPlayers && Array.isArray(roomData.bannedPlayers) && roomData.bannedPlayers.includes(userId)) {
+      return res.status(453).json({ error: 'User is banned from this room' });
+    }
+
     const playerExists = roomData.players.some((player) => player.id === userId);
     const inGame = roomData.status !== null;
 

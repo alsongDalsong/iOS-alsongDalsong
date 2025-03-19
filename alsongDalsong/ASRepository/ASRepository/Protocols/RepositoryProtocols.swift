@@ -55,6 +55,7 @@ public protocol RoomActionRepositoryProtocol: Sendable {
 
 public protocol GameStateRepositoryProtocol {
     func getGameState() -> AnyPublisher<GameState?, Never>
+    func receiveKickOut() -> AnyPublisher<Bool, Never>
 }
 
 public protocol HummingResultRepositoryProtocol {

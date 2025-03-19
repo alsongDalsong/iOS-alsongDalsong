@@ -45,6 +45,17 @@
         }
       }
     },
+    "강퇴 되었습니다." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have been kicked out."
+          }
+        }
+      }
+    },
     "강퇴 하기" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -536,13 +547,13 @@
         }
       }
     },
-    "사냥꾼" : {
+    "사부님" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hunter"
+            "value" : "Master"
           }
         }
       }
@@ -558,13 +569,13 @@
         }
       }
     },
-    "사부님" : {
+    "사냥꾼" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Master"
+            "value" : "Hunter"
           }
         }
       }
@@ -913,6 +924,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Harmony"
+          }
+        }
+      }
+    },
+    "해당 방에서 강퇴되어 참여할 수 없습니다." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You have been banned from this room and cannot join."
           }
         }
       }

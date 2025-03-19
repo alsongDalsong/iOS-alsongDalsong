@@ -138,6 +138,7 @@ enum ASAlertText {
         case back
         case permissionDenied
         case kick(playerName: String)
+        case receiveKick
 
         var description: String {
             switch self {
@@ -149,6 +150,7 @@ enum ASAlertText {
                 case .back: "이전 화면으로 돌아가시겠습니까?"
                 case .permissionDenied: "게임을 시작하기 위해서 마이크 권한이 필요해요"
                 case let .kick(playerName): String(format: NSLocalizedString("님을 강퇴하시겠습니까?", comment: ""), playerName)
+                case .receiveKick: "강퇴 되었습니다."
             }
         }
     }

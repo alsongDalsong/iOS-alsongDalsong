@@ -44,6 +44,7 @@ module.exports.kickPlayer = onRequest({ region: 'asia-southeast1' }, async (req,
     const updatedPlayers = players.filter((player) => player.id !== playerId);
     await roomRef.update({
       players: updatedPlayers,
+      bannedPlayers: admin.firestore.FieldValue.arrayUnion(playerId),
     });
 
     res.status(200).json({ success: true });

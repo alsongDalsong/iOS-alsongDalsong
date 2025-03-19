@@ -18,4 +18,9 @@ public final class GameStateMockRepository: GameStateRepositoryProtocol {
         gameStatePublisher
             .eraseToAnyPublisher()
     }
+    
+    public func receiveKickOut() -> AnyPublisher<Bool, Never> {
+        CurrentValueSubject<Bool, Never>(false)
+            .eraseToAnyPublisher()
+    }
 }

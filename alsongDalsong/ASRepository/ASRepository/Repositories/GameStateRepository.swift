@@ -19,4 +19,10 @@ final class GameStateRepository: GameStateRepositoryProtocol {
             }
             .eraseToAnyPublisher()
     }
+    
+    func receiveKickOut() -> AnyPublisher<Bool, Never> {
+        mainRepository.isKickedOut
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
 }

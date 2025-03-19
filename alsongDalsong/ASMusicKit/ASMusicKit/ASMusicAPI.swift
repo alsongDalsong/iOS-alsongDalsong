@@ -58,25 +58,21 @@ public struct ASMusicAPI {
                     throw ASMusicErrors(type: .search, reason: error.localizedDescription, file: #file, line: #line)
                 }
             default:
-            throw ASMusicErrors(type: .notAuthorized, reason: "", file: #file, line: #line)
+                throw ASMusicErrors(type: .notAuthorized, reason: "", file: #file, line: #line)
         }
     }
 
-    public func randomSong(from playlistId: String) async throws -> ASEntity.Music {
+    public func getSong(from songId: String) async throws -> ASEntity.Music {
         let status = await MusicAuthorization.request()
         switch status {
             case .authorized:
                 do {
-                    let request = MusicCatalogResourceRequest<MusicKit.Playlist>(matching: \.id, equalTo: MusicItemID(rawValue: playlistId))
-                    let playlistResponse = try await request.response()
-                    let playlist = playlistResponse.items.first!
+                    var request = MusicCatalogResourceRequest<MusicKit.Song>(matching: \.id, equalTo: MusicItemID(rawValue: songId))
+                    request.limit = 1
 
-                    let playlistWithTrack = try await playlist.with([.tracks])
-                    guard let tracks = playlistWithTrack.tracks else {
-                        throw ASMusicErrors(type: .playListHasNoSongs, reason: "", file: #file, line: #line)
-                    }
+                    let response = try await request.response()
 
-                    if let song = tracks.randomElement() {
+                    if let song = response.items.first {
                         return ASEntity.Music(
                             id: song.id.rawValue,
                             title: song.title,
@@ -87,10 +83,10 @@ public struct ASMusicAPI {
                         )
                     }
                 } catch {
-                    throw ASMusicErrors(type: .search, reason: "", file: #file, line: #line)
+                    throw ASMusicErrors(type: .search, reason: "Apple Music Catalog로 부터 음악을 가져오는 데 실패하였습니다.", file: #file, line: #line)
                 }
             default:
-            throw ASMusicErrors(type: .notAuthorized, reason: "", file: #file, line: #line)
+                throw ASMusicErrors(type: .notAuthorized, reason: "Apple Music에 인증되지 않았습니다.", file: #file, line: #line)
         }
         return ASEntity.Music(id: "nil", title: nil, artist: nil, artworkUrl: nil, previewUrl: nil, artworkBackgroundColor: nil)
     }

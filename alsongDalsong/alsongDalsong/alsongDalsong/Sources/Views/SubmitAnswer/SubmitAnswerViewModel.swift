@@ -142,13 +142,14 @@ final class SubmitAnswerViewModel: ObservableObject, @unchecked Sendable {
     }
 
     func getPlaylist() async throws -> [String] {
-        let playlistURL = URL(string: "https://firebasestorage.googleapis.com/v0/b/alsongdalsong-boostcamp.firebasestorage.app/o/audios%2FselectMusicRandom%2FsubmitAnswerPlayList.txt?alt=media&token=2c0c2629-ecc8-4895-b205-305c70c38ef6")!
+        guard let playlistURL = URL(string: "https://firebasestorage.googleapis.com/v0/b/alsongdalsong-boostcamp.firebasestorage.app/o/audios%2FselectMusicRandom%2FsubmitAnswerPlayList.txt?alt=media&token=2c0c2629-ecc8-4895-b205-305c70c38ef6")
+        else { return [] }
         guard let musicList = await dataDownloadRepository.downloadData(url: playlistURL) else {
             return []
         }
 
         let musicListString = String(data: musicList, encoding: .utf8)!
-        return musicListString.components(separatedBy: "\n").filter { !$0.isEmpty }
+        return musicListString.split(separator: "\n").map { String($0) }
     }
 
     func searchMusic(text: String) async throws {

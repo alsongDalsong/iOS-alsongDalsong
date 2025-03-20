@@ -81,8 +81,8 @@ final class ASButton: UIButton {
     ) {
         dataSource
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] newHumming in
-                if newHumming == nil { return }
+            .compactMap { $0 }
+            .sink { [weak self] data in
                 self?.isEnabled = true
                 self?.configuration?.baseBackgroundColor = .asGreen
             }

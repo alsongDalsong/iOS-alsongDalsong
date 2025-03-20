@@ -89,15 +89,12 @@ final class ASButton: UIButton {
             }
             .store(in: &cancellables)
     }
-
-    func updateButton(_ type: ASButton.ASButtonType) {
-        switch type {
-            case .disabled: disable()
-            case .submitted:
-                setConfiguration(text: type.text)
-                disable()
-            default: setConfiguration(systemImageName: type.systemImage, text: type.text, backgroundColor: type.backgroundColor)
-        }
+    
+    /// 버튼의 활성화 여부를 결정하는 메서드입니다.
+    /// - Parameters:
+    ///    - isEnabled: `true`면 버튼을 활성화하고, `false`면 버튼을 비활성화합니다.
+    func setEnabled(_ isEnabled: Bool) {
+        isEnabled ? enableButton() : disableButton()
     }
 
     enum ASButtonType {
@@ -160,6 +157,19 @@ final class ASButton: UIButton {
 }
 
 private extension ASButton {
+    /// Configuration을 적용하는 메서드
+    func applyConfiguration() {
+      
+    }
+
+    /// 버튼을 비활성화하고 색상을 변경하는 메서드
+    func disableButton() {
+    }
+
+    /// 버튼을 활성화하고 원래 색상으로 되돌리는 메서드
+    func enableButton() {
+    }
+
     /// 버튼이 눌렸을 때 효과를 적용하는 메서드
     func applyHighlightEffect() {
         if isHighlighted {

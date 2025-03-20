@@ -7,10 +7,12 @@ final class ASButton: UIButton {
 
     init() {
         super.init(frame: .zero)
+        setupButton()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+        setupButton()
     }
 
     /// 버튼의 UI 관련한 Configuration을 설정하는 메서드

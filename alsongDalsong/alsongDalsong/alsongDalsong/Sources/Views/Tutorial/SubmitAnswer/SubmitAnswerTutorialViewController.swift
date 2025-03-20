@@ -69,7 +69,7 @@ final class SubmitAnswerTutorialViewController: UIViewController {
         
         selectAnswerButton.setConfiguration(text: String(localized: "정답 선택"), backgroundColor: .asLightSky)
         submitButton.setConfiguration(text: String(localized: "정답 제출"), backgroundColor: .asLightGray)
-        submitButton.updateButton(.disabled)
+        submitButton.setEnabled(false)
         buttonStack.axis = .horizontal
         buttonStack.spacing = 16
         buttonStack.addArrangedSubview(selectAnswerButton)

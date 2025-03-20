@@ -34,16 +34,16 @@ final class HummingViewController: UIViewController {
         musicPanel.bind(to: viewModel.$music)
         hummingPanel.bind(to: viewModel.$isRecording)
         hummingPanel.onRecordingFinished = { [weak self] recordedData in
-            self?.recordButton.updateButton(.reRecord)
+            self?.recordButton.setConfiguration(.reRecord)
             self?.viewModel.didRecordingFinished(recordedData)
         }
         submitButton.bind(to: viewModel.$recordedData)
     }
 
     private func setupUI() {
-        recordButton.updateButton(.startRecord)
-        submitButton.updateButton(.submit)
-        submitButton.updateButton(.disabled)
+        recordButton.setConfiguration(.startRecord)
+        submitButton.setConfiguration(.submit)
+        submitButton.setEnabled(false)
         buttonStack.axis = .horizontal
         buttonStack.spacing = 16
         buttonStack.addArrangedSubview(recordButton)
@@ -59,7 +59,7 @@ final class HummingViewController: UIViewController {
 
     private func setAction() {
         recordButton.addAction(UIAction { [weak self] _ in
-            self?.recordButton.updateButton(.recording)
+            self?.recordButton.setConfiguration(.recording)
             self?.viewModel.didTappedRecordButton()
         },
         for: .touchUpInside)
@@ -115,8 +115,9 @@ final class HummingViewController: UIViewController {
     private func submitHumming() async throws {
         progressBar.cancelCompletion()
         viewModel.didTappedSubmitButton()
-        submitButton.updateButton(.submitted)
-        recordButton.updateButton(.disabled)
+        submitButton.setConfiguration(.submitted)
+        submitButton.setEnabled(false)
+        recordButton.setEnabled(false)
     }
 }
 

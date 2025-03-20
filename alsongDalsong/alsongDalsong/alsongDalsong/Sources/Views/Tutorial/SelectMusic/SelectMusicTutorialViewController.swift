@@ -80,13 +80,13 @@ final class SelectMusicTutorialViewController: UIViewController {
 
         let musicView = SelectMusicTutorialView { [weak self] music in
             self?.selectedMusic = music
-            self?.submitButton.updateButton(.submit)
+            self?.submitButton.setConfiguration(.submit)
             self?.submitButton.isEnabled = true
         }
         selectMusicView = UIHostingController(rootView: musicView)
 
         submitButton.setConfiguration(text: String(localized: "선택 완료"), backgroundColor: .asGreen)
-        submitButton.updateButton(.disabled)
+        submitButton.setEnabled(false)
 
         view.addSubview(progressBar)
         view.addSubview(selectMusicView.view)

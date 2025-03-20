@@ -4,6 +4,7 @@ import UIKit
 
 /// 버튼의 동작을 관리
 final class ASButton: UIButton {
+    private var configurationData: ASButtonConfiguration?
     private var cancellables = Set<AnyCancellable>()
 
     init() {
@@ -29,58 +30,37 @@ final class ASButton: UIButton {
         text: String? = nil,
         textStyle: UIFont.TextStyle = .largeTitle,
         backgroundColor: UIColor? = nil,
-        cornerStyle: UIButton.Configuration.CornerStyle = .medium
+        cornerStyle: UIButton.Configuration.CornerStyle = .medium,
+        baseForegroundColor: UIColor = .asBlack
     ) {
-        var config = UIButton.Configuration.gray()
-        config.baseForegroundColor = .asBlack
-        config.background.strokeColor = .black
-        config.background.strokeWidth = 3
-        
-        if let systemImageName {
-            config.imagePlacement = .leading
-            config.image = UIImage(systemName: systemImageName)
-            config.imagePadding = 10
-            let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .heavy)
-            config.preferredSymbolConfigurationForImage = imageConfig
-        }
-        
-        if let backgroundColor {
-            config.baseBackgroundColor = backgroundColor
-        }
+        configurationData = ASButtonConfiguration(
+            systemImageName: systemImageName,
+            text: text ?? configurationData?.text,
+            textStyle: textStyle,
+            backgroundColor: backgroundColor,
+            cornerStyle: cornerStyle,
+            baseForegroundColor: baseForegroundColor
+        )
 
-        if let text {
-            var titleAttr = AttributedString(text)
-            titleAttr.font = UIFont.font(forTextStyle: textStyle)
-            config.attributedTitle = titleAttr
-        }
-
-        config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
-        config.cornerStyle = cornerStyle
-
-        setShadow()
-        
-        config.background.backgroundColorTransformer = UIConfigurationColorTransformer { color in
-            color.withAlphaComponent(1.0)
-        }
-
-        configurationUpdateHandler = { [weak self] _ in
-            guard let self else { return }
-            if isHighlighted {
-                transform = CGAffineTransform(translationX: 3, y: 3)
-                layer.shadowOffset = .zero
-            } else {
-                transform = .identity
-                layer.shadowOffset = CGSize(width: 4, height: 4)
-            }
-        }
-        configuration = config
+        applyConfiguration()
     }
+    
+    /// 버튼의 UI 관련한 Configuration을 설정하는 메서드
 
-    private func disable(_ color: UIColor = .systemGray2) {
-        configuration?.baseBackgroundColor = color
-        isEnabled = false
+    func setConfiguration(
+        _ type: ASButtonType? = nil
+    ) {
+        configurationData = ASButtonConfiguration(
+            systemImageName: type?.systemImage,
+            text: type?.text,
+            textStyle: type?.textStyle ?? .largeTitle,
+            backgroundColor: type?.backgroundColor,
+            cornerStyle: type?.cornerStyle ?? .medium
+        )
+
+        applyConfiguration()
     }
-
+    
     func bind(
         to dataSource: Published<Data?>.Publisher,
         baseBackgroundColor: UIColor = .asGreen

@@ -208,9 +208,7 @@ extension AudioHelper {
                 count + 1
             }
             .sink { [weak self] value in
-                guard let self else { return }
-                
-                waveformUpdateSubject.send(value - 1)
+                self?.waveformUpdateSubject.send(value - 1)
             }
     }
 
@@ -256,23 +254,21 @@ extension AudioHelper {
             LogHandler.handleDebug("녹음 시작")
 
             try await Task.sleep(for: .seconds(6))
-            let recordedData = await stopRecording()
-            recorderDataSubject.send(recordedData ?? Data())
-            if recordedData != nil {
-                deleteFile(url: tempURL)
-            }
+            
+            await stopRecording()
+            deleteFile(url: tempURL)
         } catch {
             let error = ASErrors(type: .startRecording, reason: error.localizedDescription, file: #file, line: #line)
             LogHandler.handleError(error)
         }
     }
 
-    private func stopRecording() async -> Data? {
+    private func stopRecording() async {
         let recordedData = await recorder?.stopRecording()
         LogHandler.handleDebug("녹음 정지")
         recorderStateSubject.send(false)
         removeRecorder()
-        return recordedData
+        recorderDataSubject.send(recordedData ?? Data())
     }
 
     private func checkRecorderState() async -> Bool {
@@ -346,8 +342,7 @@ extension AudioHelper {
 extension AudioHelper {
     private func visualize() {
         Task { [weak self] in
-            guard let self else { return }
-            calculateAmplitude()
+            self?.calculateAmplitude()
         }
     }
 
@@ -358,7 +353,7 @@ extension AudioHelper {
             .sink { [weak self] _ in
                 guard let self else { return }
                 Task {
-                    await calculateRecorderAmplitude()
+                    await self.calculateRecorderAmplitude()
                 }
             }
     }

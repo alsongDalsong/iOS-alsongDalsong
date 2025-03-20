@@ -114,17 +114,15 @@ final class HummingResultTutorialViewModel: ObservableObject {
     
     @MainActor
     func bindAudio() {
-        Task {
-            await AudioHelper.shared.playerStatePublisher
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] _, isPlaying in
-                    guard let self else { return }
-                    if !isPlaying {
-                        updateResultPhase()
-                    }
+        AudioHelper.shared.playerStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _, isPlaying in
+                guard let self else { return }
+                if !isPlaying {
+                    updateResultPhase()
                 }
-                .store(in: &cancellables)
-        }
+            }
+            .store(in: &cancellables)
     }
     
     private func startPlaying() async {

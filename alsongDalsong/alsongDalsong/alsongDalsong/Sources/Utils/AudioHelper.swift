@@ -2,13 +2,15 @@ import ASAudioKit
 import Combine
 import Foundation
 
-extension AnyPublisher: @unchecked @retroactive Sendable {}
-extension PassthroughSubject: @unchecked @retroactive Sendable {}
+final class AudioHelper: @unchecked Sendable {
 
-actor AudioHelper {
+    // MARK: - Singleton
+    
+    static let shared = AudioHelper()
+    private init() { }
+
     // MARK: - Private properties
 
-    static let shared = AudioHelper()
     private var recorder: ASAudioRecorder?
     private var player: ASAudioPlayer?
     private var midiPlayer: ASMIDIPlayer?
@@ -24,7 +26,10 @@ actor AudioHelper {
     private let waveformUpdateSubject = PassthroughSubject<Int, Never>()
     private let recorderStateSubject = PassthroughSubject<Bool, Never>()
     private let recorderDataSubject = PassthroughSubject<Data, Never>()
-    var amplitudePublisher: AnyPublisher<Float, Never> { amplitudeSubject.eraseToAnyPublisher() }
+    
+    var amplitudePublisher: AnyPublisher<Float, Never> {
+        amplitudeSubject.eraseToAnyPublisher()
+    }
 
     var playerStatePublisher: AnyPublisher<(FileSource, Bool), Never> {
         playerStateSubject.eraseToAnyPublisher()
@@ -42,8 +47,6 @@ actor AudioHelper {
         recorderDataSubject.eraseToAnyPublisher()
     }
 
-    private init() {}
-
     func isRecording() async -> Bool {
         guard let recorder else { return false }
         return await recorder.isRecording()
@@ -59,7 +62,7 @@ actor AudioHelper {
         return await midiPlayer.isPlaying()
     }
 
-    private func removePlayer() async {
+    private func removePlayer() {
         player = nil
         midiPlayer = nil
     }
@@ -119,7 +122,9 @@ extension AudioHelper {
         await player?.setOnPlaybackFinished { [weak self] in
             await self?.stopPlaying()
         }
-        sendDataThrough(playerStateSubject, (source, true))
+        
+        playerStateSubject.send((source, true))
+        
         if needsWaveUpdate {
             updatePlayIndex()
         }
@@ -140,7 +145,9 @@ extension AudioHelper {
         await midiPlayer?.setOnPlaybackFinished { [weak self] in
             await self?.stopPlaying()
         }
-        sendDataThrough(playerStateSubject, (source, true))
+        
+        playerStateSubject.send((source, true))
+        
         if needsWaveUpdate {
             updatePlayIndex()
         }
@@ -181,8 +188,10 @@ extension AudioHelper {
     func stopPlaying() async {
         await player?.stopPlaying()
         await midiPlayer?.stopPlaying()
-        await removePlayer()
-        sendDataThrough(playerStateSubject, (source, false))
+        removePlayer()
+        
+        playerStateSubject.send((source, false))
+        
         removeTimer()
     }
 
@@ -194,9 +203,8 @@ extension AudioHelper {
             }
             .sink { [weak self] value in
                 guard let self else { return }
-                Task {
-                    await self.sendDataThrough(self.waveformUpdateSubject, value - 1)
-                }
+                
+                waveformUpdateSubject.send(value - 1)
             }
     }
 
@@ -211,8 +219,8 @@ extension AudioHelper {
     private func checkPlayerState() async -> Bool {
         if await isPlaying() {
             await player?.stopPlaying()
-            await removePlayer()
-            sendDataThrough(playerStateSubject, (source, false))
+            removePlayer()
+            playerStateSubject.send((source, false))
         }
         return true
     }
@@ -220,8 +228,8 @@ extension AudioHelper {
     private func checkMIDIPlayerState() async -> Bool {
         if await isPlayingMIDI() {
             await midiPlayer?.stopPlaying()
-            await removePlayer()
-            sendDataThrough(playerStateSubject, (source, false))
+            removePlayer()
+            playerStateSubject.send((source, false))
         }
         return true
     }
@@ -243,7 +251,7 @@ extension AudioHelper {
 
             try await Task.sleep(for: .seconds(6))
             let recordedData = await stopRecording()
-            sendDataThrough(recorderDataSubject, recordedData ?? Data())
+            recorderDataSubject.send(recordedData ?? Data())
             if recordedData != nil {
                 deleteFile(url: tempURL)
             }
@@ -327,21 +335,13 @@ extension AudioHelper {
     }
 }
 
-// MARK: - Data binding
-
-extension AudioHelper {
-    private func sendDataThrough<T>(_ subject: PassthroughSubject<T, Never>, _ data: T) {
-        subject.send(data)
-    }
-}
-
 // MARK: - Audio Visualize
 
 extension AudioHelper {
     private func visualize() {
         Task { [weak self] in
             guard let self else { return }
-            await calculateAmplitude()
+            calculateAmplitude()
         }
     }
 
@@ -352,7 +352,7 @@ extension AudioHelper {
             .sink { [weak self] _ in
                 guard let self else { return }
                 Task {
-                    await self.calculateRecorderAmplitude()
+                    await calculateRecorderAmplitude()
                 }
             }
     }

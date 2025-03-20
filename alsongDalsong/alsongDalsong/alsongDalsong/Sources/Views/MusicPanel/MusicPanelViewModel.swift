@@ -16,7 +16,7 @@ final class MusicPanelViewModel: @unchecked Sendable {
     }
     
     private var cancellables = Set<AnyCancellable>()
-
+    
     init(
         music: Music?,
         type: MusicPanelType = .large,
@@ -29,51 +29,52 @@ final class MusicPanelViewModel: @unchecked Sendable {
         getArtworkData()
         bindAudioHelper()
     }
-
+    
     deinit {
         Task {
             await AudioHelper.shared.stopPlaying()
         }
     }
-
+    
     private func bindAudioHelper() {
-        Task {
-            await AudioHelper.shared.playerStatePublisher
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] source, isPlaying in
-                    switch source {
-                        case let .imported(panelType):
-                            self?.updateButtonState(type: panelType, isPlaying ? .playing : .idle)
-                        default: if isPlaying {
-                                self?.updateButtonState(type: .compact, .idle)
-                                self?.updateButtonState(type: .large, .idle)
-                            }
-                    }
+        AudioHelper.shared.playerStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] source, isPlaying in
+                switch source {
+                case let .imported(panelType):
+                    self?.updateButtonState(type: panelType, isPlaying ? .playing : .idle)
+                default: if isPlaying {
+                    self?.updateButtonState(type: .compact, .idle)
+                    self?.updateButtonState(type: .large, .idle)
                 }
-                .store(in: &cancellables)
-            await AudioHelper.shared.recorderStatePublisher
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] isRecording in
-                    if isRecording {
-                        self?.updateButtonState(type: .compact, .idle)
-                        self?.updateButtonState(type: .large, .idle)
-                    }
                 }
-                .store(in: &cancellables)
-        }
+            }
+            .store(in: &cancellables)
+        
+        AudioHelper.shared.recorderStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isRecording in
+                if isRecording {
+                    self?.updateButtonState(type: .compact, .idle)
+                    self?.updateButtonState(type: .large, .idle)
+                }
+            }
+            .store(in: &cancellables)
     }
-
-    func configureAudioHelper() async {
-        await AudioHelper.shared
+    
+    func configureAudioHelper() {
+        AudioHelper.shared
             .playType(.full)
             .isConcurrent(false)
     }
-
+    
     @MainActor
     func togglePlayPause(_ type: MusicPanelType) {
         Task { [weak self] in
             guard let self else { return }
-            await self.configureAudioHelper()
+            
+            configureAudioHelper()
+            
             if buttonState == .playing {
                 await AudioHelper.shared.stopPlaying()
                 return
@@ -95,13 +96,13 @@ final class MusicPanelViewModel: @unchecked Sendable {
             }
         }
     }
-
+    
     private func updateButtonState(type: MusicPanelType, _ state: AudioButtonState) {
         if self.type == type {
             buttonState = state
         }
     }
-
+    
     private func getPreviewData() {
         if isMIDI { return }
         guard let previewUrl = music?.previewUrl else { return }
@@ -109,7 +110,7 @@ final class MusicPanelViewModel: @unchecked Sendable {
             preview = await dataDownloadRepository.downloadData(url: previewUrl)
         }
     }
-
+    
     private func getArtworkData() {
         guard let artworkUrl = music?.artworkUrl else { return }
         Task { @MainActor in

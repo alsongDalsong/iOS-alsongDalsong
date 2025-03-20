@@ -155,3 +155,24 @@ final class ASButton: UIButton {
         }
     }
 }
+
+private extension ASButton {
+    /// 버튼이 눌렸을 때 효과를 적용하는 메서드
+    func applyHighlightEffect() {
+        if isHighlighted {
+            transform = CGAffineTransform(translationX: 3, y: 3)
+            layer.shadowOffset = .zero
+        } else {
+            transform = .identity
+            layer.shadowOffset = CGSize(width: 4, height: 4)
+        }
+    }
+    
+    /// 버튼 초기설정을 담당하는 메서드
+    func setupButton() {
+        setShadow()
+        configurationUpdateHandler = { [weak self] _ in
+            self?.applyHighlightEffect()
+        }
+    }
+}

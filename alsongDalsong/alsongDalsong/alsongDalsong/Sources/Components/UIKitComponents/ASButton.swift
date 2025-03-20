@@ -77,14 +77,15 @@ final class ASButton: UIButton {
     }
 
     func bind(
-        to dataSource: Published<Data?>.Publisher
+        to dataSource: Published<Data?>.Publisher,
+        baseBackgroundColor: UIColor = .asGreen
     ) {
         dataSource
             .receive(on: DispatchQueue.main)
             .compactMap { $0 }
             .sink { [weak self] data in
+                self?.configuration?.baseBackgroundColor = baseBackgroundColor
                 self?.isEnabled = true
-                self?.configuration?.baseBackgroundColor = .asGreen
             }
             .store(in: &cancellables)
     }

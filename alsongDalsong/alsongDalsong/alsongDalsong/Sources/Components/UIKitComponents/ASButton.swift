@@ -101,9 +101,7 @@ final class ASButton: UIButton {
     }
 
     enum ASButtonType {
-        case disabled
         case needMorePlayers
-        case idle(String, UIColor?)
         case startRecord, recording, reRecord
         case complete
         case submit, submitted
@@ -111,12 +109,10 @@ final class ASButton: UIButton {
         case startWaiting, endWaiting
         case next
         case nextResultWaiting
-
-        var text: String? {
+        
+        var text: String {
             switch self {
-                case .disabled: nil
                 case .needMorePlayers: String(localized: "게임 인원 부족")
-                case let .idle(string, _): string
                 case .startRecord: String(localized: "녹음하기")
                 case .recording: String(localized: "녹음중")
                 case .reRecord: String(localized: "재녹음")
@@ -142,7 +138,6 @@ final class ASButton: UIButton {
         var backgroundColor: UIColor? {
             switch self {
                 case .needMorePlayers: .asOrange
-                case let .idle(_, color): color
                 case .startRecord: .systemRed
                 case .recording: .asLightRed
                 case .reRecord: .asOrange
@@ -152,6 +147,14 @@ final class ASButton: UIButton {
                 case .endWaiting, .nextResultWaiting: .systemGray2
                 default: nil
             }
+        }
+        
+        var textStyle: UIFont.TextStyle {
+            .largeTitle
+        }
+
+        var cornerStyle: UIButton.Configuration.CornerStyle {
+            .medium
         }
     }
 }

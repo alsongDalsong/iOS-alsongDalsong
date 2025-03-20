@@ -47,19 +47,25 @@ final class AudioHelper: @unchecked Sendable {
         recorderDataSubject.eraseToAnyPublisher()
     }
 
-    func isRecording() async -> Bool {
-        guard let recorder else { return false }
-        return await recorder.isRecording()
+    var isRecording: Bool {
+        get async {
+            guard let recorder else { return false }
+            return await recorder.isRecording()
+        }
     }
 
-    func isPlaying() async -> Bool {
-        guard let player else { return false }
-        return await player.isPlaying()
+    var isPlaying: Bool {
+        get async {
+            guard let player else { return false }
+            return await player.isPlaying()
+        }
     }
     
-    func isPlayingMIDI() async -> Bool {
-        guard let midiPlayer else { return false }
-        return await midiPlayer.isPlaying()
+    var isPlayingMIDI: Bool {
+        get async {
+            guard let midiPlayer else { return false }
+            return await midiPlayer.isPlaying()
+        }
     }
 
     private func removePlayer() {
@@ -217,7 +223,7 @@ extension AudioHelper {
     }
 
     private func checkPlayerState() async -> Bool {
-        if await isPlaying() {
+        if await isPlaying {
             await player?.stopPlaying()
             removePlayer()
             playerStateSubject.send((source, false))
@@ -226,7 +232,7 @@ extension AudioHelper {
     }
     
     private func checkMIDIPlayerState() async -> Bool {
-        if await isPlayingMIDI() {
+        if await isPlayingMIDI {
             await midiPlayer?.stopPlaying()
             removePlayer()
             playerStateSubject.send((source, false))
@@ -270,7 +276,7 @@ extension AudioHelper {
     }
 
     private func checkRecorderState() async -> Bool {
-        if await isRecording(), !isConcurrent { return false }
+        if await isRecording, !isConcurrent { return false }
         return true
     }
 

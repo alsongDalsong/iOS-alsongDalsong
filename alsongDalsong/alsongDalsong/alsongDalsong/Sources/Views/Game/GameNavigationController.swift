@@ -41,8 +41,8 @@ final class GameNavigationController: @unchecked Sendable {
         
         gameStateRepository.receiveKickOut()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isKickedOut in
-                guard isKickedOut else { return }
+            .filter { $0 }
+            .sink { [weak self] _ in
                 self?.leaveRoom()
                 let alert = SingleButtonAlertController(
                     titleText: .receiveKick) { _ in

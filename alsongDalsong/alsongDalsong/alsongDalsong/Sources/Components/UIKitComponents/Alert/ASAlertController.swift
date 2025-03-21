@@ -149,7 +149,7 @@ enum ASAlertText {
                 case .needMorePlayer: "알쏭달쏭은 여럿이서 할 수록\n재미있는 게임이에요!\n그래도 하시겠어요?"
                 case .back: "이전 화면으로 돌아가시겠습니까?"
                 case .permissionDenied: "게임을 시작하기 위해서 마이크 권한이 필요해요"
-                case let .kick(playerName): String(format: NSLocalizedString("님을 강퇴하시겠습니까?", comment: ""), playerName)
+                case let .kick(playerName): String(format: NSLocalizedString("님을 강퇴하시겠습니까?\n강퇴 시 기존 방에는 영구적으로 재입장이 불가능합니다!", comment: ""), playerName)
                 case .receiveKick: "강퇴 되었습니다."
             }
         }

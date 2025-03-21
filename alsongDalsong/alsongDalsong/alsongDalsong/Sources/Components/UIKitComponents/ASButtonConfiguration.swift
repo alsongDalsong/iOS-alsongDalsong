@@ -9,7 +9,6 @@ extension ASButton {
         let backgroundColor: UIColor?
         let cornerStyle: UIButton.Configuration.CornerStyle
         let baseForegroundColor: UIColor
-        var previousBackgroundColor: UIColor? = nil
         
         init(
             systemImageName: String? = nil,
@@ -17,8 +16,7 @@ extension ASButton {
             textStyle: UIFont.TextStyle = .largeTitle,
             backgroundColor: UIColor? = nil,
             cornerStyle: UIButton.Configuration.CornerStyle = .medium,
-            baseForegroundColor: UIColor = .asBlack,
-            previousBackgroundColor: UIColor? = nil
+            baseForegroundColor: UIColor = .asBlack
         ) {
             self.systemImageName = systemImageName
             self.text = text
@@ -26,7 +24,6 @@ extension ASButton {
             self.textStyle = textStyle
             self.cornerStyle = cornerStyle
             self.baseForegroundColor = baseForegroundColor
-            self.previousBackgroundColor = previousBackgroundColor
         }
         
         /// 버튼의 스타일을 만드는 메소드

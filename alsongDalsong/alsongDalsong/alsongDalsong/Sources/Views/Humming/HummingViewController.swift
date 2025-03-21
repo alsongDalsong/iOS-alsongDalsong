@@ -43,7 +43,7 @@ final class HummingViewController: UIViewController {
     private func setupUI() {
         recordButton.setConfiguration(.startRecord)
         submitButton.setConfiguration(.submit)
-        submitButton.setEnabled(false)
+        submitButton.setDisabledState()
         buttonStack.axis = .horizontal
         buttonStack.spacing = 16
         buttonStack.addArrangedSubview(recordButton)
@@ -116,8 +116,8 @@ final class HummingViewController: UIViewController {
         progressBar.cancelCompletion()
         viewModel.didTappedSubmitButton()
         submitButton.setConfiguration(.submitted)
-        submitButton.setEnabled(false)
-        recordButton.setEnabled(false)
+        submitButton.setDisabledState()
+        recordButton.setDisabledState()
     }
 }
 

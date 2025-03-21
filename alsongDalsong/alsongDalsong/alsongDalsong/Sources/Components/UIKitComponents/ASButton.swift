@@ -74,11 +74,18 @@ final class ASButton: UIButton {
             .store(in: &cancellables)
     }
     
-    /// 버튼의 활성화 여부를 결정하는 메서드입니다.
-    /// - Parameters:
-    ///    - isEnabled: `true`면 버튼을 활성화하고, `false`면 버튼을 비활성화합니다.
-    func setEnabled(_ isEnabled: Bool) {
-        isEnabled ? enableButton() : disableButton()
+    /// 버튼을 비활성화하면서 스타일을 변경하는 메서드입니다.
+    func setDisabledState() {
+        configurationData = ASButtonConfiguration(
+            systemImageName: configurationData?.systemImageName,
+            text: configurationData?.text,
+            textStyle: configurationData?.textStyle ?? .largeTitle,
+            backgroundColor: .systemGray2,
+            cornerStyle: configurationData?.cornerStyle ?? .medium,
+            baseForegroundColor: configurationData?.baseForegroundColor ?? .asBlack
+        )
+        isEnabled = false
+        applyConfiguration()
     }
 
     enum ASButtonType {
@@ -144,36 +151,6 @@ private extension ASButton {
     /// Configuration을 적용하는 메서드
     func applyConfiguration() {
         self.configuration = configurationData?.createConfiguration()
-    }
-
-    /// 버튼을 비활성화하고 색상을 변경하는 메서드
-    func disableButton() {
-        configurationData = ASButtonConfiguration(
-            systemImageName: configurationData?.systemImageName,
-            text: configurationData?.text,
-            textStyle: configurationData?.textStyle ?? .largeTitle,
-            backgroundColor: .systemGray2,
-            cornerStyle: configurationData?.cornerStyle ?? .medium,
-            baseForegroundColor: configurationData?.baseForegroundColor ?? .asBlack,
-            previousBackgroundColor: configuration?.baseBackgroundColor
-        )
-        isEnabled = false
-        applyConfiguration()
-    }
-
-    /// 버튼을 활성화하고 원래 색상으로 되돌리는 메서드
-    func enableButton() {
-        let previousBackgroundColor = configurationData?.previousBackgroundColor
-        configurationData = ASButtonConfiguration(
-            systemImageName: configurationData?.systemImageName,
-            text: configurationData?.text,
-            textStyle: configurationData?.textStyle ?? .largeTitle,
-            backgroundColor: previousBackgroundColor,
-            cornerStyle: configurationData?.cornerStyle ?? .medium,
-            baseForegroundColor: configurationData?.baseForegroundColor ?? .asBlack
-        )
-        isEnabled = true
-        applyConfiguration()
     }
 
     /// 버튼이 눌렸을 때 효과를 적용하는 메서드

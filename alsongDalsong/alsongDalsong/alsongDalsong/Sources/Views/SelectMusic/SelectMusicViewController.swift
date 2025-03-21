@@ -38,7 +38,7 @@ final class SelectMusicViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .asLightGray
         submitButton.setConfiguration(text: String(localized: "선택 완료"), backgroundColor: .asGreen)
-        submitButton.setEnabled(false)
+        submitButton.setDisabledState()
         let musicView = SelectMusicView(viewModel: viewModel)
         selectMusicView = UIHostingController(rootView: musicView)
         
@@ -103,7 +103,7 @@ final class SelectMusicViewController: UIViewController {
             progressBar.cancelCompletion()
             try await viewModel.submitMusic()
             submitButton.setConfiguration(.submitted)
-            submitButton.setEnabled(false)
+            submitButton.setDisabledState()
         } catch {
             throw error
         }

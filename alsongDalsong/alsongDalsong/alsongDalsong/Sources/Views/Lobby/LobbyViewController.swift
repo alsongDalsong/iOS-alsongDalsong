@@ -48,12 +48,12 @@ final class LobbyViewController: UIViewController {
                     }
                     else {
                         self?.startButton.setConfiguration(.needMorePlayers)
-                        self?.startButton.setEnabled(false)
+                        self?.startButton.setDisabledState()
                     }
                 }
                 else {
                     self?.startButton.setConfiguration(.startWaiting)
-                    self?.startButton.setEnabled(false)
+                    self?.startButton.setDisabledState()
                 }
             }
             .store(in: &cancellables)

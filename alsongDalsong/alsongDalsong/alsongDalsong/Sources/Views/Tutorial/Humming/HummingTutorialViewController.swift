@@ -69,7 +69,7 @@ final class HummingTutorialViewController: UIViewController {
 
         recordButton.setConfiguration(.startRecord)
         submitButton.setConfiguration(.submit)
-        submitButton.setEnabled(false)
+        submitButton.setDisabledState()
 
         buttonStack.axis = .horizontal
         buttonStack.spacing = 16

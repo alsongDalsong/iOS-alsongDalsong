@@ -60,7 +60,7 @@ class HummingResultViewController: UIViewController {
         viewModel?.isHost == true
         ? nextButton.setConfiguration(.next)
         : nextButton.setConfiguration(.nextResultWaiting)
-        nextButton.setEnabled(false)
+        nextButton.setDisabledState()
     }
 
     private func setAction() {
@@ -126,7 +126,7 @@ class HummingResultViewController: UIViewController {
                 }, for: .touchUpInside)
             }
         } else {
-            nextButton.setEnabled(false)
+            nextButton.setDisabledState()
         }
     }
     
@@ -159,7 +159,7 @@ class HummingResultViewController: UIViewController {
                         self?.showLobbyLoading()
                     }, for: .touchUpInside)
                 } else {
-                    self?.nextButton.setEnabled(false)
+                    self?.nextButton.setDisabledState()
                 }
             }
             .store(in: &cancellables)

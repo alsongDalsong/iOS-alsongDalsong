@@ -47,7 +47,7 @@ final class SubmitAnswerViewController: UIViewController {
     private func setupUI() {
         selectAnswerButton.setConfiguration(text: String(localized: "정답 선택"), backgroundColor: .asLightSky)
         submitButton.setConfiguration(text: String(localized: "정답 제출"), backgroundColor: .asLightGray)
-        submitButton.setEnabled(false)
+        submitButton.setDisabledState()
         buttonStack.axis = .horizontal
         buttonStack.spacing = 16
         buttonStack.addArrangedSubview(selectAnswerButton)
@@ -107,8 +107,8 @@ final class SubmitAnswerViewController: UIViewController {
             progressBar.cancelCompletion()
             try await viewModel.submitAnswer()
             submitButton.setConfiguration(.submitted)
-            submitButton.setEnabled(false)
-            selectAnswerButton.setEnabled(false)
+            submitButton.setDisabledState()
+            selectAnswerButton.setDisabledState()
         } catch {
             throw error
         }

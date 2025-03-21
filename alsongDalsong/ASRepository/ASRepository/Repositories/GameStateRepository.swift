@@ -22,7 +22,6 @@ final class GameStateRepository: GameStateRepositoryProtocol {
     
     func receiveKickOut() -> AnyPublisher<Bool, Never> {
         mainRepository.isKickedOut
-            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 }

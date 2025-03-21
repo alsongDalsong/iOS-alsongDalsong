@@ -20,7 +20,6 @@ final class MainRepository: MainRepositoryProtocol {
     var submits = CurrentValueSubject<[ASEntity.Answer]?, Never>(nil)
     var records = CurrentValueSubject<[ASEntity.Record]?, Never>(nil)
     var selectedRecords = CurrentValueSubject<[UInt8]?, Never>(nil)
-
     var isKickedOut = PassthroughSubject<Bool, Never>()
 
     private let databaseManager: ASFirebaseDatabaseProtocol

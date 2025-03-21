@@ -82,7 +82,7 @@ struct LobbyView: View {
                 }
             }
         )
-        if let topVC = UIApplication.shared.topViewController() {
+        if let topVC = UIApplication.shared.topViewController(), topVC is LobbyViewController {
             topVC.presentAlert(alertContrller)
         }
     }

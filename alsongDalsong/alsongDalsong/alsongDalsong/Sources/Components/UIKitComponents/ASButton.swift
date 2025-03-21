@@ -22,7 +22,7 @@ final class ASButton: UIButton {
     ///   - systemImageName: SF Symbol 이미지를 삽입을 원할 경우 "play.fill" 과 같이 systemName 입력.
     ///   - text: 버튼에 쓰일 텍스트
     ///   - textStyle: 버튼에 쓰일 텍스트 스타일
-    ///   - backgroundColor: UIColor 형태로 색깔 입력.  (ex .asYellow)
+    ///   - backgroundColor: UIColor 형태로 색깔 입력.  (e.g. .asYellow)
     ///   - cornerStyle: 코너 스타일
     ///   - baseForegroundColor: 글씨 컬러
     func setConfiguration(

@@ -262,19 +262,18 @@
         }
       }
     },
-    "님을 강퇴하시겠습니까?\\n강퇴 시 기존 방에는 영구적으로 재입장이 불가능합니다!" : {
-      "extractionState" : "manual",
+    "님을 강퇴하시겠습니까?\n강퇴 시 기존 방에는 영구적으로 재입장이 불가능합니다!" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Are you sure you want to kick %@ out?\\nOnce kicked, they will not be able to rejoin the room permanently!"
+            "value" : "Are you sure you want to kick %@ out?\nOnce kicked, they will not be able to rejoin the room permanently!"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@님을 강퇴하시겠습니까?\\n강퇴 시 기존 방에는 영구적으로 재입장이 불가능합니다!"
+            "value" : "%@님을 강퇴하시겠습니까?\n강퇴 시 기존 방에는 영구적으로 재입장이 불가능합니다!"
           }
         }
       }
@@ -536,17 +535,6 @@
         }
       }
     },
-    "삶" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Life"
-          }
-        }
-      }
-    },
     "사냥꾼" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -565,6 +553,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Master"
+          }
+        }
+      }
+    },
+    "삶" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Life"
           }
         }
       }

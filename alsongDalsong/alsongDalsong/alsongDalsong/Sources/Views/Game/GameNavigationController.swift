@@ -38,6 +38,20 @@ final class GameNavigationController: @unchecked Sendable {
                 self?.gameInfo = gameState
             }
             .store(in: &subscriptions)
+        
+        gameStateRepository.receiveKickOut()
+            .receive(on: DispatchQueue.main)
+            .filter { $0 }
+            .sink { [weak self] _ in
+                self?.leaveRoom()
+                let alert = SingleButtonAlertController(
+                    titleText: .receiveKick) { _ in
+                    self?.navigationController.popToRootViewController(animated: true)
+                    self?.navigationController.navigationBar.isHidden = true
+                }
+                self?.navigationController.presentAlert(alert)
+            }
+            .store(in: &subscriptions)
     }
 
     private func setupNavigationBar(for viewController: UIViewController) {

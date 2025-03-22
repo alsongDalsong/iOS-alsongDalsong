@@ -96,6 +96,7 @@ private extension ASNetworkManager {
         case serviceUnavailable = 503
         case gatewayTimeout = 504
         case startedRoom = 452
+        case bannedPlayer = 453
         case unknown
 
         var description: String {
@@ -144,6 +145,8 @@ private extension ASNetworkManager {
                     return "게이트웨이 시간 초과: 게이트웨이가 요청에 대한 응답을 받지 못했습니다."
                 case .startedRoom:
                     return "이미 게임이 시작된 방입니다."
+                case .bannedPlayer:
+                    return "해당 방에서 강퇴되어 참여할 수 없습니다."
                 case .unknown:
                     return "알 수 없는 오류: 예상하지 못한 오류가 발생했습니다."
             }

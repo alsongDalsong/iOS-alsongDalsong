@@ -114,4 +114,14 @@ final class LobbyViewModel: ObservableObject, @unchecked Sendable {
             }
         }
     }
+    
+    func kickUser(userID: String) async throws {
+        do {
+            _ = try await roomActionRepository.kickPlayer(roomNumber: roomNumber, userID: userID)
+        } catch {
+            let error = ASErrors(type: .kickUser, reason: error.localizedDescription, file: #file, line: #line)
+            LogHandler.handleError(error)
+            throw error
+        }
+    }
 }

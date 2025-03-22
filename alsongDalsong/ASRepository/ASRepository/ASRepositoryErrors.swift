@@ -11,7 +11,7 @@ struct ASRepositoryErrors: LocalizedError {
         case getAvatarUrls
         case postRecording, postResetGame
         case uploadRecording
-        case createRoom, joinRoom, leaveRoom, startGame, changeMode, changeRecordOrder, resetGame, sendRequest
+        case createRoom, joinRoom, leaveRoom, startGame, changeMode, changeRecordOrder, resetGame, sendRequest, kickUser
         case submitAnswer
     }
 

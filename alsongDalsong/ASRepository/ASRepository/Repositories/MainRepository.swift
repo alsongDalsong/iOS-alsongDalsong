@@ -2,9 +2,9 @@ import ASDecoder
 import ASEntity
 import ASLogKit
 import ASNetworkKit
+import ASRepositoryProtocol
 import Combine
 import Foundation
-import ASRepositoryProtocol
 
 final class MainRepository: MainRepositoryProtocol {
     var myId: String? { ASFirebaseAuth.myID }
@@ -20,6 +20,7 @@ final class MainRepository: MainRepositoryProtocol {
     var submits = CurrentValueSubject<[ASEntity.Answer]?, Never>(nil)
     var records = CurrentValueSubject<[ASEntity.Record]?, Never>(nil)
     var selectedRecords = CurrentValueSubject<[UInt8]?, Never>(nil)
+    var isKickedOut = PassthroughSubject<Bool, Never>()
 
     private let databaseManager: ASFirebaseDatabaseProtocol
     private let networkManager: ASNetworkManagerProtocol
@@ -43,6 +44,14 @@ final class MainRepository: MainRepositoryProtocol {
                 }
             } receiveValue: { [weak self] room in
                 guard let self else { return }
+
+                if let bannedPlayerIDList = room.bannedPlayers, let myID = ASFirebaseAuth.myID {
+                    if bannedPlayerIDList.contains(myID) {
+                        isKickedOut.send(true)
+                        return
+                    }
+                }
+
                 update(\.number, with: room.number)
                 update(\.host, with: room.host)
                 update(\.players, with: room.players)
@@ -61,6 +70,7 @@ final class MainRepository: MainRepositoryProtocol {
 
     func disconnectRoom() {
         databaseManager.removeRoomListener()
+        cancellables.removeAll()
         update(\.number, with: nil)
         update(\.host, with: nil)
         update(\.players, with: nil)
@@ -105,7 +115,7 @@ final class MainRepository: MainRepositoryProtocol {
             throw ASRepositoryErrors(type: .postRecording, reason: error.localizedDescription, file: #file, line: #line)
         }
     }
-    
+
     func postResetGame() async throws -> Bool {
         do {
             let queryItems = [URLQueryItem(name: "userId", value: ASFirebaseAuth.myID),

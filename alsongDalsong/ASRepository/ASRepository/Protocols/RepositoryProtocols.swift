@@ -50,10 +50,12 @@ public protocol RoomActionRepositoryProtocol: Sendable {
     func changeMode(roomNumber: String, mode: Mode) async throws -> Bool
     func changeRecordOrder(roomNumber: String) async throws -> Bool
     func resetGame() async throws -> Bool
+    @discardableResult func kickPlayer(roomNumber: String, userID: String) async throws -> Bool
 }
 
 public protocol GameStateRepositoryProtocol {
     func getGameState() -> AnyPublisher<GameState?, Never>
+    func receiveKickOut() -> AnyPublisher<Bool, Never>
 }
 
 public protocol HummingResultRepositoryProtocol {

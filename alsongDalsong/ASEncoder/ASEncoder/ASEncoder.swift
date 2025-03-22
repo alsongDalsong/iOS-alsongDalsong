@@ -1,3 +1,4 @@
+import ASLogKit
 import Foundation
 
 public enum ASEncoder {
@@ -10,7 +11,8 @@ public enum ASEncoder {
 
             return try encoder.encode(value)
         } catch {
-            throw ASEncoderErrors(type: .encode, reason: error.localizedDescription, file: #file, line: #line)
+            ErrorHandler.handle(error)
+            throw ASEncoderError.encode
         }
     }
 }

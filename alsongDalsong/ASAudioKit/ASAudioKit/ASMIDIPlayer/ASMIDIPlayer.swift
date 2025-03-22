@@ -1,3 +1,4 @@
+import ASLogKit
 import AVFoundation
 
 enum Constant {
@@ -27,12 +28,8 @@ public actor ASMIDIPlayer {
             try loadSoundFont(from: Constant.soundFontURL)
             try loadMIDI(from: midiURL)
         } catch {
-            throw ASAudioErrors(
-                type: .startPlaying,
-                reason: error.localizedDescription,
-                file: #file,
-                line: #line
-            )
+            ErrorHandler.handle(error)
+            throw ASAudioError.startPlaying
         }
         sequencer?.currentPositionInBeats = 0
         try sequencer?.start()

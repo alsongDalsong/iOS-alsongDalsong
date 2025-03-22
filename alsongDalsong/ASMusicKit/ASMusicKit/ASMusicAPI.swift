@@ -1,4 +1,5 @@
 import ASEntity
+import ASLogKit
 import Foundation
 import MusicKit
 
@@ -55,10 +56,11 @@ public struct ASMusicAPI {
                         return music
                     }
                 } catch {
-                    throw ASMusicErrors(type: .search, reason: error.localizedDescription, file: #file, line: #line)
+                    ErrorHandler.handle(error)
+                    throw ASMusicError.search
                 }
             default:
-            throw ASMusicErrors(type: .notAuthorized, reason: "", file: #file, line: #line)
+                throw ASMusicError.notAuthorized
         }
     }
 
@@ -73,7 +75,7 @@ public struct ASMusicAPI {
 
                     let playlistWithTrack = try await playlist.with([.tracks])
                     guard let tracks = playlistWithTrack.tracks else {
-                        throw ASMusicErrors(type: .playListHasNoSongs, reason: "", file: #file, line: #line)
+                        throw ASMusicError.playListHasNoSongs
                     }
 
                     if let song = tracks.randomElement() {
@@ -87,10 +89,11 @@ public struct ASMusicAPI {
                         )
                     }
                 } catch {
-                    throw ASMusicErrors(type: .search, reason: "", file: #file, line: #line)
+                    ErrorHandler.handle(error)
+                    throw ASMusicError.search
                 }
             default:
-            throw ASMusicErrors(type: .notAuthorized, reason: "", file: #file, line: #line)
+                throw ASMusicError.notAuthorized
         }
         return ASEntity.Music(id: "nil", title: nil, artist: nil, artworkUrl: nil, previewUrl: nil, artworkBackgroundColor: nil)
     }

@@ -1,4 +1,5 @@
 import ASEntity
+import ASLogKit
 import ASMusicKit
 import ASRepositoryProtocol
 import Combine
@@ -136,9 +137,8 @@ final class SubmitAnswerViewModel: ObservableObject, @unchecked Sendable {
             await updateSearchList(with: searchList)
             await updateIsSearching(with: false)
         } catch {
-            let error = ASErrors(type: .searchMusicOnSubmit, reason: error.localizedDescription, file: #file, line: #line)
-            LogHandler.handleError(error)
-            throw error
+            ErrorHandler.handle(error)
+            throw ASError.searchMusicOnSubmit
         }
     }
 
@@ -157,9 +157,8 @@ final class SubmitAnswerViewModel: ObservableObject, @unchecked Sendable {
         do {
             let _ = try await submitsRepository.submitAnswer(answer: selectedMusic)
         } catch {
-            let error = ASErrors(type: .submitAnswer, reason: error.localizedDescription, file: #file, line: #line)
-            LogHandler.handleError(error)
-            throw error
+            ErrorHandler.handle(error)
+            throw ASError.submitAnswer
         }
     }
 

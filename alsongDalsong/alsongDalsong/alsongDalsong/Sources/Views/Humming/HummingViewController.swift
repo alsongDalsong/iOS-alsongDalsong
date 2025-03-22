@@ -113,10 +113,14 @@ final class HummingViewController: UIViewController {
     }
 
     private func submitHumming() async throws {
-        progressBar.cancelCompletion()
-        viewModel.didTappedSubmitButton()
-        submitButton.updateButton(.submitted)
-        recordButton.updateButton(.disabled)
+        do {
+            progressBar.cancelCompletion()
+            try await viewModel.submitHumming()
+            submitButton.updateButton(.submitted)
+            recordButton.updateButton(.disabled)
+        } catch {
+            throw error
+        }
     }
 }
 

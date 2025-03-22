@@ -1,4 +1,5 @@
 import ASEntity
+import ASLogKit
 import ASRepositoryProtocol
 import Combine
 import Foundation
@@ -96,9 +97,8 @@ final class LobbyViewModel: ObservableObject, @unchecked Sendable {
         do {
             _ = try await roomActionRepository.startGame(roomNumber: roomNumber)
         } catch {
-            let error = ASErrors(type: .gameStart, reason: error.localizedDescription, file: #file, line: #line)
-            LogHandler.handleError(error.localizedDescription)
-            throw error
+            ErrorHandler.handle(error)
+            throw ASError.gameStart
         }
     }
 
@@ -109,8 +109,7 @@ final class LobbyViewModel: ObservableObject, @unchecked Sendable {
                     _ = try await self.roomActionRepository.changeMode(roomNumber: roomNumber, mode: mode)
                 }
             } catch {
-                let error = ASErrors(type: .changeMode, reason: error.localizedDescription, file: #file, line: #line)
-                LogHandler.handleError(error)
+                ErrorHandler.handle(error)
             }
         }
     }

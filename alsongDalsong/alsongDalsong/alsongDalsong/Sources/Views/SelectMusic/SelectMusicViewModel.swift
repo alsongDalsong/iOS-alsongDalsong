@@ -1,4 +1,5 @@
 import ASEntity
+import ASLogKit
 import ASMusicKit
 import ASRepositoryProtocol
 import Combine
@@ -113,9 +114,8 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
             do {
                 _ = try await answersRepository.submitMusic(answer: selectedMusic)
             } catch {
-                let error = ASErrors(type: .submitMusic, reason: error.localizedDescription, file: #file, line: #line)
-                LogHandler.handleError(error)
-                throw error
+                ErrorHandler.handle(error)
+                throw ASError.submitMusic
             }
         }
     }
@@ -128,9 +128,8 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
             await updateSearchList(with: searchList)
             await updateIsSearching(with: false)
         } catch {
-            let error = ASErrors(type: .searchMusicOnSelect, reason: error.localizedDescription, file: #file, line: #line)
-            LogHandler.handleError(error)
-            throw error
+            ErrorHandler.handle(error)
+            throw ASError.searchMusicOnSelect
         }
     }
     
@@ -139,9 +138,8 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
         do {
             selectedMusic = try await musicAPI.randomSong(from: "pl.u-aZb00o7uPlzMZzr")
         } catch {
-            let error = ASErrors(type: .randomMusic, reason: error.localizedDescription, file: #file, line: #line)
-            LogHandler.handleError(error)
-            throw error
+            ErrorHandler.handle(error)
+            throw ASError.randomMusic
         }
     }
     

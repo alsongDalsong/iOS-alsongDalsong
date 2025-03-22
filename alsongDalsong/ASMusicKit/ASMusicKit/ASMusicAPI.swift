@@ -64,21 +64,17 @@ public struct ASMusicAPI {
         }
     }
 
-    public func randomSong(from playlistId: String) async throws -> ASEntity.Music {
+    public func getSong(from songId: String) async throws -> ASEntity.Music {
         let status = await MusicAuthorization.request()
         switch status {
             case .authorized:
                 do {
-                    let request = MusicCatalogResourceRequest<MusicKit.Playlist>(matching: \.id, equalTo: MusicItemID(rawValue: playlistId))
-                    let playlistResponse = try await request.response()
-                    let playlist = playlistResponse.items.first!
+                    var request = MusicCatalogResourceRequest<MusicKit.Song>(matching: \.id, equalTo: MusicItemID(rawValue: songId))
+                    request.limit = 1
 
-                    let playlistWithTrack = try await playlist.with([.tracks])
-                    guard let tracks = playlistWithTrack.tracks else {
-                        throw ASMusicError.playListHasNoSongs
-                    }
+                    let response = try await request.response()
 
-                    if let song = tracks.randomElement() {
+                    if let song = response.items.first {
                         return ASEntity.Music(
                             id: song.id.rawValue,
                             title: song.title,

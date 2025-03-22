@@ -1,4 +1,5 @@
 import ASCacheKitProtocol
+import ASLogKit
 import Foundation
 
 struct ASNetworkManager: ASNetworkManagerProtocol {
@@ -18,7 +19,7 @@ struct ASNetworkManager: ASNetworkManagerProtocol {
         option: CacheOption = .both
     ) async throws -> Data {
         guard let url = endpoint.url else {
-            throw ASNetworkErrors(type: .urlError, reason: "", file: #file, line: #line)
+            throw ASNetworkError.urlError
         }
         if let cache = try await loadCache(from: url, option: option) { return cache }
 
@@ -48,7 +49,7 @@ struct ASNetworkManager: ASNetworkManagerProtocol {
 
     private func urlRequest(for endpoint: any Endpoint) throws -> URLRequest {
         guard let url = endpoint.url else {
-            throw ASNetworkErrors(type: .urlError, reason: "", file: #file, line: #line)
+            throw ASNetworkError.urlError
         }
         return RequestBuilder(using: url)
             .setHeader(endpoint.headers)
@@ -59,7 +60,7 @@ struct ASNetworkManager: ASNetworkManagerProtocol {
 
     private func validate(response: URLResponse) throws {
         guard let httpResponse = response as? HTTPURLResponse else {
-            throw ASNetworkErrors(type: .responseError, reason: "", file: #file, line: #line)
+            throw ASNetworkError.responseError
         }
 
         let statusCode = StatusCode(statusCode: httpResponse.statusCode)
@@ -67,7 +68,7 @@ struct ASNetworkManager: ASNetworkManagerProtocol {
             case .success, .noContent:
                 break
             default:
-            throw ASNetworkErrors(type: .serverError, reason: "", file: #file, line: #line)
+                throw ASNetworkError.statusError(description: statusCode.description)
         }
     }
 }

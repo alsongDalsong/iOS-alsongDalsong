@@ -13,6 +13,7 @@
 		4EB1ED372CE88E500012FFBA /* ASAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; };
 		4EB1ED382CE88E500012FFBA /* ASAudioKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8593659D2D3F77FE0086C8C4 /* ASAudioError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8593659C2D3F77F60086C8C4 /* ASAudioError.swift */; };
+		85A0E9F32D91582F009343BB /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		4E8907BE2CE2489A00D5B547 /* ASAudioKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ASAudioKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB1EC802CE7AA160012FFBA /* ASAudioDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ASAudioDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8593659C2D3F77F60086C8C4 /* ASAudioError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASAudioError.swift; sourceTree = "<group>"; };
+		85A0E9F22D91582F009343BB /* ASLogKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ASLogKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -99,6 +101,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85A0E9F32D91582F009343BB /* ASLogKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,6 +150,7 @@
 		4EB1ED362CE88E500012FFBA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				85A0E9F22D91582F009343BB /* ASLogKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

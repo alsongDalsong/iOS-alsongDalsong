@@ -1,3 +1,4 @@
+import ASLogKit
 import ASNetworkKit
 import ASEntity
 import UIKit
@@ -79,10 +80,10 @@ final class MainViewController: UIViewController {
                     try await join(roomNumber: roomNumber)
                     navigateToLobby(roomNumber: roomNumber)
                 }
-            } catch(let error) {
+            } catch {
                 createButton.isEnabled = true
                 joinButton.isEnabled = true
-                print("error: \(error)")
+                ErrorHandler.handle(error)
             }
         }
     }
@@ -106,17 +107,21 @@ final class MainViewController: UIViewController {
             } catch {
                 createButton.isEnabled = true
                 joinButton.isEnabled = true
-                print("error: \(error)")
+                ErrorHandler.handle(error)
             }
         }
     }
     
     private func join(roomNumber: String) async throws {
-        let endpoint = FirebaseEndpoint(path: .joinRoom, method: .post)
-            .update(\.headers, with: ["Content-Type": "application/json"])
-        let bodyData = ["roomNumber": roomNumber, "userId": player.id]
-        let body = try JSONSerialization.data(withJSONObject: bodyData, options: [])
-        try await networkManger.sendRequest(to: endpoint, body: body)
+        do {
+            let endpoint = FirebaseEndpoint(path: .joinRoom, method: .post)
+                .update(\.headers, with: ["Content-Type": "application/json"])
+            let bodyData = ["roomNumber": roomNumber, "userId": player.id]
+            let body = try JSONSerialization.data(withJSONObject: bodyData, options: [])
+            try await networkManger.sendRequest(to: endpoint, body: body)
+        } catch {
+            throw error
+        }
     }
     
     private func connectToFirebase() async throws {

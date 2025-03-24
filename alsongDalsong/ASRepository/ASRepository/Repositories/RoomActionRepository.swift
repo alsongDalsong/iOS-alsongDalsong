@@ -50,7 +50,7 @@ final class RoomActionRepository: RoomActionRepositoryProtocol {
             return roomNumberResponse == roomNumber
         } catch {
             ErrorHandler.handle(error)
-            throw ASRepositoryError.joinRoom
+            throw ASRepositoryError.joinRoom(description: error.localizedDescription)
         }
     }
     
@@ -133,6 +133,7 @@ final class RoomActionRepository: RoomActionRepositoryProtocol {
             }
             return isSuccess
         } catch {
+            ErrorHandler.handle(error)
             throw ASRepositoryError.kickUser
         }
     }
@@ -146,7 +147,7 @@ final class RoomActionRepository: RoomActionRepositoryProtocol {
             return response
         } catch {
             ErrorHandler.handle(error)
-            throw ASRepositoryError.sendRequest
+            throw ASRepositoryError.sendRequest(description: error.localizedDescription)
         }
     }
 }

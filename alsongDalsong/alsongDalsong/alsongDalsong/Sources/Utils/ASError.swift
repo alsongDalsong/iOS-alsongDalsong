@@ -3,7 +3,7 @@ import Foundation
 enum ASError: LocalizedError {
     case submitHumming
     case gameStart, kickUser
-    case joinRoom, createRoom
+    case joinRoom(description: String), createRoom
     case submitRehumming
     case changeRecordOrder, navigateToLobby
     case submitMusic, searchMusicOnSelect, randomMusic
@@ -14,7 +14,7 @@ enum ASError: LocalizedError {
             case .submitHumming: "허밍을 제출하는 중 오류가 발생했습니다"
             case .gameStart: "게임 시작 중 오류가 발생했습니다"
             case .kickUser: "유저를 강퇴하는 중 오류가 발생했습니다"
-            case .joinRoom: "방에 참가하는 중 오류가 발생했습니다"
+            case .joinRoom(let description): "\(description)"
             case .createRoom: "방을 생성하는 중 오류가 발생했습니다"
             case .submitRehumming: "재허밍을 제출하는 중 오류가 발생했습니다"
             case .changeRecordOrder: "녹음 순서를 변경하는 중 오류가 발생했습니다"

@@ -11,6 +11,7 @@
 		1B06307B2CE64E7C005300BF /* ASDecoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1B702E612CE5193F00124F73 /* ASDecoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1B702E6A2CE5193F00124F73 /* ASDecoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B702E612CE5193F00124F73 /* ASDecoder.framework */; };
 		8593659A2D3F71E80086C8C4 /* ASDecoderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859365982D3F71E40086C8C4 /* ASDecoderError.swift */; };
+		85A0E9F12D915817009343BB /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F02D915817009343BB /* ASLogKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		1B702E612CE5193F00124F73 /* ASDecoder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ASDecoder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1B702E692CE5193F00124F73 /* ASDecoderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ASDecoderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		859365982D3F71E40086C8C4 /* ASDecoderError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASDecoderError.swift; sourceTree = "<group>"; };
+		85A0E9F02D915817009343BB /* ASLogKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ASLogKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -82,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85A0E9F12D915817009343BB /* ASLogKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,6 +102,7 @@
 		1B0630792CE64E7C005300BF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				85A0E9F02D915817009343BB /* ASLogKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

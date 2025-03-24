@@ -1,6 +1,6 @@
-import AVFoundation
 import ASContainer
 import ASRepositoryProtocol
+import AVFoundation
 import Combine
 import UIKit
 
@@ -59,17 +59,8 @@ final class LoadingViewController: UIViewController {
             guard let avatarData,
                   let avatars = self?.viewModel?.avatars,
                   let selectedAvatar = self?.viewModel?.selectedAvatar else { return }
-
-            let userDefaults = UserDefaults.standard
-            let isFirstLaunchKey = "isFirstLaunch"
-            let isfirstLaunch = !userDefaults.bool(forKey: isFirstLaunchKey)
-
-            if isfirstLaunch {
-                self?.navigateToTutorial(avatars: avatars, selectedAvatar: selectedAvatar, avatarData: avatarData)
-                userDefaults.set(true, forKey: isFirstLaunchKey)
-            } else {
-                self?.navigateToOnboarding(avatars: avatars, selectedAvatar: selectedAvatar, avatarData: avatarData)
-            }
+            
+            self?.navigateToOnboarding(avatars: avatars, selectedAvatar: selectedAvatar, avatarData: avatarData)
         }
         
         bind(viewModel?.$loadingStatus) { [weak self] status in
@@ -108,34 +99,8 @@ final class LoadingViewController: UIViewController {
         navigationController.interactivePopGestureRecognizer?.isEnabled = false
         
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = windowScene.windows.first {
-            window.rootViewController = navigationController
-            window.makeKeyAndVisible()
-        }
-    }
-
-    private func navigateToTutorial(avatars: [URL], selectedAvatar: URL, avatarData: Data) {
-        
-        let avatarURL = Bundle.main.url(forResource: "AreYouCrazyHuman", withExtension: "png")
-        let player = TutorialPlayer(name: "나", avatarURL: avatars.randomElement())
-        let aiPlayer1 = TutorialPlayer(name: "AI Player1", avatarURL: avatarURL)
-        let aiPlayer2 = TutorialPlayer(name: "AI Player2", avatarURL: avatarURL)
-        
-        let tutorialGuideViewController = TutorialGuideViewController(
-            type: .lobby,
-            avatars: avatars,
-            selectedAvatar: selectedAvatar,
-            avatarData: avatarData,
-            inviteCode: inviteCode,
-            player: player,
-            aiPlayer1: aiPlayer1,
-            aiPlayer2: aiPlayer2
-        )
-
-        let navigationController = UINavigationController(rootViewController: tutorialGuideViewController)
-
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = windowScene.windows.first {
+           let window = windowScene.windows.first
+        {
             window.rootViewController = navigationController
             window.makeKeyAndVisible()
         }

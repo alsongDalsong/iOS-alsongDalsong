@@ -112,7 +112,8 @@ final class MainRepository: MainRepositoryProtocol {
             guard let success = responseDict["success"] else { return false }
             return success
         } catch {
-            throw ASRepositoryErrors(type: .postRecording, reason: error.localizedDescription, file: #file, line: #line)
+            ErrorHandler.handle(error)
+            throw ASRepositoryError.postRecording
         }
     }
 
@@ -134,7 +135,8 @@ final class MainRepository: MainRepositoryProtocol {
             guard let success = responseDict["success"] else { return false }
             return success
         } catch {
-            throw ASRepositoryErrors(type: .postResetGame, reason: error.localizedDescription, file: #file, line: #line)
+            ErrorHandler.handle(error)
+            throw ASRepositoryError.postResetGame
         }
     }
 }

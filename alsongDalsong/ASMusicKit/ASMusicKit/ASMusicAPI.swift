@@ -1,4 +1,5 @@
 import ASEntity
+import ASLogKit
 import Foundation
 import MusicKit
 
@@ -55,10 +56,11 @@ public struct ASMusicAPI {
                         return music
                     }
                 } catch {
-                    throw ASMusicErrors(type: .search, reason: error.localizedDescription, file: #file, line: #line)
+                    ErrorHandler.handle(error)
+                    throw ASMusicError.search
                 }
             default:
-                throw ASMusicErrors(type: .notAuthorized, reason: "", file: #file, line: #line)
+                throw ASMusicError.notAuthorized
         }
     }
 
@@ -83,10 +85,11 @@ public struct ASMusicAPI {
                         )
                     }
                 } catch {
-                    throw ASMusicErrors(type: .search, reason: "Apple Music Catalog로 부터 음악을 가져오는 데 실패하였습니다.", file: #file, line: #line)
+                    ErrorHandler.handle(error)
+                    throw ASMusicError.search
                 }
             default:
-                throw ASMusicErrors(type: .notAuthorized, reason: "Apple Music에 인증되지 않았습니다.", file: #file, line: #line)
+                throw ASMusicError.notAuthorized
         }
         return ASEntity.Music(id: "nil", title: nil, artist: nil, artworkUrl: nil, previewUrl: nil, artworkBackgroundColor: nil)
     }

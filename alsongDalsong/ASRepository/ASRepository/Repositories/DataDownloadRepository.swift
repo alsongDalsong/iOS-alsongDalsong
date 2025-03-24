@@ -19,7 +19,7 @@ final class DataDownloadRepository: DataDownloadRepositoryProtocol {
             let data = try await networkManager.sendRequest(to: endpoint, type: .none, body: nil, option: .both)
             return data
         } catch {
-            Logger.error("DataDownloadRepository.swift downloadData() 에러: \n\(error.localizedDescription)")
+            ErrorHandler.handle(error)
             return nil
         }
     }

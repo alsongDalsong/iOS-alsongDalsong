@@ -1,4 +1,5 @@
 import ASEntity
+import ASLogKit
 import ASRepositoryProtocol
 import Combine
 import Foundation
@@ -31,9 +32,8 @@ final class RehummingViewModel: @unchecked Sendable {
         do {
             _ = try await recordsRepository.uploadRecording(recordedData)
         } catch {
-            let error = ASErrors(type: .submitHumming, reason: error.localizedDescription, file: #file, line: #line)
-            LogHandler.handleError(error)
-            throw error
+            ErrorHandler.handle(error)
+            throw ASError.submitRehumming
         }
     }
 

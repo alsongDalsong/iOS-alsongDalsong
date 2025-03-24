@@ -13,7 +13,6 @@ final class AudioHelper: @unchecked Sendable {
 
     private var recorder: ASAudioRecorder?
     private var player: ASAudioPlayer?
-    private var midiPlayer: ASMIDIPlayer?
     private var source: FileSource = .imported(.large)
     private var playType: PlayType = .full
     private var isConcurrent: Bool = false
@@ -60,17 +59,9 @@ final class AudioHelper: @unchecked Sendable {
             return await player.isPlaying()
         }
     }
-    
-    var isPlayingMIDI: Bool {
-        get async {
-            guard let midiPlayer else { return false }
-            return await midiPlayer.isPlaying()
-        }
-    }
 
     private func removePlayer() {
         player = nil
-        midiPlayer = nil
     }
 
     private func removeRecorder() {
@@ -85,17 +76,6 @@ final class AudioHelper: @unchecked Sendable {
     func analyze(with data: Data) async -> [CGFloat] {
         do {
             let columns = try await ASAudioAnalyzer.analyze(data: data, samplesCount: 24)
-            return columns
-        } catch {
-            let error = ASErrors(type: .analyze, reason: error.localizedDescription, file: #file, line: #line)
-            LogHandler.handleError(error)
-            return []
-        }
-    }
-    
-    func analyze(with url: URL) async -> [CGFloat] {
-        do {
-            let columns = try await ASAudioAnalyzer.analyzeMIDI(url: url, samplesCount: 24)
             return columns
         } catch {
             let error = ASErrors(type: .analyze, reason: error.localizedDescription, file: #file, line: #line)
@@ -136,38 +116,6 @@ extension AudioHelper {
         }
         await play(file: file, option: option)
     }
-    
-    func startPlayingMIDI(
-        _ fileURL: URL,
-        sourceType type: FileSource = .imported(.large),
-        option: PlayType = .full,
-        needsWaveUpdate: Bool = false
-    ) async {
-        guard await checkRecorderState(), await checkMIDIPlayerState() else { return }
-        
-        setPlayOption(option: option)
-        sourceType(type)
-        makeMIDIPlayer()
-        await midiPlayer?.setOnPlaybackFinished { [weak self] in
-            await self?.stopPlaying()
-        }
-        
-        playerStateSubject.send((source, true))
-        
-        if needsWaveUpdate {
-            updatePlayIndex()
-        }
-        switch option {
-        case .full:
-            Task {
-                try await midiPlayer?.startPlaying(midiURL: fileURL, option: .full)
-            }
-        case let .partial(time):
-            Task {
-                try await midiPlayer?.startPlaying(midiURL: fileURL, option: .partial(time: time))
-            }
-        }
-    }
 
     func play(file: Data, option: PlayType) async {
         switch option {
@@ -193,7 +141,6 @@ extension AudioHelper {
 
     func stopPlaying() async {
         await player?.stopPlaying()
-        await midiPlayer?.stopPlaying()
         removePlayer()
         
         playerStateSubject.send((source, false))
@@ -215,23 +162,10 @@ extension AudioHelper {
     private func makePlayer() {
         player = ASAudioPlayer()
     }
-    
-    private func makeMIDIPlayer() {
-        midiPlayer = ASMIDIPlayer()
-    }
 
     private func checkPlayerState() async -> Bool {
         if await isPlaying {
             await player?.stopPlaying()
-            removePlayer()
-            playerStateSubject.send((source, false))
-        }
-        return true
-    }
-    
-    private func checkMIDIPlayerState() async -> Bool {
-        if await isPlayingMIDI {
-            await midiPlayer?.stopPlaying()
             removePlayer()
             playerStateSubject.send((source, false))
         }

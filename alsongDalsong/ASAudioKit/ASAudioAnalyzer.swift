@@ -34,46 +34,6 @@ public enum ASAudioAnalyzer {
         }
     }
     
-    public static func analyzeMIDI(url: URL, samplesCount: Int) async throws -> [CGFloat] {
-        let engine = AVAudioEngine()
-        let sampler = AVAudioUnitSampler()
-        engine.attach(sampler)
-        engine.connect(sampler, to: engine.mainMixerNode, format: nil)
-        try sampler.loadAudioFiles(at: [Constant.soundFontURL])
-        
-        let sequencer = AVAudioSequencer(audioEngine: engine)
-        try sequencer.load(from: url, options: .smf_ChannelsToTracks)
-        sequencer.currentPositionInSeconds = 0
-        
-        let outputFormat = engine.outputNode.inputFormat(forBus: 0)
-        let maxFrames: AVAudioFrameCount = 4096
-        try engine.enableManualRenderingMode(.offline, format: outputFormat, maximumFrameCount: maxFrames)
-        
-        try engine.start()
-        try sequencer.start()
-        
-        let sequenceLengthInBeats = sequencer.tracks.map(\.lengthInBeats).max() ?? 0
-        let durationSeconds = sequencer.seconds(forBeats: sequenceLengthInBeats)
-        let totalFrameCount = AVAudioFrameCount(durationSeconds * outputFormat.sampleRate)
-        
-        var renderedSamples = [Float]()
-        while engine.manualRenderingSampleTime < totalFrameCount {
-            guard let buffer = AVAudioPCMBuffer(pcmFormat: outputFormat, frameCapacity: maxFrames) else { break }
-            let framesToRender = min(maxFrames, totalFrameCount - AVAudioFrameCount(engine.manualRenderingSampleTime))
-            let status = try engine.renderOffline(framesToRender, to: buffer)
-            if status == .success, let channelData = buffer.floatChannelData?[0] {
-                let frameLength = Int(buffer.frameLength)
-                renderedSamples.append(contentsOf: UnsafeBufferPointer(start: channelData, count: frameLength))
-            } else {
-                break
-            }
-        }
-        
-        engine.stop()
-        
-        return processSamples(renderedSamples.map { $0 * 10 }, samplesCount: samplesCount)
-    }
-    
     private static func processSamples(_ samples: [Float], samplesCount: Int) -> [CGFloat] {
         let chunkSize = max(samples.count / samplesCount, 1)
         let chunkedSamples = samples.chunked(into: chunkSize)

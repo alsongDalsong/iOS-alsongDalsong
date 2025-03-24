@@ -25,21 +25,12 @@ struct MappedAnswer: Hashable, PlayerInfo {
 
 struct MappedRecord: Hashable, PlayerInfo {
     let recordData: Data?
-    var midiURL: URL?
     let recordAmplitudes: [CGFloat]
     var playerName: String
     var playerAvatarData: Data
 
     init(_ recordData: Data?, _ recordAmplitudes: [CGFloat], _ playerName: String?, _ playerAvatarData: Data?) {
         self.recordData = recordData
-        self.recordAmplitudes = recordAmplitudes
-        self.playerName = playerName ?? ""
-        self.playerAvatarData = playerAvatarData ?? Data()
-    }
-    
-    init(_ midiURL: URL, _ recordAmplitudes: [CGFloat], _ playerName: String?, _ playerAvatarData: Data?) {
-        self.midiURL = midiURL
-        self.recordData = nil
         self.recordAmplitudes = recordAmplitudes
         self.playerName = playerName ?? ""
         self.playerAvatarData = playerAvatarData ?? Data()

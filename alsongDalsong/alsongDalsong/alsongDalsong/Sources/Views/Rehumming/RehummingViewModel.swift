@@ -29,7 +29,7 @@ final class RehummingViewModel: @unchecked Sendable {
     func submitHumming() async throws {
         guard let recordedData else { return }
         do {
-            let result = try await recordsRepository.uploadRecording(recordedData)
+            _ = try await recordsRepository.uploadRecording(recordedData)
         } catch {
             let error = ASErrors(type: .submitHumming, reason: error.localizedDescription, file: #file, line: #line)
             LogHandler.handleError(error)

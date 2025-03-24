@@ -200,17 +200,15 @@ extension HummingResultViewModel {
     }
 
     private func bindAudio() {
-        Task {
-            await AudioHelper.shared.playerStatePublisher
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] _, isPlaying in
-                    guard let self else { return }
-                    if !isPlaying {
-                        self.updateResultPhase()
-                    }
+        AudioHelper.shared.playerStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _, isPlaying in
+                guard let self else { return }
+                if !isPlaying {
+                    self.updateResultPhase()
                 }
-                .store(in: &cancellables)
-        }
+            }
+            .store(in: &cancellables)
     }
 
     func isValidResult(_ sortedResult: [(answer: Answer, records: [ASEntity.Record], submit: Answer, recordOrder: UInt8)]) -> Bool {

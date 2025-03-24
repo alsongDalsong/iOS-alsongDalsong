@@ -11,6 +11,11 @@ public actor ASAudioPlayer: NSObject {
     override public init() {}
 
     public var onPlaybackFinished: (@Sendable () async -> Void)?
+    
+    /// 볼륨 크기를 지정합니다.
+    public func setVolume(_ volume: Float) {
+        audioPlayer?.volume = volume
+    }
 
     /// 녹음파일을 재생하고 옵션에 따라 재생시간을 설정합니다.
     public func startPlaying(data: Data, option: PlayType = .full) throws {
@@ -41,6 +46,18 @@ public actor ASAudioPlayer: NSObject {
 
     public func stopPlaying() {
         audioPlayer?.stop()
+    }
+    
+    public func pause() {
+        audioPlayer?.pause()
+    }
+    
+    public func resume() {
+        guard let player = audioPlayer else { return }
+        
+        if !player.isPlaying {
+            player.play()
+        }
     }
 
     /// AVPlayer객체의 재생여부를 확인합니다.

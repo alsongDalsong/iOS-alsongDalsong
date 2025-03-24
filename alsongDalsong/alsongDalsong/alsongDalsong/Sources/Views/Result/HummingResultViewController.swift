@@ -58,9 +58,9 @@ class HummingResultViewController: UIViewController {
 
     private func setButton() {
         viewModel?.isHost == true
-        ? nextButton.updateButton(.next)
-        : nextButton.updateButton(.nextResultWaiting)
-        nextButton.updateButton(.disabled)
+        ? nextButton.setConfiguration(.next)
+        : nextButton.setConfiguration(.nextResultWaiting)
+        nextButton.setDisabledState()
     }
 
     private func setAction() {
@@ -116,9 +116,9 @@ class HummingResultViewController: UIViewController {
     private func changeButton(_ phase: ResultPhase) {
         if case .none = phase {
             if viewModel?.totalResult.isEmpty == true {
-                nextButton.updateButton(.complete)
+                nextButton.setConfiguration(.complete)
             } else {
-                nextButton.updateButton(.next)
+                nextButton.setConfiguration(.next)
                 nextButton.isEnabled = true
                 nextButton.removeTarget(nil, action: nil, for: .touchUpInside)
                 nextButton.addAction(UIAction { _ in
@@ -126,7 +126,7 @@ class HummingResultViewController: UIViewController {
                 }, for: .touchUpInside)
             }
         } else {
-            nextButton.updateButton(.disabled)
+            nextButton.setDisabledState()
         }
     }
     
@@ -150,7 +150,7 @@ class HummingResultViewController: UIViewController {
             .sink { [weak self] canEndGame in
                 if canEndGame {
                     guard viewModel.isHost else {
-                        self?.nextButton.updateButton(.endWaiting)
+                        self?.nextButton.setConfiguration(.endWaiting)
                         return
                     }
                     self?.nextButton.isEnabled = true
@@ -159,7 +159,7 @@ class HummingResultViewController: UIViewController {
                         self?.showLobbyLoading()
                     }, for: .touchUpInside)
                 } else {
-                    self?.nextButton.updateButton(.disabled)
+                    self?.nextButton.setDisabledState()
                 }
             }
             .store(in: &cancellables)

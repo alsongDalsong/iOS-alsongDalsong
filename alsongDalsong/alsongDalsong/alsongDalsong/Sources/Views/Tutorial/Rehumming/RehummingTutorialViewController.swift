@@ -67,7 +67,7 @@ final class RehummingTutorialViewController: UIViewController {
         musicPanel.bind(to: viewModel.$panelData)
         hummingPanel.bind(to: viewModel.$isRecording)
         hummingPanel.onRecordingFinished = { [weak self] data in
-            self?.recordButton.updateButton(.reRecord)
+            self?.recordButton.setConfiguration(.reRecord)
             self?.viewModel.recordedData = data
         }
         submitButton.bind(to: viewModel.$recordedData)
@@ -77,9 +77,9 @@ final class RehummingTutorialViewController: UIViewController {
         view.backgroundColor = .asLightGray
         title = "리허밍"
 
-        recordButton.updateButton(.startRecord)
-        submitButton.updateButton(.submit)
-        submitButton.updateButton(.disabled)
+        recordButton.setConfiguration(.startRecord)
+        submitButton.setConfiguration(.submit)
+        submitButton.setDisabledState()
 
         buttonStack.axis = .horizontal
         buttonStack.spacing = 16
@@ -157,7 +157,7 @@ final class RehummingTutorialViewController: UIViewController {
 
     private func setupAction() {
         recordButton.addAction(UIAction { [weak self] _ in
-            self?.recordButton.updateButton(.recording)
+            self?.recordButton.setConfiguration(.recording)
             self?.viewModel.isRecording = true
         }, for: .touchUpInside)
 

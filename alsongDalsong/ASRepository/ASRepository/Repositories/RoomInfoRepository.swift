@@ -12,14 +12,12 @@ final class RoomInfoRepository: RoomInfoRepositoryProtocol {
     
     func getRoomNumber() -> AnyPublisher<String, Never> {
         mainRepository.number
-            .receive(on: DispatchQueue.main)
             .compactMap { $0 }
             .eraseToAnyPublisher()
     }
     
     func getMode() -> AnyPublisher<Mode, Never> {
         mainRepository.mode
-            .receive(on: DispatchQueue.main)
             .compactMap { $0 }
             .eraseToAnyPublisher()
     }

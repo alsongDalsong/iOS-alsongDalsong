@@ -16,7 +16,6 @@ final class AnswersRepository: AnswersRepositoryProtocol {
 
     func getAnswersCount() -> AnyPublisher<Int, Never> {
         mainRepository.answers
-            .receive(on: DispatchQueue.main)
             .compactMap { $0 }
             .map { $0.count }
             .eraseToAnyPublisher()
@@ -28,7 +27,6 @@ final class AnswersRepository: AnswersRepositoryProtocol {
         }
 
         return mainRepository.answers
-            .receive(on: DispatchQueue.main)
             .compactMap(\.self)
             .flatMap { answers in
                 Just(answers.first { $0.player?.id == myId })

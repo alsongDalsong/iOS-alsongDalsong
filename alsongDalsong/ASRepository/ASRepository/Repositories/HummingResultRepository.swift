@@ -31,7 +31,6 @@ final class HummingResultRepository: HummingResultRepositoryProtocol {
                     return (answer: answer, records: relatedRecords, submit: relatedSubmit, recordOrder: recordOrder ?? 0)
                 }
             }
-            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 

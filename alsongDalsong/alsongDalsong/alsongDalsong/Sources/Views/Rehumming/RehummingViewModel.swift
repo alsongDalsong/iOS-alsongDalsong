@@ -64,6 +64,7 @@ final class RehummingViewModel: @unchecked Sendable {
 
     private func bindGameStatus() {
         gameStatusRepository.getDueTime()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] newDueTime in
                 self?.dueTime = newDueTime
             }

@@ -76,12 +76,14 @@ final class SubmitAnswerViewModel: ObservableObject, @unchecked Sendable {
 
     private func bindGameStatus() {
         gameStatusRepository.getDueTime()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] newDueTime in
                 self?.dueTime = newDueTime
             }
             .store(in: &cancellables)
 
         gameStatusRepository.getRecordOrder()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] newRecordOrder in
                 self?.bindRecord(on: newRecordOrder)
                 self?.bindSubmissionStatus()
@@ -94,6 +96,7 @@ final class SubmitAnswerViewModel: ObservableObject, @unchecked Sendable {
         let submitsPublisher = submitsRepository.getSubmitsCount()
 
         playerPublisher.combineLatest(submitsPublisher)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] playersCount, submitsCount in
                 let submitStatus = (submits: String(submitsCount), total: String(playersCount))
                 self?.submissionStatus = submitStatus

@@ -62,7 +62,7 @@ final class OnboardingViewModel: @unchecked Sendable {
             buttonEnabled = true
 
             ErrorHandler.handle(error)
-            throw ASError.joinRoom
+            throw ASError.joinRoom(description: error.localizedDescription)
         }
     }
 

@@ -137,6 +137,8 @@ enum ASAlertText {
         case needMorePlayer
         case back
         case permissionDenied
+        case kick(playerName: String)
+        case receiveKick
 
         var description: String {
             switch self {
@@ -147,6 +149,8 @@ enum ASAlertText {
                 case .needMorePlayer: "알쏭달쏭은 여럿이서 할 수록\n재미있는 게임이에요!\n그래도 하시겠어요?"
                 case .back: "이전 화면으로 돌아가시겠습니까?"
                 case .permissionDenied: "게임을 시작하기 위해서 마이크 권한이 필요해요"
+                case let .kick(playerName): String(format: NSLocalizedString("님을 강퇴하시겠습니까?\n강퇴 시 기존 방에는 영구적으로 재입장이 불가능합니다!", comment: ""), playerName)
+                case .receiveKick: "강퇴 되었습니다."
             }
         }
     }
@@ -159,6 +163,7 @@ enum ASAlertText {
         case keep
         case back
         case setting
+        case kick
 
         var description: String {
             switch self {
@@ -169,6 +174,7 @@ enum ASAlertText {
                 case .keep: "계속 하기"
                 case .back: "뒤로가기"
                 case .setting: "설정 가기"
+                case .kick: "강퇴 하기"
             }
         }
     }
@@ -198,7 +204,7 @@ enum ASAlertText {
                 case .submitMusic: "노래를 전송하는 중..."
                 case .submitHumming: "허밍을 전송하는 중..."
                 case .nextResult: "다음 결과를 가져오는 중..."
-                case . toLobby: "로비로 이동하는 중..."
+                case .toLobby: "로비로 이동하는 중..."
             }
         }
     }

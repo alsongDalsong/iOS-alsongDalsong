@@ -12,7 +12,7 @@ struct ASErrors: LocalizedError {
         case submitHumming
         case fetchAvatars
         case gameStart, changeMode
-        case authorizeAppleMusic, joinRoom, createRoom
+        case authorizeAppleMusic, joinRoom, createRoom, kickUser
         case submitRehumming
         case changeRecordOrder, navigateToLobby
         case submitMusic, searchMusicOnSelect, randomMusic

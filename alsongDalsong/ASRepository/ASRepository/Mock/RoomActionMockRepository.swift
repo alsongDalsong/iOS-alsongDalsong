@@ -32,4 +32,8 @@ public final class RoomActionMockRepository: RoomActionRepositoryProtocol {
     public func resetGame() async throws -> Bool {
         true
     }
+    
+    public func kickPlayer(roomNumber: String, userID: String) async throws -> Bool {
+        true
+    }
 }

@@ -38,16 +38,16 @@ final class RehummingViewController: UIViewController {
         musicPanel.bind(to: viewModel.$music)
         hummingPanel.bind(to: viewModel.$isRecording)
         hummingPanel.onRecordingFinished = { [weak self] recordedData in
-            self?.recordButton.updateButton(.reRecord)
+            self?.recordButton.setConfiguration(.reRecord)
             self?.viewModel.updateRecordedData(with: recordedData)
         }
         submitButton.bind(to: viewModel.$recordedData)
     }
 
     private func setupUI() {
-        recordButton.updateButton(.idle("녹음하기", .systemRed))
-        submitButton.updateButton(.submit)
-        submitButton.updateButton(.disabled)
+        recordButton.setConfiguration(.startRecord)
+        submitButton.setConfiguration(.submit)
+        submitButton.setDisabledState()
         buttonStack.axis = .horizontal
         buttonStack.spacing = 16
         buttonStack.addArrangedSubview(recordButton)
@@ -63,7 +63,7 @@ final class RehummingViewController: UIViewController {
 
     private func setAction() {
         recordButton.addAction(UIAction { [weak self] _ in
-            self?.recordButton.updateButton(.recording)
+            self?.recordButton.setConfiguration(.recording)
             self?.viewModel.startRecording()
         },
         for: .touchUpInside)
@@ -120,8 +120,9 @@ final class RehummingViewController: UIViewController {
         do {
             progressBar.cancelCompletion()
             try await viewModel.submitHumming()
-            submitButton.updateButton(.submitted)
-            recordButton.updateButton(.disabled)
+            submitButton.setConfiguration(.submitted)
+            submitButton.setDisabledState()
+            recordButton.setDisabledState()
         } catch {
             throw error
         }

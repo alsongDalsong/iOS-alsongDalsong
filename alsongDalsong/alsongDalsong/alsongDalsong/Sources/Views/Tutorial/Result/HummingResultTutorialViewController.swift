@@ -185,7 +185,7 @@ final class HummingResultTutorialViewController: UIViewController {
                 viewModel.updateResult()
             }, for: .touchUpInside)
         } else {
-            nextButton.updateButton(.disabled)
+            nextButton.setDisabledState()
         }
     }
     
@@ -195,7 +195,7 @@ final class HummingResultTutorialViewController: UIViewController {
             text: String(localized: "다음으로"),
             backgroundColor: .asMint
         )
-        nextButton.updateButton(.disabled)
+        nextButton.setDisabledState()
     }
 }
 

@@ -41,13 +41,12 @@ final class SubmitAnswerViewController: UIViewController {
         musicPanel.bind(to: viewModel.$music)
         selectedMusicPanel.bind(to: viewModel.$selectedMusic)
         submitButton.bind(to: viewModel.$musicData)
-
     }
 
     private func setupUI() {
         selectAnswerButton.setConfiguration(text: String(localized: "정답 선택"), backgroundColor: .asLightSky)
         submitButton.setConfiguration(text: String(localized: "정답 제출"), backgroundColor: .asLightGray)
-        submitButton.updateButton(.disabled)
+        submitButton.setDisabledState()
         buttonStack.axis = .horizontal
         buttonStack.spacing = 16
         buttonStack.addArrangedSubview(selectAnswerButton)
@@ -75,7 +74,7 @@ final class SubmitAnswerViewController: UIViewController {
             progressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             progressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             progressBar.heightAnchor.constraint(equalToConstant: 16),
-            
+
             scrollView.topAnchor.constraint(equalTo: progressBar.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
@@ -101,13 +100,18 @@ final class SubmitAnswerViewController: UIViewController {
         ])
     }
 
+    private func pickRandomMusic() async throws {
+        try await viewModel.randomMusic()
+    }
+
     private func submitAnswer() async throws {
         do {
             viewModel.stopMusic()
             progressBar.cancelCompletion()
             try await viewModel.submitAnswer()
-            submitButton.updateButton(.submitted)
-            selectAnswerButton.updateButton(.disabled)
+            submitButton.setConfiguration(.submitted)
+            submitButton.setDisabledState()
+            selectAnswerButton.setDisabledState()
         } catch {
             throw error
         }
@@ -137,6 +141,10 @@ final class SubmitAnswerViewController: UIViewController {
         )
 
         progressBar.setCompletionHandler { [weak self] in
+            guard self?.viewModel.selectedMusic != nil else {
+                self?.showSubmitRandomMusicLoading()
+                return
+            }
             self?.showSubmitAnswerLoading()
         }
     }
@@ -154,6 +162,20 @@ extension SubmitAnswerViewController {
         ) { [weak self] error in
             self?.showFailSubmitMusic(error)
         }
+        presentAlert(alert)
+    }
+
+    private func showSubmitRandomMusicLoading() {
+        let alert = LoadingAlertController(
+            progressText: .submitMusic,
+            loadAction: { [weak self] in
+                try await self?.pickRandomMusic()
+                try await self?.submitAnswer()
+            },
+            errorCompletion: { [weak self] error in
+                self?.showFailSubmitMusic(error)
+            }
+        )
         presentAlert(alert)
     }
 

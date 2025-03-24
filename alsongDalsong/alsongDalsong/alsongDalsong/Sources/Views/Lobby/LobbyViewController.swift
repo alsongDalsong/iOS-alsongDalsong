@@ -43,17 +43,17 @@ final class LobbyViewController: UIViewController {
             .sink { [weak self] canBeginGame, isHost in
                 if isHost {
                     if canBeginGame {
-                        self?.startButton.updateButton(.startGame)
+                        self?.startButton.setConfiguration(.startGame)
                         self?.startButton.isEnabled = true
                     }
                     else {
-                        self?.startButton.updateButton(.needMorePlayers)
-                        self?.startButton.updateButton(.disabled)
+                        self?.startButton.setConfiguration(.needMorePlayers)
+                        self?.startButton.setDisabledState()
                     }
                 }
                 else {
-                    self?.startButton.updateButton(.startWaiting)
-                    self?.startButton.updateButton(.disabled)
+                    self?.startButton.setConfiguration(.startWaiting)
+                    self?.startButton.setDisabledState()
                 }
             }
             .store(in: &cancellables)

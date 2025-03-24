@@ -1,4 +1,5 @@
 import ASEntity
+import ASLogKit
 import ASRepositoryProtocol
 import Combine
 import Foundation
@@ -38,17 +39,13 @@ final class HummingViewModel: @unchecked Sendable {
         updateRecordedData(with: data)
     }
 
-    func didTappedSubmitButton() {
-        Task { await submitHumming() }
-    }
-
-    private func submitHumming() async {
+    func submitHumming() async throws {
         do {
             let result = try await recordsRepository.uploadRecording(recordedData ?? Data())
-            if !result { LogHandler.handleError("Humming Did not sent") }
+            if !result { Logger.error("Humming Did not sent") }
         } catch {
-            let error = ASErrors(type: .submitHumming, reason: error.localizedDescription, file: #file, line: #line)
-            LogHandler.handleError(error)
+            ErrorHandler.handle(error)
+            throw ASError.submitHumming
         }
     }
 

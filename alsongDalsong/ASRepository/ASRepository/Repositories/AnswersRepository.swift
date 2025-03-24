@@ -1,6 +1,7 @@
 import ASDecoder
 import ASEncoder
 import ASEntity
+import ASLogKit
 import ASNetworkKit
 import Combine
 import Foundation
@@ -49,7 +50,8 @@ final class AnswersRepository: AnswersRepositoryProtocol {
             let responseDict = try ASDecoder.decode([String: String].self, from: response)
             return !responseDict.isEmpty
         } catch {
-            throw ASRepositoryErrors(type: .submitMusic, reason: error.localizedDescription, file: #file, line: #line)
+            ErrorHandler.handle(error)
+            throw ASRepositoryError.submitMusic
         }
     }
 }

@@ -1,3 +1,4 @@
+import ASLogKit
 import AVFoundation
 
 public actor ASAudioRecorder {
@@ -20,7 +21,8 @@ public actor ASAudioRecorder {
             audioRecorder?.record()
         } catch {
             // TODO: AVAudioRecorder 객체 생성 실패 시에 대한 처리
-            throw ASAudioErrors(type: .startRecording, reason: error.localizedDescription, file: #file, line: #line)
+            ErrorHandler.handle(error)
+            throw ASAudioError.startRecording
         }
     }
 
@@ -32,7 +34,8 @@ public actor ASAudioRecorder {
             try session.setActive(true, options: .notifyOthersOnDeactivation)
         } catch {
             // TODO: 세션 설정 실패에 따른 처리
-            throw ASAudioErrors(type: .configureAudioSession, reason: error.localizedDescription, file: #file, line: #line)
+            ErrorHandler.handle(error)
+            throw ASAudioError.configureAudioSession
         }
     }
 
@@ -56,6 +59,7 @@ public actor ASAudioRecorder {
             let recordData = try Data(contentsOf: recordURL)
             return recordData
         } catch {
+            ErrorHandler.handle(error)
             return nil
         }
     }

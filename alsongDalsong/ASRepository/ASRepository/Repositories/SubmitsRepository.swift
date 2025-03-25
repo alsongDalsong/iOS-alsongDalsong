@@ -17,7 +17,6 @@ final class SubmitsRepository: SubmitsRepositoryProtocol {
     
     func getSubmitsCount() -> AnyPublisher<Int, Never> {
         mainRepository.submits
-            .receive(on: DispatchQueue.main)
             .compactMap { $0 }
             .map { $0.count }
             .eraseToAnyPublisher()

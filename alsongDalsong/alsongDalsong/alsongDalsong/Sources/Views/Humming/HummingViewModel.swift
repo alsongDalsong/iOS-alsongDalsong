@@ -67,6 +67,7 @@ final class HummingViewModel: @unchecked Sendable {
 
     private func bindAnswer() {
         answersRepository.getMyAnswer()
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { [weak self] answer in
                 self?.music = answer?.music
@@ -76,6 +77,7 @@ final class HummingViewModel: @unchecked Sendable {
 
     private func bindGameStatus() {
         gameStatusRepository.getDueTime()
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] newDueTime in
                 self?.dueTime = newDueTime
             }

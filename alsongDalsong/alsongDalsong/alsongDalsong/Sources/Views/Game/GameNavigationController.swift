@@ -171,12 +171,14 @@ final class GameNavigationController: @unchecked Sendable {
         let answersRepository = DIContainer.shared.resolve(AnswersRepositoryProtocol.self)
         let gameStatusRepository = DIContainer.shared.resolve(GameStatusRepositoryProtocol.self)
         let dataDownloadRepository = DIContainer.shared.resolve(DataDownloadRepositoryProtocol.self)
+        let roomActionRepository = DIContainer.shared.resolve(RoomActionRepositoryProtocol.self)
 
         let vm = SelectMusicViewModel(
             playersRepository: playersRepository,
             answerRepository: answersRepository,
             gameStatusRepository: gameStatusRepository,
-            dataDownloadRepository: dataDownloadRepository
+            dataDownloadRepository: dataDownloadRepository,
+            roomActionRepository: roomActionRepository
         )
         let vc = SelectMusicViewController(selectMusicViewModel: vm)
 

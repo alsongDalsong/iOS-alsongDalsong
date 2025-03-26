@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 
 final class SelectMusicViewController: UIViewController {
@@ -6,7 +7,8 @@ final class SelectMusicViewController: UIViewController {
     private let submissionStatus = SubmissionStatusView()
     private let viewModel: SelectMusicViewModel
     private var selectMusicView = UIViewController()
-    
+    private var cancellables: Set<AnyCancellable> = []
+
     init(selectMusicViewModel: SelectMusicViewModel) {
         self.viewModel = selectMusicViewModel
         super.init(nibName: nil, bundle: nil)
@@ -33,6 +35,15 @@ final class SelectMusicViewController: UIViewController {
         progressBar.bind(to: viewModel.$dueTime)
         submitButton.bind(to: viewModel.$musicData)
         submissionStatus.bind(to: viewModel.$submissionStatus)
+
+        viewModel.$isPlayable
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isPlayable in
+                if !isPlayable {
+                    self?.showNotPlayable()
+                }
+            }
+            .store(in: &cancellables)
     }
     
     private func setupUI() {
@@ -141,5 +152,14 @@ extension SelectMusicViewController {
     private func showFailSubmitMusic(_ error: Error) {
         let alert = SingleButtonAlertController(titleText: .error(error))
         presentAlert(alert)
+    }
+
+    private func showNotPlayable() {
+        viewModel.leaveRoom()
+        let alert = SingleButtonAlertController(titleText: .notPlayable) { _ in
+            self.navigationController?.popToRootViewController(animated: true)
+            self.navigationController?.navigationBar.isHidden = true
+        }
+        self.navigationController?.presentAlert(alert)
     }
 }

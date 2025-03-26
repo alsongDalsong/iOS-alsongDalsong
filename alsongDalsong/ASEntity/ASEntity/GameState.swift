@@ -32,30 +32,31 @@ public struct GameState {
     private func resolveHummingViewType(status: Status, recordOrder: UInt8, round: UInt8) -> GameViewType? {
         switch status {
         case .humming:
-            if round == 0, recordOrder == 0 {
+
+            // MARK: record Order는 0부터 시작하여 모든 플레이어가 허밍을 완료하면 1 증가.
+
+            if round == 0 {
                 return .submitMusic
             } else if round == 1, recordOrder == 0 {
                 return .humming
             }
         case .rehumming:
-            if players.count <= 2, round == 1, recordOrder == 1 {
-                return .submitAnswer
-            }
 
-            if round == 1, recordOrder == players.count - 1 {
+            // MARK: 리허밍 할때마다 recordOrder가 1씩 증가.
+
+            // 플레이어 수가 2명 일때는 리허밍 0번
+            // 플레이어 수가 3명 일때는 리허밍 1번
+            // 플레이어 수가 4명 이상 일때는 리허밍 2번
+
+            let maxRecordOrder = players.count <= 3 ? players.count - 1 : 3
+
+            if recordOrder == maxRecordOrder {
                 return .submitAnswer
-            } else if round == 1, recordOrder >= 1 {
+            } else if recordOrder >= 1 {
                 return .rehumming
             }
         case .result:
-            if players.count <= 2, recordOrder == 1 {
-                return .result
-            }
-            else if recordOrder >= players.count - 1 {
-                return .result
-            } else {
-                return nil
-            }
+            return .result
         default:
             return .lobby
         }

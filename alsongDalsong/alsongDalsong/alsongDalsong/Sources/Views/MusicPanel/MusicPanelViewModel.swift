@@ -11,10 +11,6 @@ final class MusicPanelViewModel: @unchecked Sendable {
     @Published private(set) var buttonState: AudioButtonState = .idle
     private let dataDownloadRepository: DataDownloadRepositoryProtocol
     
-    private var isMIDI: Bool {
-        music?.previewUrl?.pathExtension == "mid"
-    }
-    
     private var cancellables = Set<AnyCancellable>()
     
     init(
@@ -80,14 +76,6 @@ final class MusicPanelViewModel: @unchecked Sendable {
                 return
             }
             if buttonState == .idle {
-                if isMIDI, let midiUrl = music?.previewUrl {
-                    await AudioHelper.shared.startPlayingMIDI(
-                        midiUrl,
-                        sourceType: .imported(type),
-                        option: .partial(time: 8)
-                    )
-                    return
-                }
                 await AudioHelper.shared.startPlaying(
                     self.preview,
                     sourceType: .imported(type)
@@ -104,7 +92,6 @@ final class MusicPanelViewModel: @unchecked Sendable {
     }
     
     private func getPreviewData() {
-        if isMIDI { return }
         guard let previewUrl = music?.previewUrl else { return }
         Task { @MainActor in
             preview = await dataDownloadRepository.downloadData(url: previewUrl)

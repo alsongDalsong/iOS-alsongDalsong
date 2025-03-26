@@ -60,7 +60,7 @@ final class AudioHelper: @unchecked Sendable {
         }
     }
 
-    private func removePlayer() {
+    private func removePlayer() async {
         player = nil
     }
 
@@ -68,7 +68,7 @@ final class AudioHelper: @unchecked Sendable {
         recorder = nil
     }
 
-    private func removeTimer() {
+    private func removeTimer() async {
         cancellable?.cancel()
         cancellable = nil
     }
@@ -141,11 +141,11 @@ extension AudioHelper {
 
     func stopPlaying() async {
         await player?.stopPlaying()
-        removePlayer()
+        await removePlayer()
         
         playerStateSubject.send((source, false))
         
-        removeTimer()
+        await removeTimer()
     }
 
     private func updatePlayIndex() {
@@ -166,7 +166,7 @@ extension AudioHelper {
     private func checkPlayerState() async -> Bool {
         if await isPlaying {
             await player?.stopPlaying()
-            removePlayer()
+            await removePlayer()
             playerStateSubject.send((source, false))
         }
         return true

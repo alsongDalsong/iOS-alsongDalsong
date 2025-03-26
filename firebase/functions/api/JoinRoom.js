@@ -44,7 +44,12 @@ module.exports.joinRoom = onRequest({ region: 'asia-southeast1' }, async (req, r
     }
 
     if (playerExists) {
-      return res.status(400).json({ error: 'User already in the room' });
+      return res.status(454).json({ error: 'User already in the room' });
+    }
+
+    // 플레이어 수 제한 체크 (최대 6명)
+    if (roomData.players.length >= 6) {
+      return res.status(455).json({ error: 'Room is full. Maximum number of players (6) reached.' });
     }
 
     const userData = await getUserData(userId);

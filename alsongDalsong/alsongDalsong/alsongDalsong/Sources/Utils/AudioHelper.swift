@@ -75,7 +75,7 @@ final class AudioHelper: @unchecked Sendable {
 
     func analyze(with data: Data) async -> [CGFloat] {
         do {
-            let columns = try await ASAudioAnalyzer.analyze(data: data, samplesCount: 24)
+            let columns = try await ASAudioAnalyzer.analyze(data: data, count: 24)
             return columns
         } catch {
             let error = ASErrors(type: .analyze, reason: error.localizedDescription, file: #file, line: #line)

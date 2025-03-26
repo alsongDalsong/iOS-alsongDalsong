@@ -45,6 +45,19 @@ public final class ASFirebaseAuth: ASFirebaseAuthProtocol {
         }
     }
 
+    public func observeConnection() async throws {
+        do {
+            guard let userID = ASFirebaseAuth.myID else {
+                throw ASNetworkErrors(type: .firebaseSignOut, reason: "ASFirebaseAuth.myID is nil", file: #file, line: #line)
+            }
+            try await databaseRef.child("players").child(userID).onDisconnectRemoveValue()
+            try Auth.auth().signOut()
+        } catch {
+            // TODO: - error message
+            throw error
+        }
+    }
+
     public static func configure() {
         if let uid = Auth.auth().currentUser?.uid {
             ASFirebaseAuth.myID = uid

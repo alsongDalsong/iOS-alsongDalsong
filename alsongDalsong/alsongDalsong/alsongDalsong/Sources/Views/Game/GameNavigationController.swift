@@ -29,6 +29,7 @@ final class GameNavigationController: @unchecked Sendable {
         self.gameStateRepository = gameStateRepository
         self.roomActionRepository = roomActionRepository
         self.roomNumber = roomNumber
+        observeRoomConnection()
     }
 
     func setConfiguration() {
@@ -284,6 +285,16 @@ final class GameNavigationController: @unchecked Sendable {
             setupNavigationBar(for: vc)
         }
         navigationController.pushViewController(guideVC, animated: true)
+    }
+
+    private func observeRoomConnection() {
+        Task {
+            do {
+                try await roomActionRepository.observeRoomConnection()
+            } catch {
+                //
+            }
+        }
     }
 
     private func leaveRoom() {

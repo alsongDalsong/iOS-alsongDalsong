@@ -1,5 +1,4 @@
 import Foundation
-import Foundation
 
 enum ASMusicError: LocalizedError {
     case notAuthorized

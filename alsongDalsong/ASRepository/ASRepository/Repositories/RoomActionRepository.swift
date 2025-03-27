@@ -69,8 +69,8 @@ final class RoomActionRepository: RoomActionRepositoryProtocol {
         do {
             try await self.authManager.observeConnection()
         } catch {
-            // TODO: - error message
-            throw error
+            ErrorHandler.handle(error)
+            throw ASRepositoryError.observeRoomConnection
         }
     }
 

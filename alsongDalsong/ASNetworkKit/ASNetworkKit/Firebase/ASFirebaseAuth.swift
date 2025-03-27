@@ -54,7 +54,7 @@ public final class ASFirebaseAuth: ASFirebaseAuthProtocol {
             try Auth.auth().signOut()
         } catch {
             ErrorHandler.handle(error)
-            throw ASNetworkError.firebaseSignOut
+            throw ASNetworkError.firebaseObserveConnection
         }
     }
 

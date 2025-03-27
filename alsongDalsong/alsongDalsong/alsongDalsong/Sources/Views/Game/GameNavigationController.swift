@@ -12,6 +12,7 @@ final class GameNavigationController: @unchecked Sendable {
     private let roomActionRepository: RoomActionRepositoryProtocol
     private var subscriptions: Set<AnyCancellable> = []
     private let roomNumber: String
+    private var roomPlayersNumber: Int = 0
 
     private var gameInfo: GameState? {
         didSet {
@@ -60,9 +61,11 @@ final class GameNavigationController: @unchecked Sendable {
             .sink { [weak self] playersCount in
                 guard let gameInfo = self?.gameInfo else { return }
                 let viewType = gameInfo.resolveViewType()
-                if viewType != .lobby && viewType != .result, playersCount <= 1 {
+                if viewType != .lobby, playersCount != self?.roomPlayersNumber {
                     self?.leaveRoom()
                     self?.showNotPlayable()
+                } else if viewType == .lobby {
+                    self?.roomPlayersNumber = playersCount
                 }
             }
             .store(in: &subscriptions)

@@ -1,3 +1,4 @@
+import ASLogKit
 import AVFoundation
 import Foundation
 
@@ -30,7 +31,8 @@ public enum ASAudioAnalyzer {
             try? FileManager.default.removeItem(at: tempURL)
             return processSamples(samples, samplesCount: samplesCount)
         } catch {
-            throw ASAudioErrors(type: .analyze, reason: error.localizedDescription, file: #file, line: #line)
+            ErrorHandler.handle(error)
+            throw ASAudioError.analyzeAudio
         }
     }
     

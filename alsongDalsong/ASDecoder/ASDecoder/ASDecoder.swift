@@ -1,3 +1,4 @@
+import ASLogKit
 import Foundation
 
 public enum ASDecoder {
@@ -9,7 +10,8 @@ public enum ASDecoder {
 
             return try decoder.decode(T.self, from: data)
         } catch {
-            throw ASDecoderErrors(type: .decode, reason: error.localizedDescription, file: #file, line: #line)
+            ErrorHandler.handle(error)
+            throw ASDecoderError.decode
         }
     }
 
@@ -20,10 +22,12 @@ public enum ASDecoder {
                     let decodedData = try decode(T.self, from: data)
                     return decodedData
                 } catch {
-                    throw error
+                    ErrorHandler.handle(error)
+                    throw ASDecoderError.decode
                 }
             case let .failure(error):
-                throw error
+                ErrorHandler.handle(error)
+                throw ASDecoderError.decode
         }
     }
 }

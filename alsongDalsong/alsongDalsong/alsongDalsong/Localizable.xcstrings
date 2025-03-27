@@ -535,17 +535,6 @@
         }
       }
     },
-    "사냥꾼" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hunter"
-          }
-        }
-      }
-    },
     "사부님" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -564,6 +553,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Life"
+          }
+        }
+      }
+    },
+    "사냥꾼" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hunter"
           }
         }
       }
@@ -885,6 +885,7 @@
       }
     },
     "튜토리얼 완료" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

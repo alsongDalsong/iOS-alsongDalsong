@@ -171,7 +171,7 @@ extension HummingResultViewController {
         let alert = LoadingAlertController(
             progressText: .nextResult,
             loadAction: { [weak self] in
-                await self?.viewModel?.changeRecordOrder()
+                try await self?.viewModel?.changeRecordOrder()
             },
             errorCompletion: { [weak self] error in
                 self?.showFailedAlert(error)
@@ -184,7 +184,7 @@ extension HummingResultViewController {
         let alert = LoadingAlertController(
             progressText: .toLobby,
             loadAction: { [weak self] in
-                await self?.viewModel?.navigateToLobby()
+                try await self?.viewModel?.navigateToLobby()
             },
             errorCompletion: { [weak self] error in
                 self?.showFailedAlert(error)

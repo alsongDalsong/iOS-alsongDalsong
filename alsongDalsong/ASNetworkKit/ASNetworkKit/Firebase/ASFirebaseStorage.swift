@@ -1,4 +1,5 @@
 @preconcurrency internal import FirebaseStorage
+import ASLogKit
 import Foundation
 
 final class ASFirebaseStorage: ASFirebaseStorageProtocol {
@@ -10,7 +11,8 @@ final class ASFirebaseStorage: ASFirebaseStorageProtocol {
             let result = try await avatarRef.listAll()
             return try await fetchDownloadURLs(from: result.items)
         } catch {
-            throw ASNetworkErrors(type: .getAvatarUrls, reason: error.localizedDescription, file: #file, line: #line)
+            ErrorHandler.handle(error)
+            throw ASNetworkError.getAvatarUrls
         }
     }
     

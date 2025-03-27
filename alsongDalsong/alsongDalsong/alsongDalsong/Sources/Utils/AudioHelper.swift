@@ -1,4 +1,5 @@
 import ASAudioKit
+import ASLogKit
 import Combine
 import Foundation
 
@@ -78,8 +79,7 @@ final class AudioHelper: @unchecked Sendable {
             let columns = try await ASAudioAnalyzer.analyze(data: data, count: 24)
             return columns
         } catch {
-            let error = ASErrors(type: .analyze, reason: error.localizedDescription, file: #file, line: #line)
-            LogHandler.handleError(error)
+            ErrorHandler.handle(error)
             return []
         }
     }
@@ -123,8 +123,7 @@ extension AudioHelper {
                 do {
                     try await player?.startPlaying(data: file)
                 } catch {
-                    let error = ASErrors(type: .playFull, reason: error.localizedDescription, file: #file, line: #line)
-                    LogHandler.handleError(error)
+                    ErrorHandler.handle(error)
                 }
             case let .partial(time):
                 do {
@@ -132,8 +131,7 @@ extension AudioHelper {
                     try await Task.sleep(nanoseconds: UInt64(time * 1_000_000_000))
                     await stopPlaying()
                 } catch {
-                    let error = ASErrors(type: .playPartial, reason: error.localizedDescription, file: #file, line: #line)
-                    LogHandler.handleError(error)
+                    ErrorHandler.handle(error)
                 }
             @unknown default: break
         }
@@ -185,21 +183,20 @@ extension AudioHelper {
         do {
             try await recorder?.startRecording(url: tempURL)
             visualize()
-            LogHandler.handleDebug("녹음 시작")
+            Logger.debug("녹음 시작")
 
             try await Task.sleep(for: .seconds(6))
             
             await stopRecording()
             deleteFile(url: tempURL)
         } catch {
-            let error = ASErrors(type: .startRecording, reason: error.localizedDescription, file: #file, line: #line)
-            LogHandler.handleError(error)
+            ErrorHandler.handle(error)
         }
     }
 
     private func stopRecording() async {
         let recordedData = await recorder?.stopRecording()
-        LogHandler.handleDebug("녹음 정지")
+        Logger.debug("녹음 정지")
         recorderStateSubject.send(false)
         removeRecorder()
         recorderDataSubject.send(recordedData ?? Data())
@@ -227,9 +224,9 @@ extension AudioHelper {
     private func deleteFile(url: URL) {
         do {
             try FileManager.default.removeItem(at: url)
-            LogHandler.handleDebug("임시 파일 삭제 완료 \(url.path)")
+            Logger.debug("임시 파일 삭제 완료 \(url.path)")
         } catch {
-            LogHandler.handleError(ASErrors(type: .deleteFile, reason: error.localizedDescription, file: #file, line: #line))
+            ErrorHandler.handle(error)
         }
     }
 
@@ -281,7 +278,7 @@ extension AudioHelper {
     }
 
     private func calculateAmplitude() {
-        LogHandler.handleDebug("진폭계산 시작")
+        Logger.debug("진폭계산 시작")
         cancellable = Timer.publish(every: 0.125, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in

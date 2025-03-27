@@ -1,3 +1,4 @@
+import ASLogKit
 import ASMusicKit
 import ASRepositoryProtocol
 import Foundation
@@ -45,8 +46,7 @@ final class OnboardingViewModel: @unchecked Sendable {
             do {
                 let _ = try await musicAPI.search(for: "뉴진스", 1, 1)
             } catch {
-                let error = ASErrors(type: .authorizeAppleMusic, reason: error.localizedDescription, file: #file, line: #line)
-                LogHandler.handleError(error)
+                ErrorHandler.handle(error)
             }
         }
     }
@@ -61,9 +61,8 @@ final class OnboardingViewModel: @unchecked Sendable {
         } catch {
             buttonEnabled = true
 
-            let error = ASErrors(type: .joinRoom, reason: error.localizedDescription, file: #file, line: #line)
-            LogHandler.handleError(error)
-            throw error
+            ErrorHandler.handle(error)
+            throw ASError.joinRoom(description: error.localizedDescription)
         }
     }
 
@@ -77,9 +76,8 @@ final class OnboardingViewModel: @unchecked Sendable {
         } catch {
             buttonEnabled = true
 
-            let error = ASErrors(type: .createRoom, reason: error.localizedDescription, file: #file, line: #line)
-            LogHandler.handleError(error)
-            throw error
+            ErrorHandler.handle(error)
+            throw ASError.createRoom
         }
     }
 }

@@ -1,4 +1,5 @@
 import ASCacheKitProtocol
+import ASLogKit
 import Foundation
 
 struct ASNetworkManager: ASNetworkManagerProtocol {
@@ -17,18 +18,23 @@ struct ASNetworkManager: ASNetworkManagerProtocol {
         body: Data? = nil,
         option: CacheOption = .both
     ) async throws -> Data {
-        guard let url = endpoint.url else {
-            throw ASNetworkErrors(type: .urlError, reason: "", file: #file, line: #line)
+        do {
+            guard let url = endpoint.url else {
+                throw ASNetworkError.urlError
+            }
+            if let cache = try await loadCache(from: url, option: option) { return cache }
+
+            let updatedEndpoint = updateEndpoint(type: type, endpoint: endpoint, body: body)
+            let request = try urlRequest(for: updatedEndpoint)
+            let (data, response) = try await urlSession.data(for: request)
+
+            try validate(response: response)
+            saveCache(from: url, with: data, option: option)
+            return data
+        } catch {
+            ErrorHandler.handle(error)
+            throw error
         }
-        if let cache = try await loadCache(from: url, option: option) { return cache }
-
-        let updatedEndpoint = updateEndpoint(type: type, endpoint: endpoint, body: body)
-        let request = try urlRequest(for: updatedEndpoint)
-        let (data, response) = try await urlSession.data(for: request)
-
-        try validate(response: response)
-        saveCache(from: url, with: data, option: option)
-        return data
     }
 
     private func loadCache(from url: URL, option: CacheOption) async throws -> Data? {
@@ -48,7 +54,7 @@ struct ASNetworkManager: ASNetworkManagerProtocol {
 
     private func urlRequest(for endpoint: any Endpoint) throws -> URLRequest {
         guard let url = endpoint.url else {
-            throw ASNetworkErrors(type: .urlError, reason: "", file: #file, line: #line)
+            throw ASNetworkError.urlError
         }
         return RequestBuilder(using: url)
             .setHeader(endpoint.headers)
@@ -59,7 +65,7 @@ struct ASNetworkManager: ASNetworkManagerProtocol {
 
     private func validate(response: URLResponse) throws {
         guard let httpResponse = response as? HTTPURLResponse else {
-            throw ASNetworkErrors(type: .responseError, reason: "", file: #file, line: #line)
+            throw ASNetworkError.responseError
         }
 
         let statusCode = StatusCode(statusCode: httpResponse.statusCode)
@@ -67,7 +73,7 @@ struct ASNetworkManager: ASNetworkManagerProtocol {
             case .success, .noContent:
                 break
             default:
-            throw ASNetworkErrors(type: .serverError, reason: "", file: #file, line: #line)
+            throw ASNetworkError.statusError(description: statusCode.description)
         }
     }
 }
@@ -102,53 +108,53 @@ private extension ASNetworkManager {
         var description: String {
             switch self {
                 case .success:
-                    return "성공: 요청이 성공적으로 완료되었습니다."
+                    return "성공: 요청이 성공적으로 완료되었습니다"
                 case .noContent:
-                    return "콘텐츠 없음: 요청은 성공했지만 반환할 내용이 없습니다."
+                    return "콘텐츠 없음: 요청은 성공했지만 반환할 내용이 없습니다"
                 case .multipleChoices:
-                    return "여러 선택: 요청에 대해 여러 선택지가 있습니다."
+                    return "여러 선택: 요청에 대해 여러 선택지가 있습니다"
                 case .movedPermanently:
-                    return "영구 이동: 요청한 리소스의 위치가 영구적으로 변경되었습니다."
+                    return "영구 이동: 요청한 리소스의 위치가 영구적으로 변경되었습니다"
                 case .found:
-                    return "임시 이동: 요청한 리소스의 위치가 일시적으로 변경되었습니다."
+                    return "임시 이동: 요청한 리소스의 위치가 일시적으로 변경되었습니다"
                 case .seeOther:
-                    return "다른 위치 참조: 다른 URI에서 리소스를 확인해야 합니다."
+                    return "다른 위치 참조: 다른 URI에서 리소스를 확인해야 합니다"
                 case .notModified:
-                    return "수정되지 않음: 캐시된 리소스와 동일하여 변경 사항이 없습니다."
+                    return "수정되지 않음: 캐시된 리소스와 동일하여 변경 사항이 없습니다"
                 case .useProxy:
-                    return "프록시 사용: 요청을 프록시를 통해 처리해야 합니다."
+                    return "프록시 사용: 요청을 프록시를 통해 처리해야 합니다"
                 case .temporaryRedirect:
-                    return "임시 리디렉션: 리소스가 일시적으로 다른 위치로 이동되었습니다."
+                    return "임시 리디렉션: 리소스가 일시적으로 다른 위치로 이동되었습니다"
                 case .permanentRedirect:
-                    return "영구 리디렉션: 리소스가 영구적으로 다른 위치로 이동되었습니다."
+                    return "영구 리디렉션: 리소스가 영구적으로 다른 위치로 이동되었습니다"
                 case .badRequest:
-                    return "잘못된 요청: 서버가 요청을 이해할 수 없습니다."
+                    return "잘못된 요청: 서버가 요청을 이해할 수 없습니다"
                 case .unauthorized:
-                    return "권한 없음: 인증이 필요합니다."
+                    return "권한 없음: 인증이 필요합니다"
                 case .forbidden:
-                    return "금지됨: 서버가 요청을 거부했습니다."
+                    return "금지됨: 서버가 요청을 거부했습니다"
                 case .notFound:
-                    return "찾을 수 없음: 요청한 리소스를 찾을 수 없습니다."
+                    return "찾을 수 없음: 요청한 리소스를 찾을 수 없습니다"
                 case .methodNotAllowed:
-                    return "허용되지 않는 메서드: 요청에 사용된 메서드는 허용되지 않습니다."
+                    return "허용되지 않는 메서드: 요청에 사용된 메서드는 허용되지 않습니다"
                 case .tooManyRequests:
-                    return "요청 과다: 너무 많은 요청이 이루어졌습니다."
+                    return "요청 과다: 너무 많은 요청이 이루어졌습니다"
                 case .internalServerError:
-                    return "서버 오류: 서버 내부에서 오류가 발생했습니다."
+                    return "서버 오류: 서버 내부에서 오류가 발생했습니다"
                 case .notImplemented:
-                    return "구현되지 않음: 서버가 요청을 처리할 수 있는 기능을 갖추지 않았습니다."
+                    return "구현되지 않음: 서버가 요청을 처리할 수 있는 기능을 갖추지 않았습니다"
                 case .badGateway:
-                    return "잘못된 게이트웨이: 게이트웨이 서버에서 잘못된 응답을 받았습니다."
+                    return "잘못된 게이트웨이: 게이트웨이 서버에서 잘못된 응답을 받았습니다"
                 case .serviceUnavailable:
-                    return "서비스 이용 불가: 서버가 현재 요청을 처리할 수 없습니다."
+                    return "서비스 이용 불가: 서버가 현재 요청을 처리할 수 없습니다"
                 case .gatewayTimeout:
-                    return "게이트웨이 시간 초과: 게이트웨이가 요청에 대한 응답을 받지 못했습니다."
+                    return "게이트웨이 시간 초과: 게이트웨이가 요청에 대한 응답을 받지 못했습니다"
                 case .startedRoom:
-                    return "이미 게임이 시작된 방입니다."
+                    return "이미 게임이 시작된 방입니다"
                 case .bannedPlayer:
-                    return "해당 방에서 강퇴되어 참여할 수 없습니다."
+                    return "해당 방에서 강퇴되어 참여할 수 없습니다"
                 case .unknown:
-                    return "알 수 없는 오류: 예상하지 못한 오류가 발생했습니다."
+                    return "알 수 없는 오류: 예상하지 못한 오류가 발생했습니다"
             }
         }
 

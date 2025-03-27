@@ -1,3 +1,4 @@
+import ASLogKit
 import AVFoundation
 import Foundation
 
@@ -31,7 +32,8 @@ public enum ASAudioAnalyzer {
             
             return downSample(samples, count: count)
         } catch {
-            throw ASAudioErrors(type: .analyze, reason: error.localizedDescription, file: #file, line: #line)
+            ErrorHandler.handle(error)
+            throw ASAudioError.analyzeAudio
         }
     }
     

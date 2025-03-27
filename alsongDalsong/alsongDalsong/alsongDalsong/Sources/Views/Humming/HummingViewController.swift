@@ -114,7 +114,7 @@ final class HummingViewController: UIViewController {
 
     private func submitHumming() async throws {
         progressBar.cancelCompletion()
-        viewModel.didTappedSubmitButton()
+        try await viewModel.submitHumming()
         submitButton.setConfiguration(.submitted)
         submitButton.setDisabledState()
         recordButton.setDisabledState()

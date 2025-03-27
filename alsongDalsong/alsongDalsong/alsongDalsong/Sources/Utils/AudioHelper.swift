@@ -80,6 +80,19 @@ final class AudioHelper: @unchecked Sendable {
             return columns
         } catch {
             ErrorHandler.handle(error)
+<<<<<<< HEAD
+=======
+            return []
+        }
+    }
+    
+    func analyze(with url: URL) async -> [CGFloat] {
+        do {
+            let columns = try await ASAudioAnalyzer.analyzeMIDI(url: url, samplesCount: 24)
+            return columns
+        } catch {
+            ErrorHandler.handle(error)
+>>>>>>> origin/refactor/#20
             return []
         }
     }

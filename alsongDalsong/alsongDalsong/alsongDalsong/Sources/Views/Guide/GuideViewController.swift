@@ -30,7 +30,7 @@ final class GuideViewController: UIViewController {
     
     private func setupUI() {
         self.navigationController?.navigationBar.isHidden = true
-        view.backgroundColor = .asLightGray
+        view.backgroundColor = .asBackground
         titleLabel.text = type.title.localized()
         descriptionLabel.text = type.description.localized()
         cautionLabel.isHidden = true

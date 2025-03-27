@@ -60,7 +60,7 @@ final class LobbyViewController: UIViewController {
     }
 
     private func setupUI() {
-        view.backgroundColor = .asLightGray
+        view.backgroundColor = .asBackground
 
         inviteButton.setConfiguration(
             systemImageName: "link",

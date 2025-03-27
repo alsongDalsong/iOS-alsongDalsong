@@ -52,7 +52,7 @@ final class OnboardingViewController: UIViewController {
     }
 
     private func setupUI() {
-        view.backgroundColor = .asLightGray
+        view.backgroundColor = .asBackground
         for item in [createRoomButton, joinRoomButton, logoImageView, avatarView, nickNamePanel, avatarRefreshButton] {
             view.addSubview(item)
             item.translatesAutoresizingMaskIntoConstraints = false
@@ -135,12 +135,12 @@ final class OnboardingViewController: UIViewController {
         createRoomButton.setConfiguration(
             systemImageName: "",
             text: Constants.craeteButtonTitle,
-            backgroundColor: .asYellow
+            backgroundColor: .asLightRed
         )
         joinRoomButton.setConfiguration(
             systemImageName: "",
             text: Constants.joinButtonTitle,
-            backgroundColor: .asMint
+            backgroundColor: .asLightSky
         )
     }
 

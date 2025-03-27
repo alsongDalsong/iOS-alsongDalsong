@@ -65,7 +65,7 @@ struct SelectMusicView: View {
                 }
             }
         }
-        .background(.asLightGray)
+        .background(.asBackground)
     }
 }
 

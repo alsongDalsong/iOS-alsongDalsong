@@ -50,7 +50,7 @@ final class HummingViewController: UIViewController {
         buttonStack.addArrangedSubview(submitButton)
         scrollView.addSubview(musicPanel)
         scrollView.addSubview(hummingPanel)
-        view.backgroundColor = .asLightGray
+        view.backgroundColor = .asBackground
         view.addSubview(progressBar)
         view.addSubview(scrollView)
         view.addSubview(buttonStack)

@@ -26,7 +26,7 @@ class HummingResultViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .asLightGray
+        view.backgroundColor = .asBackground
         setupUI()
         setupLayout()
         bindViewModel()
@@ -52,7 +52,7 @@ class HummingResultViewController: UIViewController {
         resultTableViewDiffableDataSource = HummingResultTableViewDiffableDataSource(tableView: resultTableView)
         resultTableView.separatorStyle = .none
         resultTableView.allowsSelection = false
-        resultTableView.backgroundColor = .asLightGray
+        resultTableView.backgroundColor = .asBackground
         resultTableView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
     }
 

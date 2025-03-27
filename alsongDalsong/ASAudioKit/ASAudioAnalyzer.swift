@@ -32,11 +32,7 @@ public enum ASAudioAnalyzer {
             return processSamples(samples, samplesCount: samplesCount)
         } catch {
             ErrorHandler.handle(error)
-<<<<<<< HEAD
             throw ASAudioError.analyzeAudio
-=======
-            throw ASAudioError.analyze
->>>>>>> origin/refactor/#20
         }
     }
     

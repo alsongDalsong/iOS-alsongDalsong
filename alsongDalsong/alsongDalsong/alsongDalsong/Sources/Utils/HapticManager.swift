@@ -1,7 +1,7 @@
 import UIKit
 
 @MainActor
-class HapticManager {
+final class HapticManager {
     static let shared = HapticManager()
     private let notificationFeedBackGenerator = UINotificationFeedbackGenerator()
     private let selectionFeedBackGenerator = UISelectionFeedbackGenerator()

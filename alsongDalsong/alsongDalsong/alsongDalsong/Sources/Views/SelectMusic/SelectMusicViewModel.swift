@@ -11,7 +11,6 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
     @Published private(set) var dueTime: Date?
     @Published private(set) var selectedMusic: Music?
     @Published private(set) var submissionStatus: (submits: String, total: String) = ("0", "0")
-    @Published private(set) var isPlayable: Bool = true
 
     @Published private(set) var musicData: Data? {
         didSet { isPlaying = true }
@@ -27,7 +26,6 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
     private let answersRepository: AnswersRepositoryProtocol
     private let gameStatusRepository: GameStatusRepositoryProtocol
     private let dataDownloadRepository: DataDownloadRepositoryProtocol
-    private let roomActionRepository: RoomActionRepositoryProtocol
 
     private let musicAPI = ASMusicAPI()
     private var cancellables = Set<AnyCancellable>()
@@ -36,14 +34,12 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
         playersRepository: PlayersRepositoryProtocol,
         answerRepository: AnswersRepositoryProtocol,
         gameStatusRepository: GameStatusRepositoryProtocol,
-        dataDownloadRepository: DataDownloadRepositoryProtocol,
-        roomActionRepository: RoomActionRepositoryProtocol
+        dataDownloadRepository: DataDownloadRepositoryProtocol
     ) {
         self.playersRepository = playersRepository
         self.answersRepository = answerRepository
         self.gameStatusRepository = gameStatusRepository
         self.dataDownloadRepository = dataDownloadRepository
-        self.roomActionRepository = roomActionRepository
         bindGameStatus()
         bindSubmissionStatus()
         bindSearchTerm()
@@ -69,7 +65,6 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
         playerPublisher.combineLatest(answersPublisher)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] playersCount, answersCount in
-                if playersCount <= 1 { self?.isPlayable = false }
                 let submitStatus = (submits: String(answersCount), total: String(playersCount))
                 self?.submissionStatus = submitStatus
             }
@@ -200,15 +195,5 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
     
     func cancelSubscriptions() {
         cancellables.removeAll()
-    }
-
-    func leaveRoom() {
-        Task {
-            do {
-                _ = try await roomActionRepository.leaveRoom()
-            } catch {
-                ErrorHandler.handle(error)
-            }
-        }
     }
 }

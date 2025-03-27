@@ -35,15 +35,6 @@ final class SelectMusicViewController: UIViewController {
         progressBar.bind(to: viewModel.$dueTime)
         submitButton.bind(to: viewModel.$musicData)
         submissionStatus.bind(to: viewModel.$submissionStatus)
-
-        viewModel.$isPlayable
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isPlayable in
-                if !isPlayable {
-                    self?.showNotPlayable()
-                }
-            }
-            .store(in: &cancellables)
     }
     
     private func setupUI() {
@@ -109,15 +100,11 @@ final class SelectMusicViewController: UIViewController {
     }
     
     private func submitMusic() async throws {
-        do {
-            viewModel.stopMusic()
-            progressBar.cancelCompletion()
-            try await viewModel.submitMusic()
-            submitButton.setConfiguration(.submitted)
-            submitButton.setDisabledState()
-        } catch {
-            throw error
-        }
+        viewModel.stopMusic()
+        progressBar.cancelCompletion()
+        try await viewModel.submitMusic()
+        submitButton.setConfiguration(.submitted)
+        submitButton.setDisabledState()
     }
 }
 
@@ -152,14 +139,5 @@ extension SelectMusicViewController {
     private func showFailSubmitMusic(_ error: Error) {
         let alert = SingleButtonAlertController(titleText: .error(error))
         presentAlert(alert)
-    }
-
-    private func showNotPlayable() {
-        viewModel.leaveRoom()
-        let alert = SingleButtonAlertController(titleText: .notPlayable) { _ in
-            self.navigationController?.popToRootViewController(animated: true)
-            self.navigationController?.navigationBar.isHidden = true
-        }
-        self.navigationController?.presentAlert(alert)
     }
 }

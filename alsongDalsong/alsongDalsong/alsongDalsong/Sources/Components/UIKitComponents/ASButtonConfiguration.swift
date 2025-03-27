@@ -16,7 +16,7 @@ extension ASButton {
             textStyle: UIFont.TextStyle = .largeTitle,
             backgroundColor: UIColor? = nil,
             cornerStyle: UIButton.Configuration.CornerStyle = .medium,
-            baseForegroundColor: UIColor = .asBlack
+            baseForegroundColor: UIColor = .white
         ) {
             self.systemImageName = systemImageName
             self.text = text
@@ -30,8 +30,6 @@ extension ASButton {
         func createConfiguration() -> UIButton.Configuration {
             var config = UIButton.Configuration.gray()
             config.baseForegroundColor = baseForegroundColor
-            config.background.strokeColor = .black
-            config.background.strokeWidth = 3
             
             if let systemImageName {
                 config.imagePlacement = .leading

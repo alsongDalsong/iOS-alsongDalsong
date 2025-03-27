@@ -31,7 +31,7 @@ final class ASButton: UIButton {
         textStyle: UIFont.TextStyle = .largeTitle,
         backgroundColor: UIColor? = nil,
         cornerStyle: UIButton.Configuration.CornerStyle = .medium,
-        baseForegroundColor: UIColor = .asBlack
+        baseForegroundColor: UIColor = .white
     ) {
         configurationData = ASButtonConfiguration(
             systemImageName: systemImageName,
@@ -44,7 +44,7 @@ final class ASButton: UIButton {
 
         applyConfiguration()
     }
-    
+
     /// 버튼의 UI 관련한 Configuration을 설정하는 메서드
     func setConfiguration(
         _ type: ASButtonType? = nil
@@ -59,7 +59,7 @@ final class ASButton: UIButton {
 
         applyConfiguration()
     }
-    
+
     func bind(
         to dataSource: Published<Data?>.Publisher,
         baseBackgroundColor: UIColor = .asGreen
@@ -67,13 +67,13 @@ final class ASButton: UIButton {
         dataSource
             .receive(on: DispatchQueue.main)
             .compactMap { $0 }
-            .sink { [weak self] data in
+            .sink { [weak self] _ in
                 self?.configuration?.baseBackgroundColor = baseBackgroundColor
                 self?.isEnabled = true
             }
             .store(in: &cancellables)
     }
-    
+
     /// 버튼을 비활성화하면서 스타일을 변경하는 메서드입니다.
     func setDisabledState() {
         configurationData = ASButtonConfiguration(
@@ -82,7 +82,7 @@ final class ASButton: UIButton {
             textStyle: configurationData?.textStyle ?? .largeTitle,
             backgroundColor: .systemGray2,
             cornerStyle: configurationData?.cornerStyle ?? .medium,
-            baseForegroundColor: configurationData?.baseForegroundColor ?? .asBlack
+            baseForegroundColor: configurationData?.baseForegroundColor ?? .white
         )
         isEnabled = false
         applyConfiguration()
@@ -97,7 +97,7 @@ final class ASButton: UIButton {
         case startWaiting, endWaiting
         case next
         case nextResultWaiting
-        
+
         var text: String {
             switch self {
                 case .needMorePlayers: String(localized: "게임 인원 부족")
@@ -136,7 +136,7 @@ final class ASButton: UIButton {
                 default: nil
             }
         }
-        
+
         var textStyle: UIFont.TextStyle {
             .largeTitle
         }
@@ -150,7 +150,7 @@ final class ASButton: UIButton {
 private extension ASButton {
     /// Configuration을 적용하는 메서드
     func applyConfiguration() {
-        self.configuration = configurationData?.createConfiguration()
+        configuration = configurationData?.createConfiguration()
     }
 
     /// 버튼이 눌렸을 때 효과를 적용하는 메서드
@@ -160,10 +160,10 @@ private extension ASButton {
             layer.shadowOffset = .zero
         } else {
             transform = .identity
-            layer.shadowOffset = CGSize(width: 4, height: 4)
+            layer.shadowOffset = CGSize(width: 0, height: 8)
         }
     }
-    
+
     /// 버튼 초기설정을 담당하는 메서드
     func setupButton() {
         setShadow()

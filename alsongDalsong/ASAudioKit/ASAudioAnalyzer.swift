@@ -32,7 +32,7 @@ public enum ASAudioAnalyzer {
             return processSamples(samples, samplesCount: samplesCount)
         } catch {
             ErrorHandler.handle(error)
-            throw ASAudioError.analyze
+            throw ASAudioError.analyzeAudio
         }
     }
     

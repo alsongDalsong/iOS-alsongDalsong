@@ -207,8 +207,7 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
             do {
                 _ = try await roomActionRepository.leaveRoom()
             } catch {
-                let error = ASErrors(type: .leaveRoom, reason: error.localizedDescription, file: #file, line: #line)
-                LogHandler.handleError(error)
+                ErrorHandler.handle(error)
             }
         }
     }

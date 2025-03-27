@@ -48,13 +48,13 @@ public final class ASFirebaseAuth: ASFirebaseAuthProtocol {
     public func observeConnection() async throws {
         do {
             guard let userID = ASFirebaseAuth.myID else {
-                throw ASNetworkErrors(type: .firebaseSignOut, reason: "ASFirebaseAuth.myID is nil", file: #file, line: #line)
+                throw ASNetworkError.firebaseSignOut
             }
             try await databaseRef.child("players").child(userID).onDisconnectRemoveValue()
             try Auth.auth().signOut()
         } catch {
-            // TODO: - error message
-            throw error
+            ErrorHandler.handle(error)
+            throw ASNetworkError.firebaseSignOut
         }
     }
 

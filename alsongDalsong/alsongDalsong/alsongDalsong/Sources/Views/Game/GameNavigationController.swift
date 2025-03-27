@@ -54,6 +54,18 @@ final class GameNavigationController: @unchecked Sendable {
                 self?.navigationController.presentAlert(alert)
             }
             .store(in: &subscriptions)
+
+        gameStateRepository.getPlayersCount()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] playersCount in
+                guard let gameInfo = self?.gameInfo else { return }
+                let viewType = gameInfo.resolveViewType()
+                if viewType != .lobby && viewType != .result, playersCount <= 1 {
+                    self?.leaveRoom()
+                    self?.showNotPlayable()
+                }
+            }
+            .store(in: &subscriptions)
     }
 
     private func setupNavigationBar(for viewController: UIViewController) {
@@ -178,8 +190,7 @@ final class GameNavigationController: @unchecked Sendable {
             playersRepository: playersRepository,
             answerRepository: answersRepository,
             gameStatusRepository: gameStatusRepository,
-            dataDownloadRepository: dataDownloadRepository,
-            roomActionRepository: roomActionRepository
+            dataDownloadRepository: dataDownloadRepository
         )
         let vc = SelectMusicViewController(selectMusicViewModel: vm)
 
@@ -292,7 +303,7 @@ final class GameNavigationController: @unchecked Sendable {
             do {
                 try await roomActionRepository.observeRoomConnection()
             } catch {
-                //
+                ErrorHandler.handle(error)
             }
         }
     }
@@ -305,5 +316,17 @@ final class GameNavigationController: @unchecked Sendable {
                 ErrorHandler.handle(error)
             }
         }
+    }
+}
+
+// MARK: - Alert
+
+private extension GameNavigationController {
+    func showNotPlayable() {
+        let alert = SingleButtonAlertController(titleText: .notPlayable) { _ in
+            self.navigationController.popToRootViewController(animated: true)
+            self.navigationController.navigationBar.isHidden = true
+        }
+        self.navigationController.presentAlert(alert)
     }
 }

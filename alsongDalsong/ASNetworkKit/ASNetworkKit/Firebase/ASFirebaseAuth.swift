@@ -24,6 +24,7 @@ public final class ASFirebaseAuth: ASFirebaseAuthProtocol {
                 guard let isConnected = snapshot.value as? Bool else { return }
                 if isConnected {
                     userStatusRef.setValue(dict)
+                    userStatusRef.onDisconnectRemoveValue()
                 }
             }
         } catch {
@@ -42,19 +43,6 @@ public final class ASFirebaseAuth: ASFirebaseAuthProtocol {
         } catch {
             ErrorHandler.handle(error)
             throw ASNetworkError.firebaseSignOut
-        }
-    }
-
-    public func observeConnection() async throws {
-        do {
-            guard let userID = ASFirebaseAuth.myID else {
-                throw ASNetworkError.firebaseSignOut
-            }
-            try await databaseRef.child("players").child(userID).onDisconnectRemoveValue()
-            try Auth.auth().signOut()
-        } catch {
-            ErrorHandler.handle(error)
-            throw ASNetworkError.firebaseObserveConnection
         }
     }
 

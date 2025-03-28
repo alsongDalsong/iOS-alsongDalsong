@@ -65,15 +65,6 @@ final class RoomActionRepository: RoomActionRepositoryProtocol {
         }
     }
 
-    func observeRoomConnection() async throws {
-        do {
-            try await self.authManager.observeConnection()
-        } catch {
-            ErrorHandler.handle(error)
-            throw ASRepositoryError.observeRoomConnection
-        }
-    }
-
     func startGame(roomNumber: String) async throws -> Bool {
         do {
             let response: [String: Bool]? = try await self.sendRequest(

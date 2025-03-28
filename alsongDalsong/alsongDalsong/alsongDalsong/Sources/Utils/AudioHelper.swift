@@ -121,7 +121,7 @@ extension AudioHelper {
         await play(file: file, option: option)
     }
 
-    func play(file: Data, option: PlayType) async {
+    private func play(file: Data, option: PlayType) async {
         switch option {
             case .full:
                 do {

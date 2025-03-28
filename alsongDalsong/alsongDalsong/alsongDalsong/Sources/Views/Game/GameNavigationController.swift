@@ -91,14 +91,16 @@ final class GameNavigationController: @unchecked Sendable {
                 return String(localized: "허밍")
             case .rehumming:
                 guard let recordOrder = gameInfo.recordOrder else { return "" }
-                let rounds = gameInfo.players.count - 2
-                return String(localized: "리허밍") + "\(recordOrder)/\(rounds)"
+                let maxRehummingRounds = gameInfo.players.count <= 3 ? 1 : 2
+                return String(localized: "리허밍") + "\(recordOrder)/\(maxRehummingRounds)"
             case .submitAnswer:
                 return String(localized: "정답 맞추기")
             case .result:
-                guard let recordOrder = gameInfo.recordOrder else { return "" }
-                let currentRound = Int(recordOrder) - (gameInfo.players.count - 2)
-                return String(localized: "결과 확인") + " \(currentRound)/\(gameInfo.players.count)"
+            guard let recordOrder = gameInfo.recordOrder else { return "" }
+            let playerCount = gameInfo.players.count
+            let baseResult: UInt8 = (playerCount == 2) ? 0 : (playerCount == 3 ? 1 : 2)
+            let currentRound = recordOrder - (baseResult)
+            return String(localized: "결과 확인") + " \(currentRound)/\(playerCount)"
             case .lobby:
                 return "#\(roomNumber)"
             default:

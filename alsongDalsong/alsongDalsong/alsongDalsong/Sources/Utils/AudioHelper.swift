@@ -62,6 +62,8 @@ final class AudioHelper: @unchecked Sendable {
     }
 
     private func removePlayer() {
+        Logger.debug(#function)
+        
         player = nil
     }
 
@@ -70,6 +72,8 @@ final class AudioHelper: @unchecked Sendable {
     }
 
     private func removeTimer() {
+        Logger.debug(#function)
+
         cancellable?.cancel()
         cancellable = nil
     }
@@ -138,12 +142,13 @@ extension AudioHelper {
     }
 
     func stopPlaying() async {
+        Logger.debug(#function)
+        
         await player?.stopPlaying()
         removePlayer()
+        removeTimer()
         
         playerStateSubject.send((source, false))
-        
-        removeTimer()
     }
 
     private func updatePlayIndex() {

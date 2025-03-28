@@ -72,18 +72,21 @@ final class HummingResultViewModel: @unchecked Sendable {
                     Logger.debug("Answer Play")
                     resultPhase = .record(0)
                     await startPlaying()
+                
                 case let .record(count):
                     Logger.debug("Record \(count) Play")
                     if result.records.count - 1 == count { resultPhase = .submit }
                     else { resultPhase = .record(count + 1) }
                     await startPlaying()
+                
                 case .submit:
                     Logger.debug("Submit Play")
                     resultPhase = .none
                     await startPlaying()
                     if totalResult.isEmpty { canEndGame = true }
+                
                 case .none:
-                    Logger.debug("None")
+                    Logger.debug("resultPhase == .none")
                     resultPhase = .answer
                     await startPlaying()
             }

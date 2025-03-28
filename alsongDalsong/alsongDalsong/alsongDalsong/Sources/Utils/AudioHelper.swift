@@ -118,6 +118,7 @@ extension AudioHelper {
         if needsWaveUpdate {
             updatePlayIndex()
         }
+        
         await play(file: file, option: option)
     }
 
@@ -129,14 +130,16 @@ extension AudioHelper {
                 } catch {
                     ErrorHandler.handle(error)
                 }
+            
             case let .partial(time):
                 do {
                     try await player?.startPlaying(data: file)
-                    try await Task.sleep(nanoseconds: UInt64(time * 1_000_000_000))
+                    try await Task.sleep(for: .seconds(time))
                     await stopPlaying()
                 } catch {
                     ErrorHandler.handle(error)
                 }
+            
             @unknown default: break
         }
     }
@@ -185,6 +188,7 @@ extension AudioHelper {
         makeRecorder()
         let tempURL = makeURL()
         recorderStateSubject.send(true)
+        
         do {
             try await recorder?.startRecording(url: tempURL)
             visualize()
@@ -222,6 +226,7 @@ extension AudioHelper {
             .appendingPathComponent("tempCache")
         createCacheDirectory(with: tempCacheDirectory)
         let key = UUID()
+        
         return tempCacheDirectory
             .appendingPathComponent("\(key)")
     }

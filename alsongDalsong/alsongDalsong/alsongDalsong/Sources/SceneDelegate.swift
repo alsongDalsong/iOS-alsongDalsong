@@ -36,7 +36,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = loadingVC
         window?.makeKeyAndVisible()
     }
-    
+
+    func sceneDidBecomeActive(_: UIScene) {
+        let firebaseManager = DIContainer.shared.resolve(ASFirebaseAuthProtocol.self)
+        guard
+            let rootViewController = UIApplication.shared.topViewController(),
+            let navigationController = rootViewController.navigationController
+        else { return }
+        
+        Task {
+            let isConnected = await firebaseManager.checkConnection()
+            if !isConnected {
+                let alert = SingleButtonAlertController(titleText: .networkConnectionLost) { _ in
+                    navigationController.popToRootViewController(animated: true)
+                    navigationController.navigationBar.isHidden = true
+                }
+                navigationController.presentAlert(alert)
+            }
+        }
+    }
+
     func sceneDidDisconnect(_: UIScene) {
         let firebaseManager = DIContainer.shared.resolve(ASFirebaseAuthProtocol.self)
         Task {

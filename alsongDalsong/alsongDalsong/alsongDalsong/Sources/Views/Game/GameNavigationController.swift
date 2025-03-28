@@ -7,7 +7,7 @@ import UIKit
 
 @MainActor
 final class GameNavigationController: @unchecked Sendable {
-    private let navigationController: UINavigationController
+    let navigationController: UINavigationController
     private let gameStateRepository: GameStateRepositoryProtocol
     private let roomActionRepository: RoomActionRepositoryProtocol
     private var subscriptions: Set<AnyCancellable> = []

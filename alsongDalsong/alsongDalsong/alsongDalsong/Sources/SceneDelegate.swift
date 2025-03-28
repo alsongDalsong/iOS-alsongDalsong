@@ -24,6 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             }
         }
         window = UIWindow(windowScene: windowScene)
+        HapticManager.shared.prepare()
         
         let avatarRepository = DIContainer.shared.resolve(AvatarRepositoryProtocol.self)
         let dataDownloadRepository = DIContainer.shared.resolve(DataDownloadRepositoryProtocol.self)

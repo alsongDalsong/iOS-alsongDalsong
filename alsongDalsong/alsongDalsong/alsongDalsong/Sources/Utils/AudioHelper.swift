@@ -106,9 +106,9 @@ extension AudioHelper {
         guard await checkRecorderState(), await checkPlayerState() else { return }
         guard let file else { return }
 
-        setPlayOption(option: option)
         sourceType(type)
         makePlayer()
+        
         await player?.setOnPlaybackFinished { [weak self] in
             await self?.stopPlaying()
         }
@@ -257,19 +257,9 @@ extension AudioHelper {
     }
 
     @discardableResult
-    func playType(_ type: PlayType) -> Self {
-        playType = type
-        return self
-    }
-
-    @discardableResult
     func isConcurrent(_ isTrue: Bool) -> Self {
         isConcurrent = isTrue
         return self
-    }
-
-    private func setPlayOption(option: PlayType) {
-        playType = option
     }
 }
 

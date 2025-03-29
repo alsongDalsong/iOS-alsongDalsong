@@ -23,4 +23,9 @@ public final class GameStateMockRepository: GameStateRepositoryProtocol {
         CurrentValueSubject<Bool, Never>(false)
             .eraseToAnyPublisher()
     }
+
+    public func getPlayersCount() -> AnyPublisher<Int, Never> {
+        CurrentValueSubject<Int, Never>(1)
+            .eraseToAnyPublisher()
+    }
 }

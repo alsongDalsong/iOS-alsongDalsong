@@ -7,11 +7,12 @@ import UIKit
 
 @MainActor
 final class GameNavigationController: @unchecked Sendable {
-    private let navigationController: UINavigationController
+    let navigationController: UINavigationController
     private let gameStateRepository: GameStateRepositoryProtocol
     private let roomActionRepository: RoomActionRepositoryProtocol
     private var subscriptions: Set<AnyCancellable> = []
     private let roomNumber: String
+    private var roomPlayersNumber: Int = 0
 
     private var gameInfo: GameState? {
         didSet {
@@ -51,6 +52,20 @@ final class GameNavigationController: @unchecked Sendable {
                     self?.navigationController.navigationBar.isHidden = true
                 }
                 self?.navigationController.presentAlert(alert)
+            }
+            .store(in: &subscriptions)
+
+        gameStateRepository.getPlayersCount()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] playersCount in
+                guard let gameInfo = self?.gameInfo else { return }
+                let viewType = gameInfo.resolveViewType()
+                if viewType != .lobby, playersCount != self?.roomPlayersNumber {
+                    self?.leaveRoom()
+                    self?.showNotPlayable()
+                } else if viewType == .lobby {
+                    self?.roomPlayersNumber = playersCount
+                }
             }
             .store(in: &subscriptions)
     }
@@ -171,6 +186,7 @@ final class GameNavigationController: @unchecked Sendable {
         let answersRepository = DIContainer.shared.resolve(AnswersRepositoryProtocol.self)
         let gameStatusRepository = DIContainer.shared.resolve(GameStatusRepositoryProtocol.self)
         let dataDownloadRepository = DIContainer.shared.resolve(DataDownloadRepositoryProtocol.self)
+        let roomActionRepository = DIContainer.shared.resolve(RoomActionRepositoryProtocol.self)
 
         let vm = SelectMusicViewModel(
             playersRepository: playersRepository,
@@ -292,5 +308,17 @@ final class GameNavigationController: @unchecked Sendable {
                 ErrorHandler.handle(error)
             }
         }
+    }
+}
+
+// MARK: - Alert
+
+private extension GameNavigationController {
+    func showNotPlayable() {
+        let alert = SingleButtonAlertController(titleText: .notPlayable) { _ in
+            self.navigationController.popToRootViewController(animated: true)
+            self.navigationController.navigationBar.isHidden = true
+        }
+        self.navigationController.presentAlert(alert)
     }
 }

@@ -64,7 +64,7 @@ final class RoomActionRepository: RoomActionRepositoryProtocol {
             throw ASRepositoryError.leaveRoom
         }
     }
-    
+
     func startGame(roomNumber: String) async throws -> Bool {
         do {
             let response: [String: Bool]? = try await self.sendRequest(

@@ -9,7 +9,6 @@ extension ASButton {
         let backgroundColor: UIColor?
         let cornerStyle: UIButton.Configuration.CornerStyle
         let baseForegroundColor: UIColor
-        
         init(
             systemImageName: String? = nil,
             text: String? = nil,

@@ -31,7 +31,8 @@ final class ASButton: UIButton {
         textStyle: UIFont.TextStyle = .largeTitle,
         backgroundColor: UIColor? = nil,
         cornerStyle: UIButton.Configuration.CornerStyle = .medium,
-        baseForegroundColor: UIColor = .white
+        baseForegroundColor: UIColor = .white,
+        shadowColor: UIColor = .asShadow
     ) {
         configurationData = ASButtonConfiguration(
             systemImageName: systemImageName,
@@ -41,7 +42,7 @@ final class ASButton: UIButton {
             cornerStyle: cornerStyle,
             baseForegroundColor: baseForegroundColor
         )
-
+        setShadow(color: shadowColor, width: 0, height: 8)
         applyConfiguration()
     }
 
@@ -56,7 +57,6 @@ final class ASButton: UIButton {
             backgroundColor: type?.backgroundColor,
             cornerStyle: type?.cornerStyle ?? .medium
         )
-
         applyConfiguration()
     }
 
@@ -144,6 +144,10 @@ final class ASButton: UIButton {
         var cornerStyle: UIButton.Configuration.CornerStyle {
             .medium
         }
+
+        var shadowColor: UIColor? {
+            .asShadow
+        }
     }
 }
 
@@ -156,7 +160,7 @@ private extension ASButton {
     /// 버튼이 눌렸을 때 효과를 적용하는 메서드
     func applyHighlightEffect() {
         if isHighlighted {
-            transform = CGAffineTransform(translationX: 3, y: 3)
+            transform = CGAffineTransform(translationX: 0, y: 8)
             layer.shadowOffset = .zero
         } else {
             transform = .identity

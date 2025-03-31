@@ -3,6 +3,9 @@ name: CI
 on:
   pull_request: #dev 브랜치로 PR을 올릴 경우 실행
     branches: [ "dev" ]
+    
+  push: # test
+    branches: ["feat/#48"]
 
 jobs:
   build:
@@ -10,7 +13,32 @@ jobs:
     runs-on: macos-15
 
     steps:
-    - uses: actions/checkout@v4
+    - name: 📁 Checkout Repository
+      uses: actions/checkout@v4
+    
     - name: 🛠 Start alsongDalsong Build
       run: |
-        xcodebuild build -workspace alsongDalsong.xcworkspace -scheme alsongDalsong -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest'
+        echo "🚧 Starting build..."
+        xcodebuild build \
+          -workspace alsongDalsong.xcworkspace \
+          -scheme alsongDalsong -sdk iphonesimulator \
+          -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest'
+        
+    - name: 🧾 Get Test Schemes
+      run: |
+        echo "🔍 Finding test schemes..."
+        SCHEMES=$(xcodebuild -list -workspace alsongDalsong.xcworkspace | \
+          awk '/Schemes:/, /Targets:/' | sed -e '1d;$d' | grep 'Tests' | tr '\n' ' ')
+        echo "✅ Found test schemes: $SCHEMES"
+        echo "SCHEMES=$SCHEMES" >> $GITHUB_ENV
+        
+    - name: 🔍 Run All Test Schemes
+      run: |
+        for SCHEME in $SCHEMES; do
+          echo "🧪 Testing Start scheme: $SCHEME"
+          xcodebuild test \
+            -workspace alsongDalsong.xcworkspace \
+            -scheme "$SCHEME" \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' || exit 1
+        done

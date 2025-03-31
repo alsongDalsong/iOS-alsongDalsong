@@ -61,7 +61,7 @@ struct SelectAnswerView: View {
                     .scrollDismissesKeyboard(.immediately)
                 }
             }
-            .background(.asLightGray)
+            .background(.asBackground)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("완료") {

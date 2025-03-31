@@ -38,7 +38,7 @@ class ASAlertController: UIViewController {
 
     private func setAlertView() {
         alertView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-        alertView.backgroundColor = .asLightGray
+        alertView.backgroundColor = .asBackground
         alertView.layer.borderWidth = 2.5
         alertView.layer.borderColor = UIColor.asBlack.cgColor
         view.addSubview(alertView)

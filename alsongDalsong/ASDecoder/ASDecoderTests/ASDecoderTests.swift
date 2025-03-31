@@ -15,7 +15,7 @@ struct ASDecoderTests {
                     "name": "아이유"
                 }
             """
-        let jsonData = #require(jsonString.data(using: .utf8))
+        let jsonData = try #require(jsonString.data(using: .utf8))
         let result: Result<Data, Error> = .success(jsonData)
 
         let decodedData: SampleData = try await ASDecoder.handleResponse(result: result)

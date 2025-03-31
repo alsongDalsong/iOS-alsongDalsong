@@ -23,6 +23,14 @@ jobs:
         key: ${{ runner.os }}-derivedDataCache-${{ hashFiles('**/*.xcodeproj/**', '**/*.xcworkspace/**', 'Podfile.lock') }}
         restore-keys: | #Cache miss 발생 시
           ${{ runner.os }}-derivedDataCache-
+          
+    - name: 💾 Cache Swift Packages
+      uses: actions/cache@v4
+      with:
+        path: .build
+        key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-spm-
       
     - name: 🛠 Start alsongDalsong Build
       run: |

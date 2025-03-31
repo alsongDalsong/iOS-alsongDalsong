@@ -44,7 +44,7 @@ jobs:
       run: |
         for SCHEME in $SCHEMES; do
           echo "🧪 Testing Start scheme: $SCHEME"
-          xcodebuild test \
+          xcodebuild test-without-building \
             -workspace alsongDalsong.xcworkspace \
             -scheme "$SCHEME" \
             -sdk iphonesimulator \

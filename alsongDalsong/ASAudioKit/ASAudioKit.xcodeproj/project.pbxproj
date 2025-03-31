@@ -10,6 +10,8 @@
 		1B7EB01B2CFDA83B00B2BE2A /* ASAudioAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7EB01A2CFDA83B00B2BE2A /* ASAudioAnalyzer.swift */; };
 		1B7EB01C2CFDA83B00B2BE2A /* ASAudioAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7EB01A2CFDA83B00B2BE2A /* ASAudioAnalyzer.swift */; };
 		2939AE362D89711900B2893B /* ASAudioError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8593659C2D3F77F60086C8C4 /* ASAudioError.swift */; };
+		2985DC192D961CA500979527 /* ASAudioVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2985DC182D961CA500979527 /* ASAudioVisualizer.swift */; };
+		2985DC1A2D961CA500979527 /* ASAudioVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2985DC182D961CA500979527 /* ASAudioVisualizer.swift */; };
 		4E8907C22CE2489A00D5B547 /* ASAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; platformFilter = ios; };
 		4EB1ED372CE88E500012FFBA /* ASAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; };
 		4EB1ED382CE88E500012FFBA /* ASAudioKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -50,6 +52,7 @@
 
 /* Begin PBXFileReference section */
 		1B7EB01A2CFDA83B00B2BE2A /* ASAudioAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASAudioAnalyzer.swift; sourceTree = "<group>"; };
+		2985DC182D961CA500979527 /* ASAudioVisualizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASAudioVisualizer.swift; sourceTree = "<group>"; };
 		4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ASAudioKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E8907BE2CE2489A00D5B547 /* ASAudioKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ASAudioKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB1EC802CE7AA160012FFBA /* ASAudioDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ASAudioDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -71,6 +74,13 @@
 				ASAudioPlayer/ASAudioPlayer.swift,
 			);
 			target = 4EB1EC7F2CE7AA160012FFBA /* ASAudioDemo */;
+		};
+		2985DC1E2D96258000979527 /* Exceptions for "ASAudioDemo" folder in "ASAudioKit" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AudioVisualizerView.swift,
+			);
+			target = 4E89071D2CE23D1B00D5B547 /* ASAudioKit */;
 		};
 		4E8907C92CE24BA400D5B547 /* Exceptions for "ASAudioKit" folder in "ASAudioKitTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -100,6 +110,9 @@
 		};
 		4EB1EC812CE7AA160012FFBA /* ASAudioDemo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2985DC1E2D96258000979527 /* Exceptions for "ASAudioDemo" folder in "ASAudioKit" target */,
+			);
 			path = ASAudioDemo;
 			sourceTree = "<group>";
 		};
@@ -136,6 +149,7 @@
 		4E8907142CE23D1A00D5B547 = {
 			isa = PBXGroup;
 			children = (
+				2985DC182D961CA500979527 /* ASAudioVisualizer.swift */,
 				1B7EB01A2CFDA83B00B2BE2A /* ASAudioAnalyzer.swift */,
 				8593659C2D3F77F60086C8C4 /* ASAudioError.swift */,
 				4E8907AD2CE240D400D5B547 /* ASAudioKit */,
@@ -318,6 +332,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2985DC1A2D961CA500979527 /* ASAudioVisualizer.swift in Sources */,
 				1B7EB01C2CFDA83B00B2BE2A /* ASAudioAnalyzer.swift in Sources */,
 				8593659D2D3F77FE0086C8C4 /* ASAudioError.swift in Sources */,
 			);
@@ -334,6 +349,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2985DC192D961CA500979527 /* ASAudioVisualizer.swift in Sources */,
 				1B7EB01B2CFDA83B00B2BE2A /* ASAudioAnalyzer.swift in Sources */,
 				2939AE362D89711900B2893B /* ASAudioError.swift in Sources */,
 			);

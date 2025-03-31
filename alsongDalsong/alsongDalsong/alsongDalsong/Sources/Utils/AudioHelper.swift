@@ -61,7 +61,7 @@ final class AudioHelper: @unchecked Sendable {
         }
     }
 
-    private func removePlayer() {
+    private func removePlayer() async {
         player = nil
     }
 
@@ -69,14 +69,14 @@ final class AudioHelper: @unchecked Sendable {
         recorder = nil
     }
 
-    private func removeTimer() {
+    private func removeTimer() async {
         cancellable?.cancel()
         cancellable = nil
     }
 
     func analyze(with data: Data) async -> [CGFloat] {
         do {
-            let columns = try await ASAudioAnalyzer.analyze(data: data, samplesCount: 24)
+            let columns = try await ASAudioAnalyzer.analyze(data: data, count: 24)
             return columns
         } catch {
             ErrorHandler.handle(error)
@@ -139,11 +139,11 @@ extension AudioHelper {
 
     func stopPlaying() async {
         await player?.stopPlaying()
-        removePlayer()
+        await removePlayer()
         
         playerStateSubject.send((source, false))
         
-        removeTimer()
+        await removeTimer()
     }
 
     private func updatePlayIndex() {
@@ -164,7 +164,7 @@ extension AudioHelper {
     private func checkPlayerState() async -> Bool {
         if await isPlaying {
             await player?.stopPlaying()
-            removePlayer()
+            await removePlayer()
             playerStateSubject.send((source, false))
         }
         return true

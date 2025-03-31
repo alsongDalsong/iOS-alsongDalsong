@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    name: 🛠️ build
     runs-on: macos-15
 
     steps:
@@ -31,7 +32,16 @@ jobs:
           -scheme alsongDalsong \
           -sdk iphonesimulator \
           -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest'
-        
+  test:
+    needs: build
+    name: 🧪 test
+    runs-on: macos-15
+    
+    steps:
+    
+    - name: 📁 Checkout Repository
+      uses: actions/checkout@v4
+      
     - name: 🧾 Get Test Schemes
       run: |
         echo "🔍 Finding test schemes..."

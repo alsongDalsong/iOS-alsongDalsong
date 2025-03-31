@@ -16,7 +16,11 @@ public final class RoomActionMockRepository: RoomActionRepositoryProtocol {
     public func leaveRoom() async throws -> Bool {
         true
     }
-    
+
+    public func observeRoomConnection() async throws {
+
+    }
+
     public func startGame(roomNumber: String) async throws -> Bool {
         true
     }

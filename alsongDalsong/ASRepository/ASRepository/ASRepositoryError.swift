@@ -5,7 +5,7 @@ enum ASRepositoryError: LocalizedError {
     case getAvatarUrls
     case postRecording, postResetGame
     case uploadRecording
-    case createRoom, joinRoom(description: String), leaveRoom, startGame, changeMode, changeRecordOrder, resetGame, kickUser, sendRequest(description: String)
+    case createRoom, joinRoom(description: String), leaveRoom, observeRoomConnection, startGame, changeMode, changeRecordOrder, resetGame, kickUser, sendRequest(description: String)
     case submitAnswer
 
     var errorDescription: String? {
@@ -18,6 +18,7 @@ enum ASRepositoryError: LocalizedError {
             case .createRoom: "방을 생성하는 중 오류가 발생했습니다"
             case .joinRoom(let description): "\(description)"
             case .leaveRoom: "방을 떠나는 중 오류가 발생했습니다"
+            case .observeRoomConnection: "방 연결 상태 감시 중 오류가 발생했습니다"
             case .startGame: "게임을 시작하는 중 오류가 발생했습니다"
             case .changeMode: "게임 모드를 변경하는 중 오류가 발생했습니다"
             case .changeRecordOrder: "녹음 순서를 변경하는 중 오류가 발생했습니다"

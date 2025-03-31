@@ -32,22 +32,6 @@ jobs:
           -scheme alsongDalsong \
           -sdk iphonesimulator \
           -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest'
-          
-    - name: 🧪 Build for Testing
-      run: |
-        echo "🚧 Building for testing..."
-        xcodebuild build-for-testing \
-          -workspace alsongDalsong.xcworkspace \
-          -scheme alsongDalsongTests \
-          -sdk iphonesimulator \
-          -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
-          -derivedDataPath BuildData
-
-    - name: 📦 Upload BuildData
-      uses: actions/upload-artifact@v4
-      with:
-        name: BuildData
-        path: BuildData
         
   test:
     name: 🧪 test
@@ -58,12 +42,6 @@ jobs:
     
     - name: 📁 Checkout Repository
       uses: actions/checkout@v4
-      
-    - name: 📥 Download BuildData
-      uses: actions/download-artifact@v4
-      with:
-        name: BuildData
-        path: BuildData
     
     - name: 💾 Cache DerivedData
       uses: actions/cache@v4
@@ -85,7 +63,7 @@ jobs:
       run: |
         for SCHEME in $SCHEMES; do
           echo "🧪 Testing Start scheme: $SCHEME"
-          xcodebuild test-without-building \
+          xcodebuild test \
             -workspace alsongDalsong.xcworkspace \
             -scheme "$SCHEME" \
             -sdk iphonesimulator \

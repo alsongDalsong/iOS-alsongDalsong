@@ -9,7 +9,6 @@ on:
 
 jobs:
   build:
-    # job이 실행될 환경
     runs-on: macos-15
 
     steps:
@@ -20,25 +19,17 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ~/Library/Developer/Xcode/DerivedData
-        key: ${{ runner.os }}-derivedDataCache-${{ hashFiles('**/*.xcodeproj/**', '**/*.xcworkspace/**', 'Podfile.lock') }}
+        key: ${{ runner.os }}-derivedDataCache-${{ hashFiles('**/*.xcworkspace/**', 'Podfile.lock') }}
         restore-keys: | #Cache miss 발생 시
           ${{ runner.os }}-derivedDataCache-
-          
-    - name: 💾 Cache SourcePackages
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/Library/Developer/Xcode/DerivedData/**/SourcePackages
-        key: ${{ runner.os }}-spm-sourcepackages-${{ hashFiles('**/Package.resolved') }}
-        restore-keys: |
-          ${{ runner.os }}-spm-sourcepackages-
       
     - name: 🛠 Start alsongDalsong Build
       run: |
         echo "🚧 Starting build..."
         xcodebuild build \
           -workspace alsongDalsong.xcworkspace \
-          -scheme alsongDalsong -sdk iphonesimulator \
+          -scheme alsongDalsong \
+          -sdk iphonesimulator \
           -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest'
         
     - name: 🧾 Get Test Schemes

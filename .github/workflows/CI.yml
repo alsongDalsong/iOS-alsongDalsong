@@ -16,6 +16,14 @@ jobs:
     - name: 📁 Checkout Repository
       uses: actions/checkout@v4
       
+    - name: 💾 Cache DerivedData
+      uses: actions/cache@v4
+      with:
+        path: ~/Library/Developer/Xcode/DerivedData
+        key: ${{ runner.os }}-derivedDataCache-${{ hashFiles('**/*.xcworkspace/**', 'Podfile.lock') }}
+        restore-keys: | #Cache miss 발생 시
+          ${{ runner.os }}-derivedDataCache-
+      
     - name: 🛠 Start alsongDalsong Build
       run: |
         echo "🚧 Starting build..."
@@ -34,6 +42,14 @@ jobs:
     
     - name: 📁 Checkout Repository
       uses: actions/checkout@v4
+      
+    - name: 💾 Cache DerivedData
+      uses: actions/cache@v4
+      with:
+        path: ~/Library/Developer/Xcode/DerivedData
+        key: ${{ runner.os }}-derivedDataCache-${{ hashFiles('**/*.xcworkspace/**', 'Podfile.lock') }}
+        restore-keys: | #Cache miss 발생 시
+          ${{ runner.os }}-derivedDataCache-
           
     - name: 🧾 Get Test Schemes
       run: |

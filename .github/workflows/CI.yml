@@ -33,8 +33,8 @@ jobs:
           -sdk iphonesimulator \
           -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest'
   test:
-    needs: build
     name: 🧪 test
+    needs: build
     runs-on: macos-15
     
     steps:

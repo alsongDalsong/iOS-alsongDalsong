@@ -1,83 +1,72 @@
-import UIKit
 import SwiftUI
+import Charts
 
-class AudioVisualizerView: UIView {
-    var columnWidth: CGFloat?
-    var columns: [CAShapeLayer] = []
-    var amplitudesHistory: [CGFloat] = []
-    let numOfColumns: Int = 43
+struct AudioVisualizerView: View {
+    private let audioVisualizer = ASAudioVisualizer()
+    private let timer = Timer.publish(every: 0.03, on: .main, in: .common).autoconnect()
     
-    override class func awakeFromNib() {
-        super.awakeFromNib()
-    }
+    @State private var data: [Float] = []
+    @State private var isPlaying = false
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        drawVisualizerCircles()
-    }
-    
-    func drawVisualizerCircles() {
-        self.amplitudesHistory = Array(repeating: 0, count: numOfColumns)
-        let diameter = self.bounds.width / CGFloat(2 * numOfColumns + 1)
-        self.columnWidth = diameter
-        let startingPointY = self.bounds.midY - diameter / 2
-        var startingPointX = self.bounds.minX + diameter
-        
-        for _ in 0 ..< numOfColumns {
-            let circleOrigin = CGPoint(x: startingPointX, y: startingPointY)
-            let circleSize = CGSize(width: diameter, height: diameter)
-            let circle = UIBezierPath(roundedRect: CGRect(origin: circleOrigin, size: circleSize), cornerRadius: diameter / 2)
+    private let harderBetterFasterStronger = "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview112/v4/bf/a6/1b/bfa61b15-a797-ec2d-ef44-bf9bfb9fab10/mzaf_9377760837375603436.plus.aac.p.m4a"
+
+    var body: some View {
+        VStack {
+            HStack {
+                Button(isPlaying ? "Pause" : "Play", systemImage: isPlaying ? "pause.fill" : "play.fill") {
+                    if isPlaying {
+                        audioVisualizer.pause()
+                    } else {
+                        audioVisualizer.play()
+                    }
+                    
+                    isPlaying.toggle()
+                }
+                
+                Button("Stop", systemImage: "stop.fill") {
+                    audioVisualizer.stop()
+                    isPlaying = false
+                    withAnimation {
+                        data = Array(repeating: 0, count: 20)
+                    }
+                }
+                .disabled(!isPlaying)
+            }
             
-            let circleLayer = CAShapeLayer()
-            circleLayer.path = circle.cgPath
-            circleLayer.fillColor = UIColor.systemBlue.cgColor
-            
-            self.layer.addSublayer(circleLayer)
-            self.columns.append(circleLayer)
-            startingPointX += 2 * diameter
-        }
-    }
-    
-    func removeVisualizerCircles() {
-        for column in self.columns {
-            column.removeFromSuperlayer()
-        }
-        
-        self.columns.removeAll()
-    }
-    
-    private func computeNewPath(for layer: CAShapeLayer, with amplitude: CGFloat) -> CGPath {
-        let width = self.columnWidth ?? 8.0
-        let maxHeightGain = self.bounds.height - 3 * width
-        let heightGain =  maxHeightGain * amplitude
-        let newHeight = width + heightGain
-        let newOrigin = CGPoint(x: layer.path?.boundingBox.origin.x ?? 0,
-                                y: (layer.superlayer?.bounds.midY ?? 0) - (newHeight / 2))
-        let newSize = CGSize(width: width, height: newHeight)
-        
-        return UIBezierPath(roundedRect: CGRect(origin: newOrigin, size: newSize), cornerRadius: width / 2).cgPath
-    }
-    
-    fileprivate func updateVisualizerView(with amplitude: CGFloat) {
-        guard self.columns.count == numOfColumns else { return }
-        self.amplitudesHistory.append(amplitude)
-        self.amplitudesHistory.removeFirst()
-        
-        for i in 0..<self.columns.count {
-            self.columns[i].path = computeNewPath(for: self.columns[i], with: self.amplitudesHistory[i])
+            Chart(Array(data.enumerated()), id: \.0) { index, magnitude in
+                BarMark(
+                    x: .value("Frequency", String(index)),
+                    y: .value("Magnitude", magnitude)
+                )
+                .foregroundStyle(.blue)
+            }
+            .onAppear {
+                guard let url = URL(string: harderBetterFasterStronger) else { return }
+                
+                Task {
+                    let data = try await URLSession.shared.data(from: url)
+                    audioVisualizer.bind(data: data.0)
+                }
+            }
+            .onReceive(timer) { _ in
+                if isPlaying {
+                    withAnimation {
+                        data = audioVisualizer.fftMagnitudes.map { min($0, 40) }
+                    }
+                }
+            }
+            .chartYScale(domain: 0...40)
+            .chartXAxis(.hidden)
+            .chartYAxis(.hidden)
+            .frame(height: 100)
+            .padding()
+            .background(Color(.systemGray6))
+            .cornerRadius(10)
+            .padding()
         }
     }
 }
 
-struct AudioVisualizerViewWrapper: UIViewRepresentable {
-    @Binding var amplitude: Float
-    
-    func makeUIView(context: Context) -> AudioVisualizerView {
-        let visualizer = AudioVisualizerView(frame: .zero)
-        return visualizer
-    }
-    
-    func updateUIView(_ uiView: AudioVisualizerView, context: Context) {
-        uiView.updateVisualizerView(with: CGFloat(amplitude))
-    }
+#Preview {
+    AudioVisualizerView()
 }

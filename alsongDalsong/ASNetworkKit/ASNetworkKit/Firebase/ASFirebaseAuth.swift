@@ -24,6 +24,7 @@ public final class ASFirebaseAuth: ASFirebaseAuthProtocol {
                 guard let isConnected = snapshot.value as? Bool else { return }
                 if isConnected {
                     userStatusRef.setValue(dict)
+                    userStatusRef.onDisconnectRemoveValue()
                 }
             }
         } catch {
@@ -42,6 +43,16 @@ public final class ASFirebaseAuth: ASFirebaseAuthProtocol {
         } catch {
             ErrorHandler.handle(error)
             throw ASNetworkError.firebaseSignOut
+        }
+    }
+
+    public func checkConnection() async -> Bool {
+        await withCheckedContinuation { continuation in
+            let connectedRef = databaseRef.child(".info/connected")
+            connectedRef.observeSingleEvent(of: .value) { snapshot in
+                let isConnected = snapshot.value as? Bool ?? false
+                continuation.resume(returning: isConnected)
+            }
         }
     }
 

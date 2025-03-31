@@ -22,12 +22,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> UISceneConfiguration {
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
-    
+
     func applicationWillTerminate(_ application: UIApplication) {
         leaveRoom()
         sleep(5)
     }
-    
+
     private func leaveRoom() {
         let roomActionRepository = DIContainer.shared.resolve(RoomActionRepositoryProtocol.self)
         
@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             do {
                 try await roomActionRepository.leaveRoom()
             } catch {
-                Logger.error(error.localizedDescription)
+                ErrorHandler.handle(error)
             }
         }
     }

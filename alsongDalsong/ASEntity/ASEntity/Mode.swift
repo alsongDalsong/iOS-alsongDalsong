@@ -1,5 +1,3 @@
-import Foundation
-
 public enum Mode: String, Codable, CaseIterable, Identifiable {
     case humming
     case harmony
@@ -49,6 +47,21 @@ public enum Mode: String, Codable, CaseIterable, Identifiable {
             case .tts: return "음악의 가사만 듣고 노래를 맞추는 모드입니다. 선택된 노래의 가사를 TTS로 읽어주며, 플레이어는 그 가사에 해당하는 노래를 맞춰야 합니다."
         }
     }
+    
+    public var summary: String {
+        switch self {
+        case .humming:
+            "허밍으로 노래를 전달하자!"
+        case .harmony:
+            "각자 파트를 녹음해 완벽한 하모니를 만들자!"
+        case .sync:
+            "동시에 노래를 맞춰보자!"
+        case .instant:
+            "1초 듣고 노래를 맞추자!"
+        case .tts:
+            "가사만 듣고 노래를 맞추자!"
+        }
+    }
 
     public var imageName: String {
         switch self {
@@ -58,5 +71,9 @@ public enum Mode: String, Codable, CaseIterable, Identifiable {
             case .instant: return "instant"
             case .tts: return "tts"
         }
+    }
+    
+    public var recommended: (time: String, peopleCount: String) {
+        ("5~10 분", "3~6 명")
     }
 }

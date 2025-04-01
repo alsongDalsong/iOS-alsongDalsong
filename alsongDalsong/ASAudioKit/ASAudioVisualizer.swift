@@ -14,6 +14,15 @@ public class ASAudioVisualizer {
     private var playState: PlayState = .stop
     
     public var fftMagnitudes: [Float] = []
+    public var progress: Double {
+        guard let nodetime = player.lastRenderTime,
+              let playerTime = player.playerTime(forNodeTime: nodetime),
+              let audioFile else { return 0.0 }
+        
+        let duration = Double(audioFile.length) / audioFile.processingFormat.sampleRate
+        
+        return Double(playerTime.sampleTime) / playerTime.sampleRate / duration
+    }
     
     public func bind(data: Data, count: Int = 20) {
         sampleCount = count

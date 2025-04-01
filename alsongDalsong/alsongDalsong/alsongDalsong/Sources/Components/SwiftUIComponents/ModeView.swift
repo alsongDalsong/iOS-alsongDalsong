@@ -59,7 +59,6 @@ extension ModeView {
                           .font(.doHyeon(size: 20))
                   }
               }
-              .foregroundStyle(.white)
               .padding(.top, 16)
               .padding(.trailing, 24)
               .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
@@ -73,10 +72,10 @@ extension ModeView {
                       .font(.doHyeon(size: 24))
                       .minimumScaleFactor(0.01)
               }
-              .foregroundStyle(.white)
               .padding(.bottom, 25)
               .padding(.leading, 24)
               .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
           }
+          .foregroundStyle(.white)  //TO-DO
       }
 }

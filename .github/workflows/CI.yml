@@ -47,12 +47,12 @@ jobs:
         id: set-matrix
         run: |
           SCHEMES=$(xcodebuild -list -workspace alsongDalsong.xcworkspace | \
-            awk '/Schemes:/, /Targets:/' | sed -e '1d;$d' | grep 'Tests')
+            awk '/Schemes:/, /Targets:/' | sed -e '1d;$d' | grep 'Tests' | sed 's/^ *//')
 
           echo "✅ Found schemes:"
           echo "$SCHEMES"
 
-          JSON=$(jq -n --argjson schemes "$(echo "$SCHEMES" | jq -R -s -c 'split("\n")[:-1]')" '{ scheme: $schemes }')
+          JSON=$(echo "$SCHEMES" | jq -R -s -c 'split("\n")[:-1] | {scheme: .}')
           echo "matrix=$JSON" >> $GITHUB_OUTPUT
           
   test:

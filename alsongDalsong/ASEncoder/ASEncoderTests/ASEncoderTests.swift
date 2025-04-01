@@ -12,7 +12,7 @@ struct ASEncoderTests {
     @Test("인코딩 성공") func encode() async throws {
         let dateFormatter = ISO8601DateFormatter()
         let dateString = "2000-01-01T00:00:00Z"
-        let date = #require(dateFormatter.date(from: dateString))
+        let date = try #require(dateFormatter.date(from: dateString))
         
         let testModel = TestModel(name: "아이유", age: 30, birthDate: date)
         

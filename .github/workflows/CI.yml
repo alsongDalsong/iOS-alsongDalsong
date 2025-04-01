@@ -32,12 +32,6 @@ jobs:
           -scheme alsongDalsong \
           -sdk iphonesimulator \
           -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest'
-          
-    - name: 📦 Upload DerivedData
-      uses: actions/upload-artifact@v4
-      with:
-        name: DerivedData
-        path: ./build/DerivedData
         
   test:
     name: 🧪 test
@@ -48,12 +42,6 @@ jobs:
     
     - name: 📁 Checkout Repository
       uses: actions/checkout@v4
-
-    - name: 📥 Download DerivedData
-      uses: actions/download-artifact@v4
-      with:
-        name: DerivedData
-        path: ./build/DerivedData
           
     - name: 🧾 Get Test Schemes
       run: |

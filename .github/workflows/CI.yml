@@ -32,33 +32,46 @@ jobs:
           -scheme alsongDalsong \
           -sdk iphonesimulator \
           -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest'
-        
+   
+  generate-matrix:
+    name: 🧾 Generate Test Matrix
+    runs-on: macos-15
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+    steps:
+      - name: 📁 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🔍 Extract Test Schemes
+        id: set-matrix
+        run: |
+          SCHEMES=$(xcodebuild -list -workspace alsongDalsong.xcworkspace | \
+            awk '/Schemes:/, /Targets:/' | sed -e '1d;$d' | grep 'Tests')
+
+          echo "✅ Found schemes:"
+          echo "$SCHEMES"
+
+          JSON=$(jq -n --argjson schemes "$(echo "$SCHEMES" | jq -R -s -c 'split("\n")[:-1]')" '{ scheme: $schemes }')
+          echo "matrix=$JSON" >> $GITHUB_OUTPUT
+          
   test:
     name: 🧪 test
-    needs: build
+    needs: [build, generate-matrix]
     runs-on: macos-15
-    
+    strategy:
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+      
     steps:
-    
     - name: 📁 Checkout Repository
       uses: actions/checkout@v4
-          
-    - name: 🧾 Get Test Schemes
-      run: |
-        echo "🔍 Finding test schemes..."
-        SCHEMES=$(xcodebuild -list -workspace alsongDalsong.xcworkspace | \
-          awk '/Schemes:/, /Targets:/' | sed -e '1d;$d' | grep 'Tests' | tr '\n' ' ')
-        echo "✅ Found test schemes: $SCHEMES"
-        echo "SCHEMES=$SCHEMES" >> $GITHUB_ENV
     
-    - name: 🔍 Run All Test Schemes
+    - name: 🔍 Run Test Scheme
       run: |
-        for SCHEME in $SCHEMES; do
-          echo "🧪 Testing Start scheme: $SCHEME"
+          echo "🧪 Running: ${{ matrix.scheme }}"
           xcodebuild test \
             -workspace alsongDalsong.xcworkspace \
-            -scheme "$SCHEME" \
+            -scheme "${{ matrix.scheme }}" \
             -sdk iphonesimulator \
             -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
-            -parallel-testing-enabled YES || exit 1 
-        done
+            -parallel-testing-enabled YES

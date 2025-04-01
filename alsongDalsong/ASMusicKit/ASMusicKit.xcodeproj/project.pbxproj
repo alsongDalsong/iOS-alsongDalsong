@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		296360AB2D96C278007C4E14 /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 296360AA2D96C278007C4E14 /* ASLogKit.framework */; };
+		296360AC2D96C278007C4E14 /* ASLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 296360AA2D96C278007C4E14 /* ASLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		859365942D3F709D0086C8C4 /* ASMusicError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859365912D3F70960086C8C4 /* ASMusicError.swift */; };
 		8D7F5A862CF88C32002EAB0F /* ASEntity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7F5A852CF88C25002EAB0F /* ASEntity.framework */; };
 		8D7F5A872CF88C32002EAB0F /* ASEntity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7F5A852CF88C25002EAB0F /* ASEntity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -29,6 +31,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				296360AC2D96C278007C4E14 /* ASLogKit.framework in Embed Frameworks */,
 				8D7F5A872CF88C32002EAB0F /* ASEntity.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -38,6 +41,7 @@
 
 /* Begin PBXFileReference section */
 		1635A4282CE59833002246E0 /* ASMusicKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ASMusicKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		296360AA2D96C278007C4E14 /* ASLogKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ASLogKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		859365912D3F70960086C8C4 /* ASMusicError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASMusicError.swift; sourceTree = "<group>"; };
 		8D7F5A802CF88C25002EAB0F /* ASEntity.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ASEntity.xcodeproj; path = ../ASEntity/ASEntity.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -55,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				296360AB2D96C278007C4E14 /* ASLogKit.framework in Frameworks */,
 				8D7F5A862CF88C32002EAB0F /* ASEntity.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -65,6 +70,7 @@
 		8D7F5A7F2CF88C25002EAB0F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				296360AA2D96C278007C4E14 /* ASLogKit.framework */,
 				8D7F5A802CF88C25002EAB0F /* ASEntity.xcodeproj */,
 			);
 			name = Frameworks;

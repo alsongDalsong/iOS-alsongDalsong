@@ -103,6 +103,8 @@ private extension ASNetworkManager {
         case gatewayTimeout = 504
         case startedRoom = 452
         case bannedPlayer = 453
+        case alreadyExsit = 454
+        case maximumRoom = 455
         case unknown
 
         var description: String {
@@ -152,7 +154,11 @@ private extension ASNetworkManager {
                 case .startedRoom:
                     return "이미 게임이 시작된 방입니다"
                 case .bannedPlayer:
-                    return "해당 방에서 강퇴되어 참여할 수 없습니다"
+                    return "해당 방에서 강퇴되어 참여할 수 없습니다."
+                case .alreadyExsit:
+                    return "이미 플레이어가 방에 참가중입니다."
+                case .maximumRoom:
+                    return "방이 가득 찼습니다."
                 case .unknown:
                     return "알 수 없는 오류: 예상하지 못한 오류가 발생했습니다"
             }

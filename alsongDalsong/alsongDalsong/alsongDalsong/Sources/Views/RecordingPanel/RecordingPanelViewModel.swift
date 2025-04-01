@@ -16,7 +16,6 @@ final class RecordingPanelViewModel: @unchecked Sendable {
     
     func configureAudioHelper() {
         AudioHelper.shared
-            .playType(.full)
             .isConcurrent(false)
     }
     

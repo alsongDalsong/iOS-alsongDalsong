@@ -68,7 +68,7 @@ struct LobbyView: View {
                 }
             }
         }
-        .background(Color.asLightGray)
+        .background(Color.asBackground)
     }
 
     func presentKickAlert(player: Player) {

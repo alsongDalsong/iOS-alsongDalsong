@@ -62,6 +62,7 @@ final class AudioHelper: @unchecked Sendable {
     }
 
     private func removePlayer() {
+        Logger.debug(#function)
         player = nil
     }
 
@@ -70,13 +71,14 @@ final class AudioHelper: @unchecked Sendable {
     }
 
     private func removeTimer() {
+        Logger.debug(#function)
         cancellable?.cancel()
         cancellable = nil
     }
 
     func analyze(with data: Data) async -> [CGFloat] {
         do {
-            let columns = try await ASAudioAnalyzer.analyze(data: data, samplesCount: 24)
+            let columns = try await ASAudioAnalyzer.analyze(data: data, count: 24)
             return columns
         } catch {
             ErrorHandler.handle(error)
@@ -102,9 +104,9 @@ extension AudioHelper {
         guard await checkRecorderState(), await checkPlayerState() else { return }
         guard let file else { return }
 
-        setPlayOption(option: option)
         sourceType(type)
         makePlayer()
+        
         await player?.setOnPlaybackFinished { [weak self] in
             await self?.stopPlaying()
         }
@@ -114,10 +116,11 @@ extension AudioHelper {
         if needsWaveUpdate {
             updatePlayIndex()
         }
+        
         await play(file: file, option: option)
     }
 
-    func play(file: Data, option: PlayType) async {
+    private func play(file: Data, option: PlayType) async {
         switch option {
             case .full:
                 do {
@@ -125,25 +128,29 @@ extension AudioHelper {
                 } catch {
                     ErrorHandler.handle(error)
                 }
+            
             case let .partial(time):
                 do {
                     try await player?.startPlaying(data: file)
-                    try await Task.sleep(nanoseconds: UInt64(time * 1_000_000_000))
+                    try await Task.sleep(for: .seconds(time))
                     await stopPlaying()
                 } catch {
                     ErrorHandler.handle(error)
                 }
+            
             @unknown default: break
         }
     }
 
     func stopPlaying() async {
+        Logger.debug(#function)
+        
         await player?.stopPlaying()
+      
         removePlayer()
+        removeTimer()
         
         playerStateSubject.send((source, false))
-        
-        removeTimer()
     }
 
     private func updatePlayIndex() {
@@ -164,7 +171,7 @@ extension AudioHelper {
     private func checkPlayerState() async -> Bool {
         if await isPlaying {
             await player?.stopPlaying()
-            removePlayer()
+            await removePlayer()
             playerStateSubject.send((source, false))
         }
         return true
@@ -180,6 +187,7 @@ extension AudioHelper {
         makeRecorder()
         let tempURL = makeURL()
         recorderStateSubject.send(true)
+        
         do {
             try await recorder?.startRecording(url: tempURL)
             visualize()
@@ -217,6 +225,7 @@ extension AudioHelper {
             .appendingPathComponent("tempCache")
         createCacheDirectory(with: tempCacheDirectory)
         let key = UUID()
+        
         return tempCacheDirectory
             .appendingPathComponent("\(key)")
     }
@@ -252,19 +261,9 @@ extension AudioHelper {
     }
 
     @discardableResult
-    func playType(_ type: PlayType) -> Self {
-        playType = type
-        return self
-    }
-
-    @discardableResult
     func isConcurrent(_ isTrue: Bool) -> Self {
         isConcurrent = isTrue
         return self
-    }
-
-    private func setPlayOption(option: PlayType) {
-        playType = option
     }
 }
 

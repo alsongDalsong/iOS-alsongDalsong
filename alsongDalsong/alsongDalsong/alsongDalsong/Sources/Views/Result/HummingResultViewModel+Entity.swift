@@ -45,8 +45,8 @@ enum ResultPhase: Equatable {
 
     var playOption: PlayType {
         switch self {
-            case .record: .partial(time: 6)
-            default: .partial(time: 10)
+        case .record: .full
+        default: .partial(time: 10)
         }
     }
 

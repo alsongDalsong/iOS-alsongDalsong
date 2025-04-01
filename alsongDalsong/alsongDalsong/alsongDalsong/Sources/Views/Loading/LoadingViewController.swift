@@ -31,7 +31,7 @@ final class LoadingViewController: UIViewController {
     }
     
     private func setupUI() {
-        view.backgroundColor = .asLightGray
+        view.backgroundColor = .asBackground
         loadingStatusLabel.font = .font(forTextStyle: .body)
         [logoImageView, activityIndicatorView, loadingStatusLabel].forEach {
             view.addSubview($0)

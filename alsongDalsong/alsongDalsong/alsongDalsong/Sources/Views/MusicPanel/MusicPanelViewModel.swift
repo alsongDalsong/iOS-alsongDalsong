@@ -60,7 +60,6 @@ final class MusicPanelViewModel: @unchecked Sendable {
     
     func configureAudioHelper() {
         AudioHelper.shared
-            .playType(.full)
             .isConcurrent(false)
     }
     

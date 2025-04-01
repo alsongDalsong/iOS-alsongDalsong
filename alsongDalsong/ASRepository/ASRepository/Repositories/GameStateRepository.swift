@@ -23,4 +23,11 @@ final class GameStateRepository: GameStateRepositoryProtocol {
         mainRepository.isKickedOut
             .eraseToAnyPublisher()
     }
+
+    func getPlayersCount() -> AnyPublisher<Int, Never> {
+        mainRepository.players
+            .compactMap { $0 }
+            .map { $0.count }
+            .eraseToAnyPublisher()
+    }
 }

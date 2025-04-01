@@ -3,7 +3,9 @@ import ASEntity
 
 struct ModeView: View {
     let modeInfo: Mode
+    @StateObject var viewModel = ModeViewModel()
     let width: CGFloat
+    
     var body: some View {
         ZStack {
             Rectangle()
@@ -39,4 +41,42 @@ struct ModeView: View {
         }
         .frame(width: width)
     }
+}
+
+extension ModeView {
+    private var frontOverlay: some View {
+          ZStack {
+              VStack(alignment: .leading) {
+                  HStack {
+                      Image(systemName: "clock")
+                      Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.recommended.time))
+                          .font(.doHyeon(size: 20))
+                  }
+
+                  HStack {
+                      Image(systemName: "person.fill")
+                      Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.recommended.peopleCount))
+                          .font(.doHyeon(size: 20))
+                  }
+              }
+              .foregroundStyle(.white)
+              .padding(.top, 16)
+              .padding(.trailing, 24)
+              .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+
+              VStack(alignment: .leading) {
+                  Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.title))
+                      .font(.doHyeon(size: 40))
+                      .layoutPriority(1)
+
+                  Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.summary))
+                      .font(.doHyeon(size: 24))
+                      .minimumScaleFactor(0.01)
+              }
+              .foregroundStyle(.white)
+              .padding(.bottom, 25)
+              .padding(.leading, 24)
+              .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+          }
+      }
 }

@@ -1,8 +1,15 @@
-//
-//  ModeViewModel.swift
-//  alsongDalsong
-//
-//  Created by inye on 4/1/25.
-//
+import Combine
+import ASEntity
 
-import Foundation
+final class ModeViewModel: ObservableObject {
+    @Published var selectedCard: ModeCard
+    
+    init() {
+        self.selectedCard = ModeCard(mode: .humming)
+    }
+    
+    struct ModeCard {
+        var mode: Mode
+        var isFaceUp: Bool = true
+    }
+}

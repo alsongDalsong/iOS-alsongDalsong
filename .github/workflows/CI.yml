@@ -63,10 +63,6 @@ jobs:
         echo "✅ Found test schemes: $SCHEMES"
         echo "SCHEMES=$SCHEMES" >> $GITHUB_ENV
     
-    - name: 🚀 Boot Simulator
-      run: |
-        xcrun simctl boot "iPhone 16" || echo "Already booted"
-    
     - name: 🔍 Run All Test Schemes
       run: |
         for SCHEME in $SCHEMES; do

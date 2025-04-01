@@ -3,7 +3,7 @@ import SwiftUI
 struct ASSearchBar: View {
     @Binding var text: String
     let placeHolder: String
-    
+
     var body: some View {
         HStack {
             HStack {
@@ -11,7 +11,7 @@ struct ASSearchBar: View {
  
                 TextField(placeHolder, text: $text)
                     .foregroundColor(.primary)
- 
+
                 if !text.isEmpty {
                     Button(action: {
                         self.text = ""

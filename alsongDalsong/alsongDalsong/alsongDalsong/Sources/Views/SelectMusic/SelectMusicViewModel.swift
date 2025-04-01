@@ -129,14 +129,11 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
     func searchMusic(text: String) async throws {
         do {
             if text.isEmpty { return }
-
-            currentPage = 1
-            isAllLoaded = false
-
             await updateIsSearching(with: true)
             let searchList = try await musicAPI.search(for: text, pageSize, 0)
             await updateSearchList(with: searchList)
             await updateIsSearching(with: false)
+            currentPage += 1
         } catch {
             ErrorHandler.handle(error)
             throw ASError.searchMusicOnSelect
@@ -187,6 +184,8 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
     @MainActor
     func resetSearchList() {
         searchList = []
+        currentPage = 0
+        isAllLoaded = false
     }
     
     @MainActor
@@ -216,7 +215,7 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
 
         if let currentMusic = currentMusic {
             guard let index = searchList.firstIndex(where: { $0.id == currentMusic.id }),
-                  index >= searchList.count - 3 else { return }
+                  index >= searchList.count - 1 else { return }
         }
 
         isLoadingPage = true
@@ -226,8 +225,9 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
         }
 
         do {
+            Logger.debug(currentPage)
             let nextSearchList = try await musicAPI.search(for: searchTerm, pageSize, currentPage * pageSize)
-            print(currentPage)
+
             if nextSearchList.isEmpty {
                 isAllLoaded = true
             } else {

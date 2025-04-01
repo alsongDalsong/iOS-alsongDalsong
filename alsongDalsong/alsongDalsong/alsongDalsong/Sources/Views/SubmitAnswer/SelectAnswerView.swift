@@ -3,7 +3,6 @@ import SwiftUI
 struct SelectAnswerView: View {
     @ObservedObject var viewModel: SubmitAnswerViewModel
     @Environment(\.dismiss) private var dismiss
-    @FocusState private var isFocused: Bool
 
     var body: some View {
         NavigationStack {
@@ -32,12 +31,8 @@ struct SelectAnswerView: View {
                     .frame(width: 60)
                 }
                 .padding(16)
-                .onTapGesture {
-                    isFocused = false
-                }
-
+                
                 ASSearchBar(text: $viewModel.searchTerm, placeHolder: String(localized: "노래를 선택하세요"))
-                    .focused($isFocused)
                 if viewModel.isSearching {
                     VStack {
                         Spacer()
@@ -48,6 +43,7 @@ struct SelectAnswerView: View {
                 } else {
                     List(viewModel.searchList) { music in
                         Button {
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                             viewModel.handleSelectedMusic(with: music)
                         } label: {
                             ASMusicItemCell(music: music, fetchArtwork: { url in

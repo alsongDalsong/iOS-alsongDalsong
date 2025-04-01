@@ -52,6 +52,7 @@ struct SelectMusicView: View {
                 } else {
                     List(viewModel.searchList) { music in
                         Button {
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                             viewModel.handleSelectedSong(with: music)
                         } label: {
                             ASMusicItemCell(music: music, fetchArtwork: { url in

@@ -32,6 +32,12 @@ jobs:
           -scheme alsongDalsong \
           -sdk iphonesimulator \
           -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest'
+          
+    - name: 📦 Upload DerivedData
+      uses: actions/upload-artifact@v4
+      with:
+        name: DerivedData
+        path: ~/Library/Developer/Xcode/DerivedData
         
   test:
     name: 🧪 test
@@ -42,14 +48,12 @@ jobs:
     
     - name: 📁 Checkout Repository
       uses: actions/checkout@v4
-      
-    - name: 💾 Cache DerivedData
-      uses: actions/cache@v4
+
+    - name: 📥 Download DerivedData
+      uses: actions/download-artifact@v4
       with:
+        name: DerivedData
         path: ~/Library/Developer/Xcode/DerivedData
-        key: ${{ runner.os }}-derivedDataCache-${{ hashFiles('**/*.xcworkspace/**', 'Podfile.lock') }}
-        restore-keys: | #Cache miss 발생 시
-          ${{ runner.os }}-derivedDataCache-
           
     - name: 🧾 Get Test Schemes
       run: |
@@ -58,7 +62,11 @@ jobs:
           awk '/Schemes:/, /Targets:/' | sed -e '1d;$d' | grep 'Tests' | tr '\n' ' ')
         echo "✅ Found test schemes: $SCHEMES"
         echo "SCHEMES=$SCHEMES" >> $GITHUB_ENV
-        
+    
+    - name: 🚀 Boot Simulator
+      run: |
+        xcrun simctl boot "iPhone 16" || echo "Already booted"
+    
     - name: 🔍 Run All Test Schemes
       run: |
         for SCHEME in $SCHEMES; do
@@ -67,5 +75,6 @@ jobs:
             -workspace alsongDalsong.xcworkspace \
             -scheme "$SCHEME" \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' || exit 1
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -parallel-testing-enabled YES || exit 1 
         done

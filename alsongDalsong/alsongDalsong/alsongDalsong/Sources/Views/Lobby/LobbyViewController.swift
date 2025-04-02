@@ -2,6 +2,7 @@ import Combine
 import SwiftUI
 
 final class LobbyViewController: UIViewController {
+    private let roomNumberButton = ASButton()
     private let inviteButton = ASButton()
     private let startButton = ASButton()
     private lazy var lobbyUIHostingController = UIHostingController(rootView: LobbyView(viewModel: viewmodel))
@@ -62,24 +63,43 @@ final class LobbyViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .asBackground
 
+        roomNumberButton.setConfiguration(
+            text: "#" + viewmodel.roomNumber,
+            textStyle: .largeTitle,
+            backgroundColor: .roomNumberButton,
+            cornerStyle: .capsule,
+            baseForegroundColor: .asBlack,
+            shadowColor: .backButtonShadow,
+            strokeColor: .backButtonShadow,
+            strokeWidth: 3
+        )
+
         inviteButton.setConfiguration(
-            systemImageName: "link",
-            text: String(localized: "초대하기!"),
-            backgroundColor: .asYellow
+            systemImageName: "square.and.arrow.up",
+            imageSize: 30,
+            text: nil,
+            backgroundColor: .inviteButton,
+            cornerStyle: .large,
+            baseForegroundColor: .tintColor,
+            shadowColor: .asShadow
         )
 
         startButton.setConfiguration(
             systemImageName: "play.fill",
-            text: String(localized: "시작하기!"),
-            backgroundColor: .asMint
+            text: "시작하기",
+            backgroundColor: .asLightRed,
+            shadowColor: .redButtonShadow
         )
 
         view.addSubview(lobbyUIHostingController.view)
+        view.addSubview(roomNumberButton)
         view.addSubview(startButton)
         view.addSubview(inviteButton)
     }
 
     private func setAction() {
+        // TODO: invite Button 클립보드 복사 액션 추가하기
+
         inviteButton.addAction(UIAction { [weak self] _ in
             guard let roomNumber = self?.viewmodel.roomNumber else { return }
             if let url = URL(string: "alsongDalsong://invite/?roomnumber=\(roomNumber)") {
@@ -101,20 +121,26 @@ final class LobbyViewController: UIViewController {
     }
 
     private func setupLayout() {
+        roomNumberButton.translatesAutoresizingMaskIntoConstraints = false
         inviteButton.translatesAutoresizingMaskIntoConstraints = false
         startButton.translatesAutoresizingMaskIntoConstraints = false
         lobbyUIHostingController.view.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
             lobbyUIHostingController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             lobbyUIHostingController.view.bottomAnchor.constraint(equalTo: inviteButton.topAnchor, constant: -20),
             lobbyUIHostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             lobbyUIHostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
-            inviteButton.bottomAnchor.constraint(equalTo: startButton.topAnchor, constant: -25),
-            inviteButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            roomNumberButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            roomNumberButton.trailingAnchor.constraint(equalTo: inviteButton.leadingAnchor, constant: -16),
+            roomNumberButton.bottomAnchor.constraint(equalTo: startButton.topAnchor, constant: -24),
+            roomNumberButton.heightAnchor.constraint(equalToConstant: 80),
+
+            inviteButton.bottomAnchor.constraint(equalTo: startButton.topAnchor, constant: -24),
             inviteButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            inviteButton.heightAnchor.constraint(equalToConstant: 64),
+            inviteButton.widthAnchor.constraint(equalToConstant: 84),
+            inviteButton.heightAnchor.constraint(equalToConstant: 80),
 
             startButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             startButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),

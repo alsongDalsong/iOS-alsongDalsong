@@ -12,11 +12,16 @@
 		2939AE362D89711900B2893B /* ASAudioError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8593659C2D3F77F60086C8C4 /* ASAudioError.swift */; };
 		2985DC192D961CA500979527 /* ASAudioVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2985DC182D961CA500979527 /* ASAudioVisualizer.swift */; };
 		2985DC1A2D961CA500979527 /* ASAudioVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2985DC182D961CA500979527 /* ASAudioVisualizer.swift */; };
+		29B308312D9CD16C0032EAA5 /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; };
+		29B308322D9CD16C0032EAA5 /* ASLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		29B308342D9CD2820032EAA5 /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; };
+		29B308352D9CD2820032EAA5 /* ASLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		29B308372D9CD2950032EAA5 /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; };
+		29B308382D9CD2950032EAA5 /* ASLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4E8907C22CE2489A00D5B547 /* ASAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; platformFilter = ios; };
 		4EB1ED372CE88E500012FFBA /* ASAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; };
 		4EB1ED382CE88E500012FFBA /* ASAudioKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8593659D2D3F77FE0086C8C4 /* ASAudioError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8593659C2D3F77F60086C8C4 /* ASAudioError.swift */; };
-		85A0E9F32D91582F009343BB /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,12 +42,35 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		29B308332D9CD16C0032EAA5 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				29B308322D9CD16C0032EAA5 /* ASLogKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		29B308362D9CD2820032EAA5 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				29B308352D9CD2820032EAA5 /* ASLogKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4EB1ED3B2CE88E500012FFBA /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				29B308382D9CD2950032EAA5 /* ASLogKit.framework in Embed Frameworks */,
 				4EB1ED382CE88E500012FFBA /* ASAudioKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -123,7 +151,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85A0E9F32D91582F009343BB /* ASLogKit.framework in Frameworks */,
+				29B308312D9CD16C0032EAA5 /* ASLogKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +159,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29B308342D9CD2820032EAA5 /* ASLogKit.framework in Frameworks */,
 				4E8907C22CE2489A00D5B547 /* ASAudioKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -139,6 +168,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29B308372D9CD2950032EAA5 /* ASLogKit.framework in Frameworks */,
 				4EB1ED372CE88E500012FFBA /* ASAudioKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -199,6 +229,7 @@
 				4E89071A2CE23D1B00D5B547 /* Sources */,
 				4E89071B2CE23D1B00D5B547 /* Frameworks */,
 				4E89071C2CE23D1B00D5B547 /* Resources */,
+				29B308332D9CD16C0032EAA5 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -221,6 +252,7 @@
 				4E8907BA2CE2489A00D5B547 /* Sources */,
 				4E8907BB2CE2489A00D5B547 /* Frameworks */,
 				4E8907BC2CE2489A00D5B547 /* Resources */,
+				29B308362D9CD2820032EAA5 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -399,6 +431,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp9.alsongDalsong.ASAudioKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_VERSION = 6.0;
@@ -433,6 +469,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp9.alsongDalsong.ASAudioKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_VERSION = 6.0;

@@ -24,6 +24,8 @@ public class ASAudioVisualizer {
         return Double(playerTime.sampleTime) / playerTime.sampleRate / duration
     }
     
+    public init() { }
+    
     public func bind(data: Data, count: Int = 20) {
         sampleCount = count
 
@@ -92,7 +94,6 @@ public class ASAudioVisualizer {
 }
 
 extension ASAudioVisualizer {
-    /// Fast Fourier Transform, 고속 푸리에 변환
     private func fft(data: UnsafeMutablePointer<Float>, setup: OpaquePointer) -> [Float] {
         var realIn = [Float](repeating: 0, count: 1024)
         var imagIn = [Float](repeating: 0, count: 1024)

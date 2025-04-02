@@ -252,16 +252,6 @@
         }
       }
     },
-    "닉네임" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nickname"
-          }
-        }
-      }
-    },
     "님을 강퇴하시겠습니까?\n강퇴 시 기존 방에는 영구적으로 재입장이 불가능합니다!" : {
       "localizations" : {
         "en" : {
@@ -535,6 +525,17 @@
         }
       }
     },
+    "사냥꾼" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hunter"
+          }
+        }
+      }
+    },
     "사부님" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -553,17 +554,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Life"
-          }
-        }
-      }
-    },
-    "사냥꾼" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hunter"
           }
         }
       }
@@ -806,7 +796,14 @@
       }
     },
     "종료 대기 중" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting to exit"
+          }
+        }
+      }
     },
     "찰나의 순간" : {
       "extractionState" : "manual",
@@ -826,16 +823,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Participation failed."
-          }
-        }
-      }
-    },
-    "초대하기!" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invite!"
           }
         }
       }
@@ -880,17 +867,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancellation"
-          }
-        }
-      }
-    },
-    "튜토리얼 완료" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Complete"
           }
         }
       }

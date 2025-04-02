@@ -12,7 +12,7 @@ final class ASPanel: UIView {
 
     private func setupUI() {
         layer.cornerRadius = 12
-        layer.borderColor = UIColor.black.cgColor
+        layer.borderColor = UIColor.profileViewCircle.cgColor
         layer.borderWidth = 3
         backgroundColor = .asSystem
         setShadow()

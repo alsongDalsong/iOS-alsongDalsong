@@ -14,7 +14,7 @@ struct AsyncImageView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             } else {
-                Image(systemName: "person.circle.fill")
+                Image(systemName: "xmark")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .clipShape(Circle())
@@ -39,11 +39,11 @@ struct ProfileView: View {
     var body: some View {
         VStack {
             AsyncImageView(imagePublisher: imagePublisher, url: imageUrl)
-                .background(Color.asMint)
-                .frame(width: 75, height: 75)
+                .background(Color.profileViewBackground)
+                .frame(width: 72, height: 72)
                 .clipShape(Circle())
                 .overlay(
-                    Circle().stroke(isMyId ? Color.asYellow : Color.white, lineWidth: 5)
+                    Circle().stroke(Color.profileViewCircle, lineWidth: 5)
                 )
                 .overlay(alignment: .top) {
                     isHost ? Image(systemName: "crown.fill")
@@ -52,9 +52,11 @@ struct ProfileView: View {
                         .offset(y: -20)
                         : nil
                 }
+                .shadow(radius: 2, y: 4)
                 .padding(.bottom, 4)
             if let name {
                 Text(name)
+                    .foregroundStyle(isMyId ? .myIdForeground : .asBlack)
                     .font(.doHyeon(size: 16))
                     .multilineTextAlignment(.center)
                     .lineLimit(2)

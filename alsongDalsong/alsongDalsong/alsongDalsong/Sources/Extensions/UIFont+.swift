@@ -3,6 +3,7 @@ import UIKit
 enum FontName: String {
     case dohyeon = "Dohyeon-Regular"
     case neoDunggeunmoPro = "NeoDunggeunmoPro-Regular"
+    case riaSans = "RiaSans-ExtraBold"
     case wantedSansBold = "wantedSans-Bold"
 }
 

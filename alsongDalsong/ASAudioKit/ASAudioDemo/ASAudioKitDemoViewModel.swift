@@ -35,11 +35,11 @@ final class ASAudioKitDemoViewModel: Sendable, ObservableObject {
 extension ASAudioKitDemoViewModel {
     func recordButtonTapped() {
         recordedFile = nil
+        
         if isPlaying {
             stopPlaying()
             startRecording()
-        }
-        else if isRecording {
+        } else if isRecording {
             stopRecording()
         } else {
             startRecording()
@@ -53,22 +53,27 @@ extension ASAudioKitDemoViewModel {
         AVAudioSession.sharedInstance().requestRecordPermission { granted in
             if !granted { return }
         }
+        
         Task {
             try await audioRecorder.startRecording(url: fileURL)
             isRecording = true
         }
-        recordProgressTimer = Timer.scheduledTimer(withTimeInterval: 0.08, repeats: true, block: { [weak self] _ in
+        
+        recordProgressTimer = Timer.scheduledTimer(withTimeInterval: 0.08, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 guard let self else { return }
                 await self.updateRecorderAmplitude()
             }
-        })
+        }
     }
 
     private func updateRecorderAmplitude() async {
         await audioRecorder.updateMeters()
+        
         guard let averagePower = await audioRecorder.getAveragePower() else { return }
+        
         let newAmplitude = 1.1 * pow(10.0, averagePower / 20.0)
+        
         recorderAmplitude = min(max(newAmplitude, 0), 1)
     }
 
@@ -76,6 +81,7 @@ extension ASAudioKitDemoViewModel {
         Task {
             recordedFile = await audioRecorder.stopRecording()
         }
+        
         isRecording = false
         recordProgressTimer?.invalidate()
     }
@@ -92,16 +98,18 @@ extension ASAudioKitDemoViewModel {
                 guard let self else { return }
                 await self.stopPlaying()
             }
+            
             try await audioPlayer.startPlaying(data: recordedFile, option: playType)
+            
             isPlaying = true
         }
 
-        progressTimer = Timer.scheduledTimer(withTimeInterval: 0.08, repeats: true, block: { [weak self] _ in
+        progressTimer = Timer.scheduledTimer(withTimeInterval: 0.08, repeats: true) { [weak self] _ in
             Task { @MainActor in
                 guard let self else { return }
                 await self.updateRecorderAmplitude()
             }
-        })
+        }
     }
 
     func stopPlaying() {
@@ -111,10 +119,13 @@ extension ASAudioKitDemoViewModel {
 
     func getDuration(recordedFile: Data?) -> TimeInterval? {
         guard let recordedFile else { return nil }
+        
         var timeInterval: TimeInterval?
+        
         Task {
             timeInterval = try await audioPlayer.getDuration(data: recordedFile)
         }
+        
         return timeInterval
     }
 }

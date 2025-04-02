@@ -1,4 +1,5 @@
 import ASEntity
+import ASLogKit
 import Combine
 @preconcurrency internal import FirebaseFirestore
 
@@ -15,14 +16,15 @@ final class ASFirebaseDatabase: ASFirebaseDatabaseProtocol {
             }
             
             guard let document = documentSnapshot, document.exists else {
-                return self.roomPublisher.send(completion: .failure(ASNetworkErrors(type: .firebaseListener, reason: error?.localizedDescription ?? "", file: #file, line: #line)))
+                return self.roomPublisher.send(completion: .failure(ASNetworkError.firebaseListener))
             }
             
             do {
                 let room = try document.data(as: Room.self)
                 return self.roomPublisher.send(room)
             } catch {
-                return self.roomPublisher.send(completion: .failure(ASNetworkErrors(type: .firebaseListener, reason: error.localizedDescription, file: #file, line: #line)))
+                ErrorHandler.handle(error)
+                return self.roomPublisher.send(completion: .failure(ASNetworkError.firebaseListener))
             }
         }
         

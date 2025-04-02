@@ -74,6 +74,7 @@ final class LobbyViewController: UIViewController {
             strokeWidth: 3
         )
 
+
         inviteButton.setConfiguration(
             systemImageName: "square.and.arrow.up",
             imageSize: 30,

@@ -1,3 +1,4 @@
+import ASLogKit
 import ASRepositoryProtocol
 import Foundation
 
@@ -39,8 +40,7 @@ final class LoadingViewModel: @unchecked Sendable {
 
                 avatarData = await dataDownloadRepository.downloadData(url: randomAvatarUrl)
             } catch {
-                let error = ASErrors(type: .fetchAvatars, reason: error.localizedDescription, file: #file, line: #line)
-                LogHandler.handleError(error)
+                ErrorHandler.handle(error)
             }
         }
     }

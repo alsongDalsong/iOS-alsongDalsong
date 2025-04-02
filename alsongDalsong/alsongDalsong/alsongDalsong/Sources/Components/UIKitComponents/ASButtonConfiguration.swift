@@ -12,6 +12,7 @@ extension ASButton {
         let baseForegroundColor: UIColor
         let strokeColor: UIColor?
         let strokeWidth: CGFloat
+      
         init(
             systemImageName: String? = nil,
             imageSize: CGFloat = 20,

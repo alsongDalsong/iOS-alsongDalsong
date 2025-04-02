@@ -141,6 +141,8 @@ enum ASAlertText {
         case permissionDenied
         case kick(playerName: String)
         case receiveKick
+        case notPlayable
+        case networkConnectionLost
 
         var description: String {
             switch self {
@@ -153,6 +155,8 @@ enum ASAlertText {
                 case .permissionDenied: "게임을 시작하기 위해서 마이크 권한이 필요해요"
                 case let .kick(playerName): String(format: NSLocalizedString("님을 강퇴하시겠습니까?\n강퇴 시 기존 방에는 영구적으로 재입장이 불가능합니다!", comment: ""), playerName)
                 case .receiveKick: "강퇴 되었습니다."
+                case .notPlayable: "다른 플레이어가 모두 방에서 나가 더이상 진행할 수 없습니다\n게임을 종료합니다"
+                case .networkConnectionLost: "네트워크 연결이 끊어졌습니다\n앱을 중단하면 방에서 나가지니 조심하세요!"
             }
         }
     }

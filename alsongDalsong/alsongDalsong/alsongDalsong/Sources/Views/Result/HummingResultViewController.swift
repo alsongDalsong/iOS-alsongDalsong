@@ -94,22 +94,17 @@ class HummingResultViewController: UIViewController {
     }
 
     func addDataSource(_ phase: ResultPhase, result: Result) {
-        if case let .record(count) = phase {
-            var updateResult = result
-            let records = updateResult.records[0 ... count]
-            updateResult.records = Array(records)
-            updateResult.submit = nil
-            Logger.debug("record update", updateResult)
-            resultTableViewDiffableDataSource?.applySnapshot(updateResult)
-            return
-        }
-        if case .submit = phase {
-            Logger.debug("submit update", result)
-            resultTableViewDiffableDataSource?.applySnapshot(result)
-            return
-        }
-        if case .answer = phase {
+        switch phase {
+        case .answer:
             resultTableViewDiffableDataSource?.applySnapshot((result.answer, [], nil))
+            
+        case .record(let count):
+            resultTableViewDiffableDataSource?.applySnapshot((result.answer, Array(result.records[0...count]), nil))
+            
+        case .submit:
+            resultTableViewDiffableDataSource?.applySnapshot(result)
+            
+        case .none: return
         }
     }
 
@@ -171,7 +166,7 @@ extension HummingResultViewController {
         let alert = LoadingAlertController(
             progressText: .nextResult,
             loadAction: { [weak self] in
-                await self?.viewModel?.changeRecordOrder()
+                try await self?.viewModel?.changeRecordOrder()
             },
             errorCompletion: { [weak self] error in
                 self?.showFailedAlert(error)
@@ -184,7 +179,7 @@ extension HummingResultViewController {
         let alert = LoadingAlertController(
             progressText: .toLobby,
             loadAction: { [weak self] in
-                await self?.viewModel?.navigateToLobby()
+                try await self?.viewModel?.navigateToLobby()
             },
             errorCompletion: { [weak self] error in
                 self?.showFailedAlert(error)

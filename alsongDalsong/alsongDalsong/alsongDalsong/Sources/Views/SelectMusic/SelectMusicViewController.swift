@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 
 final class SelectMusicViewController: UIViewController {
@@ -6,7 +7,8 @@ final class SelectMusicViewController: UIViewController {
     private let submissionStatus = SubmissionStatusView()
     private let viewModel: SelectMusicViewModel
     private var selectMusicView = UIViewController()
-    
+    private var cancellables: Set<AnyCancellable> = []
+
     init(selectMusicViewModel: SelectMusicViewModel) {
         self.viewModel = selectMusicViewModel
         super.init(nibName: nil, bundle: nil)
@@ -98,15 +100,11 @@ final class SelectMusicViewController: UIViewController {
     }
     
     private func submitMusic() async throws {
-        do {
-            viewModel.stopMusic()
-            progressBar.cancelCompletion()
-            try await viewModel.submitMusic()
-            submitButton.setConfiguration(.submitted)
-            submitButton.setDisabledState()
-        } catch {
-            throw error
-        }
+        viewModel.stopMusic()
+        progressBar.cancelCompletion()
+        try await viewModel.submitMusic()
+        submitButton.setConfiguration(.submitted)
+        submitButton.setDisabledState()
     }
 }
 

@@ -28,6 +28,8 @@
 		1BF1CB732CEA52D40003EED9 /* ASCacheKitProtocol.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1BF1CB712CEA52D40003EED9 /* ASCacheKitProtocol.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		29CC87252D3E5563007DBA97 /* ASCacheKitProtocol.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29CC87242D3E5563007DBA97 /* ASCacheKitProtocol.framework */; };
 		29CC87262D3E5563007DBA97 /* ASCacheKitProtocol.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 29CC87242D3E5563007DBA97 /* ASCacheKitProtocol.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		85A0E9F52D91584C009343BB /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F42D91584C009343BB /* ASLogKit.framework */; };
+		85A0E9F62D91584C009343BB /* ASLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F42D91584C009343BB /* ASLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8D64F8DD2CEA05A90069B77F /* ASDecoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169727782CE6627F005B4953 /* ASDecoder.framework */; };
 		8D64F8DE2CEA05AA0069B77F /* ASDecoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 169727782CE6627F005B4953 /* ASDecoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -84,6 +86,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				85A0E9F62D91584C009343BB /* ASLogKit.framework in Embed Frameworks */,
 				1BF1CB732CEA52D40003EED9 /* ASCacheKitProtocol.framework in Embed Frameworks */,
 				16DE64442CEE211C00DFC48F /* ASContainer.framework in Embed Frameworks */,
 				169726A72CE63DCD005B4953 /* ASEntity.framework in Embed Frameworks */,
@@ -130,6 +133,7 @@
 		1BF1CB712CEA52D40003EED9 /* ASCacheKitProtocol.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ASCacheKitProtocol.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		29CC87102D3E5560007DBA97 /* ASCacheKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ASCacheKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		29CC87242D3E5563007DBA97 /* ASCacheKitProtocol.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ASCacheKitProtocol.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		85A0E9F42D91584C009343BB /* ASLogKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ASLogKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -190,6 +194,7 @@
 			files = (
 				1BF1CB722CEA52D40003EED9 /* ASCacheKitProtocol.framework in Frameworks */,
 				169725542CE5F817005B4953 /* FirebaseDatabase in Frameworks */,
+				85A0E9F52D91584C009343BB /* ASLogKit.framework in Frameworks */,
 				8D64F8DD2CEA05A90069B77F /* ASDecoder.framework in Frameworks */,
 				16DE64432CEE211C00DFC48F /* ASContainer.framework in Frameworks */,
 				169727702CE65D99005B4953 /* ASEncoder.framework in Frameworks */,
@@ -247,6 +252,7 @@
 		16F8B8A52CE5E50C0059F22A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				85A0E9F42D91584C009343BB /* ASLogKit.framework */,
 				29CC87242D3E5563007DBA97 /* ASCacheKitProtocol.framework */,
 				29CC87102D3E5560007DBA97 /* ASCacheKit.framework */,
 				16DE643D2CEE211100DFC48F /* ASContainer.xcodeproj */,

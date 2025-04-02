@@ -61,6 +61,7 @@ final class OnboardingViewController: UIViewController {
         titleLabel.textColor = .onboardingForeground
 
         for item in [titleLabel, nickNamePanel, avatarView, createRoomButton, joinRoomButton, avatarRefreshButton] {
+
             view.addSubview(item)
             item.translatesAutoresizingMaskIntoConstraints = false
         }

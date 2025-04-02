@@ -43,7 +43,8 @@ final class RecordsRepository: RecordsRepositoryProtocol {
         do {
             return try await mainRepository.postRecording(record)
         } catch {
-            throw ASRepositoryErrors(type: .uploadRecording, reason: error.localizedDescription, file: #file, line: #line)
+            ErrorHandler.handle(error)
+            throw ASRepositoryError.uploadRecording
         }
     }
     

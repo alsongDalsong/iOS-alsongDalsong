@@ -1,5 +1,6 @@
 import ASEncoder
 import ASEntity
+import ASLogKit
 import Foundation
 @preconcurrency internal import FirebaseAuth
 @preconcurrency internal import FirebaseDatabase
@@ -11,7 +12,7 @@ public final class ASFirebaseAuth: ASFirebaseAuthProtocol {
     public func signIn(nickname: String, avatarURL: URL?) async throws {
         do {
             guard let myID = ASFirebaseAuth.myID else {
-                throw ASNetworkErrors(type: .firebaseSignIn, reason: "ASFirebaseAuth.myID is nil", file: #file, line: #line)
+                throw ASNetworkError.firebaseSignIn
             }
             let player = Player(id: myID, avatarUrl: avatarURL, nickname: nickname, order: 0)
             let playerData = try ASEncoder.encode(player)
@@ -23,22 +24,35 @@ public final class ASFirebaseAuth: ASFirebaseAuthProtocol {
                 guard let isConnected = snapshot.value as? Bool else { return }
                 if isConnected {
                     userStatusRef.setValue(dict)
+                    userStatusRef.onDisconnectRemoveValue()
                 }
             }
         } catch {
-            throw ASNetworkErrors(type: .firebaseSignIn, reason: error.localizedDescription, file: #file, line: #line)
+            ErrorHandler.handle(error)
+            throw ASNetworkError.firebaseSignIn
         }
     }
 
     public func signOut() async throws {
         do {
             guard let userID = ASFirebaseAuth.myID else {
-                throw ASNetworkErrors(type: .firebaseSignOut, reason: "ASFirebaseAuth.myID is nil", file: #file, line: #line)
+                throw ASNetworkError.firebaseSignOut
             }
             try await databaseRef.child("players").child(userID).removeValue()
             try Auth.auth().signOut()
         } catch {
-            throw ASNetworkErrors(type: .firebaseSignOut, reason: error.localizedDescription, file: #file, line: #line)
+            ErrorHandler.handle(error)
+            throw ASNetworkError.firebaseSignOut
+        }
+    }
+
+    public func checkConnection() async -> Bool {
+        await withCheckedContinuation { continuation in
+            let connectedRef = databaseRef.child(".info/connected")
+            connectedRef.observeSingleEvent(of: .value) { snapshot in
+                let isConnected = snapshot.value as? Bool ?? false
+                continuation.resume(returning: isConnected)
+            }
         }
     }
 

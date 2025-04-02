@@ -11,9 +11,9 @@ final class FrequencyWaveView: UIView {
         (bounds.width - spacing * CGFloat(shapeLayersCount - 1)) / CGFloat(shapeLayersCount)
     }
     
-    var frequencyAmplitudes: [Float] = [0, 0, 0, 0, 0, 0] {
+    var normalizedFrequencyAmplitudes: [Float] = [0, 0, 0, 0, 0, 0] {
         didSet {
-            updateAmplitudes()
+            updateFrequencyShapeLayers()
         }
     }
     
@@ -43,12 +43,12 @@ final class FrequencyWaveView: UIView {
         }
     }
 
-    private func updateAmplitudes() {
-        guard frequencyAmplitudes.count == 6 else { return }
+    private func updateFrequencyShapeLayers() {
+        guard normalizedFrequencyAmplitudes.count == 6 else { return }
         
         for (index, shapeLayer) in frequencyShapeLayers.enumerated() {
-            let magnitude = CGFloat(frequencyAmplitudes[index]) / 10
-            let newHeight = min(bounds.height, max(initialHeight, magnitude))
+            let normalizedFrequencyAmplitude = CGFloat(normalizedFrequencyAmplitudes[index])
+            let newHeight = max(initialHeight, bounds.height * normalizedFrequencyAmplitude)
             
             let xPosition = CGFloat(index) * (initialWidth + spacing)
             

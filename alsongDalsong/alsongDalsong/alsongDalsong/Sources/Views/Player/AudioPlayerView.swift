@@ -126,14 +126,14 @@ final class AudioPlayerView: UIView {
         artistLabel.text = music.artist
     }
     
-    func configure(progress: Double, frequencyAmplitudes: [Float]) {
+    func configure(progress: Double, normalizedFrequencyAmplitudes: [Float]) {
         let progress = CGFloat(progress)
         
         UIView.animate(withDuration: 0.3) {
             self.playProgressView.progress = progress
         }
         
-        frequencyWaveView.frequencyAmplitudes = frequencyAmplitudes
+        frequencyWaveView.normalizedFrequencyAmplitudes = normalizedFrequencyAmplitudes
     }
     
     func configure(with buttonState: AudioControlButtonState) {

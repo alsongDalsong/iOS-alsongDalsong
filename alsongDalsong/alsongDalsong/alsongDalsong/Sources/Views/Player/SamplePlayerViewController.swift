@@ -40,13 +40,13 @@ final class SamplePlayerViewController: UIViewController {
         
         viewModel.$progress
             .sink { [weak self] progress in
-                self?.playerView.configure(progress: progress, frequencyAmplitudes: self?.viewModel.frequencyAmplitudes ?? [])
+                self?.playerView.configure(progress: progress, normalizedFrequencyAmplitudes: self?.viewModel.normalizedFrequencyAmplitudes ?? [])
             }
             .store(in: &cancellables)
         
-        viewModel.$frequencyAmplitudes
-            .sink { [weak self] magnitudes in
-                self?.playerView.configure(progress: self?.viewModel.progress ?? 0, frequencyAmplitudes: magnitudes)
+        viewModel.$normalizedFrequencyAmplitudes
+            .sink { [weak self] normalizedFrequencyAmplitudes in
+                self?.playerView.configure(progress: self?.viewModel.progress ?? 0, normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes)
             }
             .store(in: &cancellables)
     }
@@ -62,14 +62,14 @@ final class SamplePlayerViewModel {
     private var timer: Timer?
     
     @Published var progress: Double = 0.0
-    @Published var frequencyAmplitudes: [Float] = [0, 0, 0, 0, 0, 0]
+    @Published var normalizedFrequencyAmplitudes: [Float] = [0, 0, 0, 0, 0, 0]
     
     @MainActor
     func bindVisualizer() {
         Task {
             guard let music, let url = music.previewUrl else { return }
             let (data, _) = try await URLSession.shared.data(from: url)
-            visualizer.bind(data: data, count: 6)
+            visualizer.bind(data: data)
         }
     }
     
@@ -86,7 +86,7 @@ final class SamplePlayerViewModel {
     func togglePlay() {
         if isPlaying {
             progress = 0.0
-            frequencyAmplitudes = [0, 0, 0, 0, 0, 0]
+            normalizedFrequencyAmplitudes = [0, 0, 0, 0, 0, 0]
             
             visualizer.stop()
             timer?.invalidate()
@@ -105,11 +105,11 @@ final class SamplePlayerViewModel {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
             self?.progress = self?.visualizer.progress ?? 0.0
-            self?.frequencyAmplitudes = self?.visualizer.frequencyAmplitudes ?? []
+            self?.normalizedFrequencyAmplitudes = self?.visualizer.normalizedFrequencyAmplitudes ?? []
             
             if self?.progress == 1 {
                 self?.progress = 0.0
-                self?.frequencyAmplitudes = [0, 0, 0, 0, 0, 0]
+                self?.normalizedFrequencyAmplitudes = [0, 0, 0, 0, 0, 0]
                 
                 self?.buttonState = .play
                 self?.isPlaying = false

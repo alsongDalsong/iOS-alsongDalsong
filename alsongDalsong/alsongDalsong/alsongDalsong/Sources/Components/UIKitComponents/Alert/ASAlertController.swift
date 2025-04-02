@@ -7,7 +7,7 @@ class ASAlertController: UIViewController {
     var primaryButtonAction: ((String) -> Void)?
     var secondaryButtonAction: (() -> Void)?
     var reversedColor: Bool = false
-        
+
     var alertView = ASPanel()
     var stackView = UIStackView()
     lazy var buttonStackView = UIStackView()
@@ -40,7 +40,7 @@ class ASAlertController: UIViewController {
         alertView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
         alertView.backgroundColor = .asBackground
         alertView.layer.borderWidth = 2.5
-        alertView.layer.borderColor = UIColor.asBlack.cgColor
+        alertView.layer.borderColor = UIColor.profileViewCircle.cgColor
         view.addSubview(alertView)
     }
 
@@ -88,7 +88,7 @@ class ASAlertController: UIViewController {
         buttonStackView.distribution = .fillEqually
         buttonStackView.alignment = .center
         stackView.addArrangedSubview(buttonStackView)
-        
+
         buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             buttonStackView.widthAnchor.constraint(equalTo: stackView.widthAnchor),
@@ -102,7 +102,8 @@ class ASAlertController: UIViewController {
             text: primaryButtonText?.description.localized(),
             textStyle: .title2,
             backgroundColor: reversedColor ? .asLightRed : .asLightSky,
-            cornerStyle: .large
+            cornerStyle: .large,
+            shadowColor: reversedColor ? .redButtonShadow : .blueButtonShadow
         )
         primaryButton.addAction(UIAction { [weak self] _ in
             self?.dismiss(animated: true)
@@ -117,7 +118,8 @@ class ASAlertController: UIViewController {
             text: secondaryButtonText?.description.localized(),
             textStyle: .title2,
             backgroundColor: reversedColor ? .asLightSky : .asLightRed,
-            cornerStyle: .large
+            cornerStyle: .large,
+            shadowColor: reversedColor ? .blueButtonShadow : .redButtonShadow
         )
         secondaryButton.addAction(UIAction { [weak self] _ in
             self?.dismiss(animated: true)
@@ -196,7 +198,7 @@ enum ASAlertText {
         case submitHumming
         case nextResult
         case toLobby
-        
+
         var description: String {
             switch self {
                 case .joinRoom: "방 정보를 가져오는 중..."

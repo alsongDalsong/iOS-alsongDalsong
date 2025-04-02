@@ -13,7 +13,7 @@ public class ASAudioVisualizer {
     private var audioFile: AVAudioFile?
     private var playState: PlayState = .stop
     
-    public var fftMagnitudes: [Float] = []
+    public var frequencyAmplitudes: [Float] = []
     public var progress: Double {
         guard let nodetime = player.lastRenderTime,
               let playerTime = player.playerTime(forNodeTime: nodetime),
@@ -88,7 +88,7 @@ public class ASAudioVisualizer {
             format: nil
         ) { [self] buffer, _ in
             guard let channelData = buffer.floatChannelData?[0] else { return }
-            fftMagnitudes = fft(data: channelData, setup: fftSetup)
+            frequencyAmplitudes = fft(data: channelData, setup: fftSetup)
         }
     }
 }

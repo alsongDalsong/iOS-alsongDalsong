@@ -3,9 +3,9 @@ import ASEntity
 import Combine
 import UIKit
 
-final class ASPlayPanelViewController: UIViewController {
-    private let viewModel = ASPlayPanelViewModel()
-    private let playPanel = ASPlayPanel(type: .large)
+final class SamplePlayerViewController: UIViewController {
+    private let viewModel = SamplePlayerViewModel()
+    private let playerView = AudioPlayerView(type: .large)
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -15,18 +15,18 @@ final class ASPlayPanelViewController: UIViewController {
         
         viewModel.bindVisualizer()
         
-        view.addSubview(playPanel)
+        view.addSubview(playerView)
         
-        playPanel.translatesAutoresizingMaskIntoConstraints = false
+        playerView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            playPanel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            playPanel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            playPanel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+            playerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
         
-        playPanel.configure(by: viewModel.music)
-        playPanel.onPlayButtonTapped = viewModel.togglePlay
+        playerView.configure(by: viewModel.music)
+        playerView.onPlayButtonTapped = viewModel.togglePlay
         
         bind()
     }
@@ -34,35 +34,35 @@ final class ASPlayPanelViewController: UIViewController {
     private func bind() {
         viewModel.$buttonState
             .sink { [weak self] state in
-                self?.playPanel.configure(with: state)
+                self?.playerView.configure(with: state)
             }
             .store(in: &cancellables)
         
         viewModel.$progress
             .sink { [weak self] progress in
-                self?.playPanel.configure(progress: progress, magnitudes: self?.viewModel.fftMagnitudes ?? [])
+                self?.playerView.configure(progress: progress, frequencyAmplitudes: self?.viewModel.frequencyAmplitudes ?? [])
             }
             .store(in: &cancellables)
         
-        viewModel.$fftMagnitudes
+        viewModel.$frequencyAmplitudes
             .sink { [weak self] magnitudes in
-                self?.playPanel.configure(progress: self?.viewModel.progress ?? 0, magnitudes: magnitudes)
+                self?.playerView.configure(progress: self?.viewModel.progress ?? 0, frequencyAmplitudes: magnitudes)
             }
             .store(in: &cancellables)
     }
 }
 
-final class ASPlayPanelViewModel {
+final class SamplePlayerViewModel {
     @Published var music: Music? = Music(id: "1422639704", title: "D (Half Moon) [feat. Gaeko]", artist: "DEAN", artworkUrl: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/8e/a2/d0/8ea2d001-0b52-a451-4a7c-de35d3502155/00602547860828.rgb.jpg/300x300bb.jpg"), previewUrl: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/98/4f/8e/984f8e93-2901-c8b3-5883-8281b363f723/mzaf_11734879238275302685.plus.aac.p.m4a")!, artworkBackgroundColor: "#7A3B68")
-    @Published var preview: Data?
-    @Published var buttonState: ASPlayButtonState = .play
+    @Published var coverImageData: Data?
+    @Published var buttonState: AudioControlButtonState = .play
     
     private let visualizer = ASAudioVisualizer()
     private var isPlaying = false
     private var timer: Timer?
     
     @Published var progress: Double = 0.0
-    @Published var fftMagnitudes: [Float] = [0, 0, 0, 0, 0, 0]
+    @Published var frequencyAmplitudes: [Float] = [0, 0, 0, 0, 0, 0]
     
     @MainActor
     func bindVisualizer() {
@@ -78,7 +78,7 @@ final class ASPlayPanelViewModel {
         Task {
             guard let music, let url = music.previewUrl else { return }
             let (data, _) = try await URLSession.shared.data(from: url)
-            preview = data
+            coverImageData = data
         }
     }
     
@@ -86,7 +86,8 @@ final class ASPlayPanelViewModel {
     func togglePlay() {
         if isPlaying {
             progress = 0.0
-            fftMagnitudes = [0, 0, 0, 0, 0, 0]
+            frequencyAmplitudes = [0, 0, 0, 0, 0, 0]
+            
             visualizer.stop()
             timer?.invalidate()
             buttonState = .play
@@ -95,6 +96,7 @@ final class ASPlayPanelViewModel {
             startUpdatingVisualizer()
             buttonState = .stop
         }
+        
         isPlaying.toggle()
     }
     
@@ -103,12 +105,20 @@ final class ASPlayPanelViewModel {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
             self?.progress = self?.visualizer.progress ?? 0.0
-            self?.fftMagnitudes = self?.visualizer.fftMagnitudes ?? []
+            self?.frequencyAmplitudes = self?.visualizer.frequencyAmplitudes ?? []
+            
+            if self?.progress == 1 {
+                self?.progress = 0.0
+                self?.frequencyAmplitudes = [0, 0, 0, 0, 0, 0]
+                
+                self?.buttonState = .play
+                self?.isPlaying = false
+            }
         }
     }
 }
 
 @available(iOS 17.0, *)
 #Preview {
-    ASPlayPanelViewController()
+    SamplePlayerViewController()
 }

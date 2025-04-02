@@ -51,7 +51,7 @@ struct AudioVisualizerView: View {
             .onReceive(timer) { _ in
                 if isPlaying {
                     withAnimation {
-                        data = audioVisualizer.fftMagnitudes.map { min($0, 40) }
+                        data = audioVisualizer.frequencyAmplitudes.map { min($0, 40) }
                     }
                 }
             }

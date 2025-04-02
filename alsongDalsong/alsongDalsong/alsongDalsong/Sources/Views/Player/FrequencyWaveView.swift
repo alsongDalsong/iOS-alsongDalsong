@@ -1,0 +1,77 @@
+import UIKit
+
+final class FrequencyWaveView: UIView {
+    private var frequencyShapeLayers: [CAShapeLayer] = []
+    
+    private let shapeLayersCount = 6
+    private let spacing: CGFloat = 1
+    private let initialHeight: CGFloat = 3
+    
+    private var initialWidth: CGFloat {
+        (bounds.width - spacing * CGFloat(shapeLayersCount - 1)) / CGFloat(shapeLayersCount)
+    }
+    
+    var frequencyAmplitudes: [Float] = [0, 0, 0, 0, 0, 0] {
+        didSet {
+            updateAmplitudes()
+        }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if frequencyShapeLayers.isEmpty {
+            setup()
+        }
+    }
+    
+    private func setup() {
+        for i in 0..<shapeLayersCount {
+            let shapeLayer = CAShapeLayer()
+            let xPosition = CGFloat(i) * (initialWidth + spacing)
+            
+            let rect = CGRect(
+                x: xPosition,
+                y: (bounds.height - initialHeight) / 2,
+                width: initialWidth,
+                height: initialHeight
+            )
+            
+            shapeLayer.path = UIBezierPath(roundedRect: rect, cornerRadius: 2).cgPath
+            shapeLayer.fillColor = UIColor.lightGray.cgColor
+            frequencyShapeLayers.append(shapeLayer)
+            layer.addSublayer(shapeLayer)
+        }
+    }
+
+    private func updateAmplitudes() {
+        guard frequencyAmplitudes.count == 6 else { return }
+        
+        for (index, shapeLayer) in frequencyShapeLayers.enumerated() {
+            let magnitude = CGFloat(frequencyAmplitudes[index]) / 10
+            let newHeight = min(bounds.height, max(initialHeight, magnitude))
+            
+            let xPosition = CGFloat(index) * (initialWidth + spacing)
+            
+            let newRect = CGRect(
+                x: xPosition,
+                y: (bounds.height - newHeight) / 2,
+                width: initialWidth,
+                height: newHeight
+            )
+            
+            let animation = CASpringAnimation(keyPath: "path")
+            animation.damping = 6
+            animation.initialVelocity = 0.5
+            animation.stiffness = 80
+            animation.mass = 0.8
+            animation.duration = animation.settlingDuration
+            animation.fromValue = shapeLayer.path
+            animation.toValue = UIBezierPath(roundedRect: newRect, cornerRadius: 1).cgPath
+            animation.fillMode = .forwards
+            animation.isRemovedOnCompletion = false
+            
+            shapeLayer.add(animation, forKey: "animation")
+            shapeLayer.path = UIBezierPath(roundedRect: newRect, cornerRadius: 1).cgPath
+        }
+    }
+}

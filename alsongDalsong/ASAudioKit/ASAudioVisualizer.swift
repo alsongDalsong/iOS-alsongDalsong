@@ -21,7 +21,7 @@ public class ASAudioVisualizer {
         
         let duration = Double(audioFile.length) / audioFile.processingFormat.sampleRate
         
-        return Double(playerTime.sampleTime) / playerTime.sampleRate / duration
+        return min(1.0, Double(playerTime.sampleTime) / playerTime.sampleRate / duration)
     }
     
     public init() { }

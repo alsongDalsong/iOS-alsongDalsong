@@ -38,14 +38,15 @@ final class GameNavigationController: @unchecked Sendable {
                 self?.gameInfo = gameState
             }
             .store(in: &subscriptions)
-        
+
         gameStateRepository.receiveKickOut()
             .receive(on: DispatchQueue.main)
             .filter { $0 }
             .sink { [weak self] _ in
                 self?.leaveRoom()
                 let alert = SingleButtonAlertController(
-                    titleText: .receiveKick) { _ in
+                    titleText: .receiveKick)
+                { _ in
                     self?.navigationController.popToRootViewController(animated: true)
                     self?.navigationController.navigationBar.isHidden = true
                 }
@@ -59,7 +60,6 @@ final class GameNavigationController: @unchecked Sendable {
         navigationController.navigationBar.tintColor = .asBlack
         let fontStyle = setFont()
         navigationController.navigationBar.titleTextAttributes = [.font: fontStyle]
-        let backButtonImage = setImage()
 
         let backButtonAction = UIAction { [weak self] _ in
             let alert = DefaultAlertController(
@@ -74,9 +74,21 @@ final class GameNavigationController: @unchecked Sendable {
             self?.navigationController.presentAlert(alert)
         }
 
-        let backButton = UIBarButtonItem(image: backButtonImage, primaryAction: backButtonAction)
+        let backButton = ASButton()
+        backButton.setConfiguration(
+            systemImageName: "arrowshape.backward.fill",
+            backgroundColor: .backButtonBackground,
+            cornerStyle: .medium,
+            baseForegroundColor: .backButtonForeground,
+            shadowColor: .backButtonShadow,
+            strokeColor: .backButtonShadow,
+            strokeWidth: 3
+        )
+        backButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+        backButton.layer.shadowOffset = CGSize(width: 0, height: 2)
+        backButton.addAction(backButtonAction, for: .touchUpInside)
 
-        viewController.navigationItem.leftBarButtonItem = backButton
+        viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         viewController.title = setTitle()
     }
 
@@ -107,16 +119,6 @@ final class GameNavigationController: @unchecked Sendable {
 
     private func setFont() -> UIFont {
         return .font(.dohyeon, forTextStyle: .headline)
-    }
-
-    private func setImage() -> UIImage? {
-        guard let gameInfo else { return UIImage() }
-        let viewType = gameInfo.resolveViewType()
-        switch viewType {
-            case .lobby: return UIImage(systemName: "rectangle.portrait.and.arrow.forward")?
-            .rotate(radians: .pi)
-            default: return UIImage(systemName: "house")
-        }
     }
 
     private func updateViewControllers(state: GameState) {
@@ -235,7 +237,7 @@ final class GameNavigationController: @unchecked Sendable {
         let recordsRepository = DIContainer.shared.resolve(RecordsRepositoryProtocol.self)
         let submitsRepository = DIContainer.shared.resolve(SubmitsRepositoryProtocol.self)
         let dataDownloadRepository = DIContainer.shared.resolve(DataDownloadRepositoryProtocol.self)
-        
+
         let vm = SubmitAnswerViewModel(
             gameStatusRepository: gameStatusRepository,
             playersRepository: playersRepository,

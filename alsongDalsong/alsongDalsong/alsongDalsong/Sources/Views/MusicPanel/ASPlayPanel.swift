@@ -102,12 +102,10 @@ final class PlayProgressView: UIView {
         layer.addSublayer(progressLayer)
         
         trackLayer.backgroundColor = UIColor.systemGray5.cgColor
-        progressLayer.backgroundColor = UIColor.darkGray.cgColor
+        trackLayer.cornerRadius = 4
+        trackLayer.masksToBounds = true
         
-        [trackLayer, progressLayer].forEach {
-            $0.cornerRadius = 3
-            $0.masksToBounds = true
-        }
+        progressLayer.backgroundColor = UIColor.darkGray.cgColor
     }
     
     override func layoutSubviews() {
@@ -121,10 +119,21 @@ final class PlayProgressView: UIView {
     
     private func updateProgress() {
         let targetWidth = bounds.width * progress
-        let springAnimation = CASpringAnimation(keyPath: "bounds.size.width")
+        let rect = CGRect(x: 0, y: 0, width: targetWidth, height: bounds.height)
         
+        let path = UIBezierPath(
+            roundedRect: rect,
+            byRoundingCorners: progress == 1 ? [.allCorners] : [.topLeft, .bottomLeft],
+            cornerRadii: CGSize(width: 4, height: 4)
+        )
+        
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = path.cgPath
+        progressLayer.mask = maskLayer
+        
+        let springAnimation = CASpringAnimation(keyPath: "bounds.size.width")
         springAnimation.stiffness = 80
-        springAnimation.initialVelocity = 0.3
+        springAnimation.initialVelocity = 0.2
         springAnimation.fromValue = progressLayer.bounds.width
         springAnimation.toValue = targetWidth
         springAnimation.duration = springAnimation.settlingDuration
@@ -136,6 +145,7 @@ final class PlayProgressView: UIView {
         progressLayer.add(springAnimation, forKey: "widthAnimation")
         CATransaction.commit()
     }
+
 }
 
 enum ASPlayPanelType {

@@ -29,11 +29,10 @@ public class ASAudioVisualizer {
     public func bind(data: Data, sampleCount: Int = 6) {
         self.sampleCount = sampleCount
 
-        _ = engine.mainMixerNode
-
-        engine.prepare()
-        try? engine.start()
-
+        let session = AVAudioSession.sharedInstance()
+        try? session.setCategory(.playback, mode: .default, options: [])
+        try? session.setActive(true, options: .notifyOthersOnDeactivation)
+        
         let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".m4a")
         try? data.write(to: tempURL)
 
@@ -45,11 +44,18 @@ public class ASAudioVisualizer {
         engine.attach(player)
         engine.connect(player, to: engine.mainMixerNode, format: format)
 
+        engine.prepare()
+        try? engine.start()
+
         installFastFourierTransform()
     }
 
     public func play() {
         guard let file = audioFile else { return }
+        
+        if !engine.isRunning {
+            try? engine.start()
+        }
 
         if playState == .stop {
             player.scheduleFile(file, at: nil) { [weak self] in

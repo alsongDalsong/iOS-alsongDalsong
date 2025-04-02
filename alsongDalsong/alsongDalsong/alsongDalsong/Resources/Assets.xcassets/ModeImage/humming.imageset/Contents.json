@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "humming.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "humming 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

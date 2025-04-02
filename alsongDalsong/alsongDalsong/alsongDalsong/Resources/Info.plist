@@ -21,6 +21,7 @@
 	<string>$(SERVER_URL)</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>RiaSans-ExtraBold.ttf</string>
 		<string>DoHyeon-Regular.ttf</string>
 		<string>NeoDunggeunmoPro-Regular.ttf</string>
 		<string>WantedSans-Bold.ttf</string>

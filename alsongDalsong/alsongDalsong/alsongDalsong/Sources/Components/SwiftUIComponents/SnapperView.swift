@@ -24,7 +24,7 @@ struct SnapperView: View {
         
         HStack(spacing: spacing) {
             ForEach(modeInfos, id: \.id) { card in
-                ModeView(modeInfo: card, width: cardWidth)
+                ModeView(viewModel: ModeViewModel(mode: card), width: cardWidth)
                     .offset(x: isDragging ? totalDrag : 0)
                     .animation(.snappy(duration: 0.4, extraBounce: 0.2), value: isDragging)
             }

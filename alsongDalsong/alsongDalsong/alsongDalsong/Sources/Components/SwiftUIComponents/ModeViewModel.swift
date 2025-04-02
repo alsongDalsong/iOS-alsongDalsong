@@ -1,11 +1,22 @@
 import Combine
 import ASEntity
+import SwiftUI
 
 final class ModeViewModel: ObservableObject {
     @Published var selectedCard: ModeCard
+    @Published var rotation = 0.0
     
-    init() {
-        self.selectedCard = ModeCard(mode: .humming)
+    init(mode: Mode) {
+        self.selectedCard = ModeCard(mode: mode)
+    }
+    
+    @MainActor func flipCard(delay: TimeInterval = 0.4) {
+        HapticManager.shared.impact(style: .medium)
+        rotation = (rotation == 0) ? -180 : 0
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+            self?.selectedCard.isFaceUp.toggle()
+        }
     }
     
     struct ModeCard {

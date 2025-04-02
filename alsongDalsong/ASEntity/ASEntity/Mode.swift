@@ -38,6 +38,51 @@ public enum Mode: String, Codable, CaseIterable, Identifiable {
         }
     }
 
+    public var duration: String {
+        switch self {
+            case .humming:
+                "5~10분"
+            case .harmony:
+                "5~10분"
+            case .sync:
+                "5~10분"
+            case .instant:
+                "5~10분"
+            case .tts:
+                "5~10분"
+        }
+    }
+
+    public var recommendedPlayers: String {
+        switch self {
+            case .humming:
+                "3~6인"
+            case .harmony:
+                "2~6인"
+            case .sync:
+                "4~6인"
+            case .instant:
+                "1~6인"
+            case .tts:
+                "2~6인"
+        }
+    }
+
+    public var summary: String {
+        switch self {
+            case .humming:
+                "허밍으로 노래를 전달하자!"
+            case .harmony:
+                "노래의 화음을 쌓아보자!"
+            case .sync:
+                "동시에 섞인 노래를 맞춰보자!"
+            case .instant:
+                "아주 잠깐 듣고 무슨노래인지 맞춰보자!"
+            case .tts:
+                "가사만 보고 무슨노래인지 맞춰보자!"
+        }
+    }
+
     public var description: String {
         switch self {
             case .humming: return "원하는 노래를 선택하고 허밍을 하세요! \n다음 사람부터 당신의 허밍을 따라하게 됩니다. \n마지막 친구는 허밍을 듣고 어떤 노래인지 맞출 수 있을까요?"

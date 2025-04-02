@@ -1,7 +1,7 @@
 import UIKit
 import SwiftUI
 
-final class ASAvatarCircleView: UIView {
+final class ASAvatarView: UIView {
     private var imageView = UIImageView()
     
     init(backgroundColor: UIColor = .asMint) {
@@ -14,12 +14,8 @@ final class ASAvatarCircleView: UIView {
     }
     
     private func setup(backgroundColor: UIColor) {
-        layer.cornerRadius = 100
         layer.masksToBounds = true
-        layer.backgroundColor = backgroundColor.cgColor
-        
-        layer.borderWidth = 10
-        layer.borderColor = UIColor.white.cgColor
+        layer.backgroundColor = CGColor(gray: 0, alpha: 0)
         
         clipsToBounds = true
         imageView.contentMode = .scaleAspectFit

@@ -1,5 +1,5 @@
-import SwiftUI
 import ASEntity
+import SwiftUI
 
 struct ModeView: View {
     let modeInfo: Mode
@@ -9,15 +9,24 @@ struct ModeView: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .foregroundColor(Color.asSystem)
-                .cornerRadius(12)
-                .shadow(color: .asShadow, radius: 0, x: 5, y: 5)
-                .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.black, lineWidth: 3))
-            VStack {
-                Text(LocalizedStringResource(stringLiteral: modeInfo.title))
-                    .font(.doHyeon(size: 32))
-                    .padding(.top, 16)
-                    .layoutPriority(1)
+                .foregroundColor(Color.purplePanel)
+                .cornerRadius(30)
+                .shadow(color: .asShadow, radius: 2, x: 0, y: 4)
+            VStack(alignment: .leading) {
+                HStack {
+                    Spacer()
+                    Image(systemName: "clock")
+                    Text(LocalizedStringResource(stringLiteral: modeInfo.duration))
+                        .font(.doHyeon(size: 20))
+                        .layoutPriority(1)
+                }
+                HStack {
+                    Spacer()
+                    Image(systemName: "person.2.fill")
+                    Text(LocalizedStringResource(stringLiteral: modeInfo.recommendedPlayers))
+                        .font(.doHyeon(size: 20))
+                        .layoutPriority(1)
+                }
                 GeometryReader { geometry in
                     VStack {
                         Image(modeInfo.imageName)
@@ -26,18 +35,18 @@ struct ModeView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                             .padding(.horizontal)
                             .frame(width: width, height: min(geometry.size.height * 0.6, 150))
-                        
-                        Text(LocalizedStringResource(stringLiteral: modeInfo.description))
-                            .font(.doHyeon(size: 20))
-                            .minimumScaleFactor(0.01)
-                            .lineLimit(nil)
-                            .padding(.top, 0)
-                            .padding(.horizontal)
-                            .frame(maxHeight: geometry.size.height * 0.3, alignment: .top)
                     }
                 }
+                Text(LocalizedStringResource(stringLiteral: modeInfo.title))
+                    .font(.doHyeon(size: 40))
+                    .layoutPriority(1)
+                Text(LocalizedStringResource(stringLiteral: modeInfo.summary))
+                    .font(.doHyeon(size: 24))
+                    .foregroundStyle(Color(red: 0.913, green: 0.913, blue: 0.913))
+                    .layoutPriority(1)
             }
-            
+            .foregroundStyle(.white)
+            .padding(16)
         }
         .frame(width: width)
     }

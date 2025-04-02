@@ -113,10 +113,10 @@ final class AudioPlayerView: UIView {
             controlButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             controlButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
             
-            frequencyWaveView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            frequencyWaveView.topAnchor.constraint(equalTo: topAnchor, constant: 18),
             frequencyWaveView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -18),
-            frequencyWaveView.widthAnchor.constraint(equalToConstant: 20),
-            frequencyWaveView.heightAnchor.constraint(equalToConstant: 16)
+            frequencyWaveView.widthAnchor.constraint(equalToConstant: 24),
+            frequencyWaveView.heightAnchor.constraint(equalToConstant: 18)
         ])
     }
     

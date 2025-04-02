@@ -4,7 +4,7 @@ final class FrequencyWaveView: UIView {
     private var frequencyShapeLayers: [CAShapeLayer] = []
     
     private let shapeLayersCount = 6
-    private let spacing: CGFloat = 1
+    private let spacing: CGFloat = 1.5
     private let initialHeight: CGFloat = 3
     
     private var initialWidth: CGFloat {
@@ -60,15 +60,8 @@ final class FrequencyWaveView: UIView {
             )
             
             let animation = CASpringAnimation(keyPath: "path")
-            animation.damping = 6
-            animation.initialVelocity = 0.5
-            animation.stiffness = 80
-            animation.mass = 0.8
-            animation.duration = animation.settlingDuration
             animation.fromValue = shapeLayer.path
             animation.toValue = UIBezierPath(roundedRect: newRect, cornerRadius: 1).cgPath
-            animation.fillMode = .forwards
-            animation.isRemovedOnCompletion = false
             
             shapeLayer.add(animation, forKey: "animation")
             shapeLayer.path = UIBezierPath(roundedRect: newRect, cornerRadius: 1).cgPath

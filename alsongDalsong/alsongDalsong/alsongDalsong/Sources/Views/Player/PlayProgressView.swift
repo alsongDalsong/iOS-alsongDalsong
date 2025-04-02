@@ -53,11 +53,8 @@ final class PlayProgressView: UIView {
         progressShapeLayer.mask = maskLayer
         
         let springAnimation = CASpringAnimation(keyPath: "bounds.size.width")
-        springAnimation.stiffness = 80
-        springAnimation.initialVelocity = 0.2
         springAnimation.fromValue = progressShapeLayer.bounds.width
         springAnimation.toValue = targetWidth
-        springAnimation.duration = springAnimation.settlingDuration
         
         CATransaction.begin()
         CATransaction.setCompletionBlock { [weak self] in

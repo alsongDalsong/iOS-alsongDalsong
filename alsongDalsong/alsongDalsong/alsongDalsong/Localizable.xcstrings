@@ -190,6 +190,9 @@
         }
       }
     },
+    "곧 출시 예정입니다" : {
+
+    },
     "나가기" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -525,6 +528,17 @@
         }
       }
     },
+    "삶" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Life"
+          }
+        }
+      }
+    },
     "사냥꾼" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -543,17 +557,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Master"
-          }
-        }
-      }
-    },
-    "삶" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Life"
           }
         }
       }

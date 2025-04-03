@@ -79,7 +79,7 @@ public enum Mode: String, Codable, CaseIterable, Identifiable {
             case .instant:
                 "아주 잠깐 듣고 무슨노래인지 맞춰보자!"
             case .tts:
-                "가사만 보고 무슨노래인지 맞춰보자!"
+                "가사만 보고 노래를 맞춰보자!"
         }
     }
 

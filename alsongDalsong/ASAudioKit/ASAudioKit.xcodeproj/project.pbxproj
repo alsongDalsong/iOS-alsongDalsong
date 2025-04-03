@@ -17,6 +17,7 @@
 		4EB1ED382CE88E500012FFBA /* ASAudioKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8593659D2D3F77FE0086C8C4 /* ASAudioError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8593659C2D3F77F60086C8C4 /* ASAudioError.swift */; };
 		85A0E9F32D91582F009343BB /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; };
+		CB4E27AA2D9678F1002D1C94 /* ASAudioError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8593659C2D3F77F60086C8C4 /* ASAudioError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -342,6 +343,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB4E27AA2D9678F1002D1C94 /* ASAudioError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

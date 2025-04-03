@@ -13,13 +13,13 @@ struct ASAudioPlayerTests {
     }
 
     @Test("재생 시작 성공") func startPlaying() async throws {
-        await player.startPlaying(data: testMusic, option: .full)
+        try await player.startPlaying(data: testMusic, option: .full)
 
         #expect(await player.isPlaying())
     }
 
-    @Test("제한된 시간 동안 재생 시작 성공") func startPlayingWithTimeLimit() async {
-        await player.startPlaying(data: testMusic, option: .partial(time: 6))
+    @Test("제한된 시간 동안 재생 시작 성공") func startPlayingWithTimeLimit() async throws {
+        try await player.startPlaying(data: testMusic, option: .partial(time: 6))
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 6.0) {
             Task {

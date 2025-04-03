@@ -1,7 +1,5 @@
 import ASNetworkKit
 import ASLogKit
-import Combine
-import Foundation
 import ASRepositoryProtocol
 
 final class AvatarRepository: AvatarRepositoryProtocol {

@@ -6,11 +6,69 @@ on:
 
 jobs:
   build:
-    # job이 실행될 환경
+    name: 🛠️ build
     runs-on: macos-15
 
     steps:
-    - uses: actions/checkout@v4
+    - name: 📁 Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: 💾 Cache DerivedData
+      uses: actions/cache@v4
+      with:
+        path: ~/Library/Developer/Xcode/DerivedData
+        key: ${{ runner.os }}-derivedDataCache-${{ hashFiles('**/*.xcworkspace/**', 'Podfile.lock') }}
+        restore-keys: | #Cache miss 발생 시
+          ${{ runner.os }}-derivedDataCache-
+      
     - name: 🛠 Start alsongDalsong Build
       run: |
-        xcodebuild build -workspace alsongDalsong.xcworkspace -scheme alsongDalsong -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest'
+        echo "🚧 Starting build..."
+        xcodebuild build \
+          -workspace alsongDalsong.xcworkspace \
+          -scheme alsongDalsong \
+          -sdk iphonesimulator \
+          -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest'
+   
+  generate-matrix:
+    name: 🧾 Generate Test Matrix
+    runs-on: macos-15
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+    steps:
+      - name: 📁 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🔍 Extract Test Schemes
+        id: set-matrix
+        run: |
+          SCHEMES=$(xcodebuild -list -workspace alsongDalsong.xcworkspace | \
+            awk '/Schemes:/, /Targets:/' | sed -e '1d;$d' | grep 'Tests' | sed 's/^ *//')
+
+          echo "✅ Found schemes:"
+          echo "$SCHEMES"
+
+          JSON=$(echo "$SCHEMES" | jq -R -s -c 'split("\n")[:-1] | {scheme: .}')
+          echo "matrix=$JSON" >> $GITHUB_OUTPUT
+          
+  test:
+    name: 🧪 test
+    needs: [build, generate-matrix]
+    runs-on: macos-15
+    strategy:
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
+      
+    steps:
+    - name: 📁 Checkout Repository
+      uses: actions/checkout@v4
+    
+    - name: 🔍 Run Test Scheme
+      run: |
+          echo "🧪 Running: ${{ matrix.scheme }}"
+          xcodebuild test \
+            -workspace alsongDalsong.xcworkspace \
+            -scheme "${{ matrix.scheme }}" \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            -parallel-testing-enabled YES

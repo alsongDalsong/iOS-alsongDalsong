@@ -12,7 +12,7 @@ struct ASAudioRecorderTests {
         let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("녹음성공테스트")
         
-        await recorder.startRecording(url: url)
+        try await recorder.startRecording(url: url)
         let isRecording = await recorder.isRecording()
         #expect(isRecording)
     }
@@ -21,7 +21,7 @@ struct ASAudioRecorderTests {
         let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("녹음저장성공테스트")
         
-        await recorder.startRecording(url: url)
+        try await recorder.startRecording(url: url)
         await recorder.stopRecording()
         #expect(FileManager.default.fileExists(atPath: url.path))
     }

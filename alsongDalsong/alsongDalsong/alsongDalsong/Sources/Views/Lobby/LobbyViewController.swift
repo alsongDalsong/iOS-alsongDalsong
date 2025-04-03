@@ -67,13 +67,12 @@ final class LobbyViewController: UIViewController {
             text: "#" + viewmodel.roomNumber,
             textStyle: .largeTitle,
             backgroundColor: .roomNumberButton,
-            cornerStyle: .capsule,
+            cornerStyle: .large,
             baseForegroundColor: .asBlack,
             shadowColor: .backButtonShadow,
             strokeColor: .backButtonShadow,
             strokeWidth: 3
         )
-
 
         inviteButton.setConfiguration(
             systemImageName: "square.and.arrow.up",
@@ -99,7 +98,12 @@ final class LobbyViewController: UIViewController {
     }
 
     private func setAction() {
-        // TODO: invite Button 클립보드 복사 액션 추가하기
+        roomNumberButton.addAction(UIAction { [weak self] _ in
+            guard let self else { return }
+            let roomNumber = viewmodel.roomNumber
+            UIPasteboard.general.string = roomNumber
+            roomNumberButton.animateConfirmation(temporaryText: "복사 됨!")
+        }, for: .touchUpInside)
 
         inviteButton.addAction(UIAction { [weak self] _ in
             guard let roomNumber = self?.viewmodel.roomNumber else { return }

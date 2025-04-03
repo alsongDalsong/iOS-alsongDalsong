@@ -2,15 +2,36 @@ import ASEntity
 import SwiftUI
 
 struct ModeView: View {
-    @StateObject var viewModel: ModeViewModel
     let width: CGFloat
+    var viewModel: ModeViewModel {
+        externalViewModel ?? stateViewModel
+    }
+    
+    @StateObject private var stateViewModel: ModeViewModel
+    private var externalViewModel: ModeViewModel?
+    
+    init(mode: Mode, width: CGFloat) {
+        _stateViewModel = StateObject(wrappedValue: ModeViewModel(mode: mode))
+        self.externalViewModel = nil
+        self.width = width
+    }
+    
+    init(viewModel: ModeViewModel, width: CGFloat) {
+        _stateViewModel = StateObject(wrappedValue: viewModel)
+        self.externalViewModel = viewModel
+        self.width = width
+    }
     
     var body: some View {
         ZStack {
-            frontCard
-                .opacity(viewModel.selectedCard.isFaceUp ? 1 : 0)
-            backCard
-                .opacity(viewModel.selectedCard.isFaceUp ? 0 : 1)
+            if viewModel.selectedCard.isFaceUp {
+                frontCard
+            } else {
+                backCard
+                    .overlay(
+                        viewModel.selectedCard.isOpened ? nil : lockedView
+                    )
+            }
         }
         .rotation3DEffect(
             Angle(degrees: viewModel.rotation + (viewModel.selectedCard.isFaceUp ? 0 : 180)),
@@ -27,6 +48,25 @@ struct ModeView: View {
 }
 
 private extension ModeView {
+    var lockedView: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 30)
+                .fill(.ultraThinMaterial)
+                .overlay(Color.black.opacity(0.4))
+                .clipShape(RoundedRectangle(cornerRadius: 30))
+            VStack(spacing: 12) {
+                Image(systemName: "lock.fill")
+                    .font(.system(size: 30, weight: .bold))
+                    .foregroundColor(.white)
+                
+                Text("곧 출시 예정입니다")
+                    .font(.system(size: 20))
+                    .fontWeight(.bold)
+                    .foregroundColor(.white.opacity(0.8))
+            }
+        }
+    }
+    
     var cardBaseView: some View {
         Image(viewModel.selectedCard.mode.imageName)
             .resizable()
@@ -51,13 +91,13 @@ private extension ModeView {
             VStack(alignment: .leading) {
                 HStack {
                     Image(systemName: "clock")
-                    Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.recommended.time))
+                    Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.duration))
                         .font(.doHyeon(size: 20))
                 }
                 
                 HStack {
                     Image(systemName: "person.fill")
-                    Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.recommended.peopleCount))
+                    Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.recommendedPlayers))
                         .font(.doHyeon(size: 20))
                 }
             }
@@ -82,16 +122,30 @@ private extension ModeView {
     }
     
     var backOverlay: some View {
-        RoundedRectangle(cornerRadius: 30)
-            .fill(Color.white.opacity(0.05))
-            .overlay(
-                VStack(alignment: .leading, spacing: 15) {
-                    Text(viewModel.selectedCard.mode.title)
-                        .font(.doHyeon(size: 40))
-                    Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.description))
-                        .font(.system(size: 18))
-                }
-                    .padding(.horizontal, 20)
-            )
+        ZStack(alignment: .topLeading) {
+            RoundedRectangle(cornerRadius: 30)
+                .fill(Color.white.opacity(0.05))
+                .overlay(
+                    VStack(alignment: .leading, spacing: 50) {
+                        Text(viewModel.selectedCard.mode.title)
+                            .font(.doHyeon(size: 40))
+                            .padding(.top, 50)
+                        
+                        VStack(alignment: .leading, spacing: 20) {
+                            Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.description))
+                                .font(.system(size: 16))
+                                .fontWeight(.medium)
+                                .lineSpacing(5)
+                            
+                            Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.footerText))
+                                .font(.system(size: 13))
+                                .lineSpacing(5)
+                                .opacity(0.7)
+                        }
+                    }
+                        .padding(.horizontal, 28)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                )
+        }
     }
 }

@@ -5,9 +5,11 @@ import SwiftUI
 final class ModeViewModel: ObservableObject {
     @Published var selectedCard: ModeCard
     @Published var rotation = 0.0
+    private var openedMode: [Mode] = [.humming]
     
     init(mode: Mode) {
-        self.selectedCard = ModeCard(mode: mode)
+        let isOpened = openedMode.contains(mode)
+        self.selectedCard = ModeCard(mode: mode, isOpened: isOpened)
     }
     
     @MainActor func flipCard(delay: TimeInterval = 0.4) {
@@ -22,5 +24,6 @@ final class ModeViewModel: ObservableObject {
     struct ModeCard {
         var mode: Mode
         var isFaceUp: Bool = true
+        var isOpened: Bool = false
     }
 }

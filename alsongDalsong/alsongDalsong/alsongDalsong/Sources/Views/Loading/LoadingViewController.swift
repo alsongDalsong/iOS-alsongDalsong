@@ -72,7 +72,7 @@ final class LoadingViewController: UIViewController {
                   let avatars = self?.viewModel?.avatars,
                   let selectedAvatar = self?.viewModel?.selectedAvatar else { return }
             
-            self?.titleLabelAnimation { _ in
+            self?.titleLabelAnimation {
                 self?.navigateToOnboarding(avatars: avatars, selectedAvatar: selectedAvatar, avatarData: avatarData)
             }
         }
@@ -88,7 +88,7 @@ final class LoadingViewController: UIViewController {
             .store(in: &cancellables)
     }
     
-    private func titleLabelAnimation(completion: @escaping (UIViewAnimatingPosition) -> Void) {
+    private func titleLabelAnimation(completion: @escaping () -> Void) {
         guard let superview = titleLabel.superview else { return }
 
         let currentY = superview.convert(titleLabel.frame, to: nil).minY
@@ -108,7 +108,10 @@ final class LoadingViewController: UIViewController {
             self?.activityIndicatorView.alpha = 0
         }
 
-        animator.addCompletion(completion)
+        animator.addCompletion { _ in
+            completion()
+        }
+        
         animator.startAnimation()
     }
     

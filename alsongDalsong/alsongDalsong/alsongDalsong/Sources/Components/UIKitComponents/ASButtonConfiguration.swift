@@ -5,6 +5,7 @@ extension ASButton {
     struct ASButtonConfiguration {
         let systemImageName: String?
         let imageSize: CGFloat
+        let imageColor: UIColor?
         let text: String?
         let textStyle: UIFont.TextStyle
         let backgroundColor: UIColor?
@@ -16,6 +17,7 @@ extension ASButton {
         init(
             systemImageName: String? = nil,
             imageSize: CGFloat = 20,
+            imageColor: UIColor? = nil,
             text: String? = nil,
             textStyle: UIFont.TextStyle = .largeTitle,
             backgroundColor: UIColor? = nil,
@@ -26,6 +28,7 @@ extension ASButton {
         ) {
             self.systemImageName = systemImageName
             self.imageSize = imageSize
+            self.imageColor = imageColor
             self.text = text
             self.backgroundColor = backgroundColor
             self.textStyle = textStyle
@@ -44,8 +47,10 @@ extension ASButton {
             
             if let systemImageName {
                 config.imagePlacement = .leading
-                config.image = UIImage(systemName: systemImageName)
-                config.imagePadding = 0
+                config.image = UIImage(systemName: systemImageName)?
+                    .withRenderingMode(.alwaysOriginal)
+                    .withTintColor(imageColor ?? baseForegroundColor)
+                config.imagePadding = 8
                 let imageConfig = UIImage.SymbolConfiguration(pointSize: imageSize, weight: .heavy)
                 config.preferredSymbolConfigurationForImage = imageConfig
             }

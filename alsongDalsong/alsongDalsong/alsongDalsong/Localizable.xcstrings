@@ -496,6 +496,17 @@
         }
       }
     },
+    "복사 됨!" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied!"
+          }
+        }
+      }
+    },
     "부드러운" : {
       "extractionState" : "manual",
       "localizations" : {

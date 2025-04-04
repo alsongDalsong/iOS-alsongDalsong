@@ -6,6 +6,7 @@ import UIKit
 final class ASButton: UIButton {
     private var configurationData: ASButtonConfiguration?
     private var cancellables = Set<AnyCancellable>()
+    private var isAnimating = false
 
     init() {
         super.init(frame: .zero)
@@ -206,6 +207,57 @@ private extension ASButton {
         setShadow()
         configurationUpdateHandler = { [weak self] _ in
             self?.applyHighlightEffect()
+        }
+    }
+}
+
+// MARK: - Animations
+
+extension ASButton {
+    func animateConfirmation(temporaryText: String, delay: TimeInterval = 1.5) {
+        guard !isAnimating, let originConfiguration = configurationData else { return }
+        isAnimating = true
+        let updatedConfiguration = ASButtonConfiguration(
+            systemImageName: "checkmark.circle.fill",
+            imageSize: 24,
+            imageColor: .asGreen,
+            text: temporaryText,
+            textStyle: originConfiguration.textStyle,
+            backgroundColor: originConfiguration.backgroundColor,
+            cornerStyle: originConfiguration.cornerStyle,
+            baseForegroundColor: originConfiguration.baseForegroundColor,
+            strokeColor: originConfiguration.strokeColor,
+            strokeWidth: originConfiguration.strokeWidth
+        )
+
+        UIView.transition(
+            with: self,
+            duration: 0.3,
+            options: .transitionCrossDissolve,
+            animations: {
+                self.configurationData = updatedConfiguration
+                self.applyConfiguration()
+                if #available(iOS 17.0, *) {
+                    guard let symbolImageView = self.imageView else { return }
+                    symbolImageView.addSymbolEffect(.bounce)
+                }
+            },
+            completion: nil
+        )
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            UIView.transition(
+                with: self,
+                duration: 0.3,
+                options: .transitionCrossDissolve,
+                animations: {
+                    self.configurationData = originConfiguration
+                    self.applyConfiguration()
+                },
+                completion: { _ in
+                    self.isAnimating = false
+                }
+            )
         }
     }
 }

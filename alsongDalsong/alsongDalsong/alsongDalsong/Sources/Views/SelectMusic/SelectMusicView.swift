@@ -60,8 +60,10 @@ struct SelectMusicView: View {
                             .tint(.black)
                         }
                         .onAppear {
-                            Task {
-                                await viewModel.fetchNextSearchList(currentMusic: music)
+                            if music == viewModel.searchList.last {
+                                Task {
+                                    await viewModel.fetchNextSearchList(currentMusic: music)
+                                }
                             }
                         }
                     }

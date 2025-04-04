@@ -78,6 +78,7 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
     
     private func bindSearchTerm() {
         $searchTerm
+            .removeDuplicates() 
             .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .sink { [weak self] term in
                 Task { [weak self] in

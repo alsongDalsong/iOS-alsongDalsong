@@ -94,10 +94,9 @@ final class LoadingViewController: UIViewController {
         let currentY = superview.convert(titleLabel.frame, to: nil).minY
         let targetY = view.safeAreaInsets.top
                 
-        let scaleFactor: CGFloat = 32 / 80 // 폰트 크기 변화
-        let fontHeightDifference = titleLabel.frame.height * (1 - scaleFactor) // 변한 폰트의 크기
+        let scaleFactor: CGFloat = 32 / 80 /// 폰트 크기 변화
+        let fontHeightDifference = titleLabel.frame.height * (1 - scaleFactor)
         
-        // 이동할 거리 계산
         let translationY = targetY - currentY - (fontHeightDifference / 2)
 
         let animator = UIViewPropertyAnimator(duration: 1, dampingRatio: 0.85) { [weak self] in

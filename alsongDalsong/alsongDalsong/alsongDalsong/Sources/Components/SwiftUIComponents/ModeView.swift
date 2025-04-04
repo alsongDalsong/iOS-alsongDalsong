@@ -2,7 +2,10 @@ import ASEntity
 import SwiftUI
 
 struct ModeView: View {
+    /// 뷰의 너비
     let width: CGFloat
+    
+    /// 실제로 사용되는 뷰모델
     var viewModel: ModeViewModel {
         externalViewModel ?? stateViewModel
     }
@@ -10,12 +13,14 @@ struct ModeView: View {
     @StateObject private var stateViewModel: ModeViewModel
     private var externalViewModel: ModeViewModel?
     
+    /// 외부 값에 의해 뷰가 변경될 경우 사용하는 초기화
     init(mode: Mode, width: CGFloat) {
         _stateViewModel = StateObject(wrappedValue: ModeViewModel(mode: mode))
         self.externalViewModel = nil
         self.width = width
     }
     
+    /// 외부 뷰에 의해 뷰 모델이 관리되는 경우 사용하는 초기화
     init(viewModel: ModeViewModel, width: CGFloat) {
         _stateViewModel = StateObject(wrappedValue: viewModel)
         self.externalViewModel = viewModel

@@ -37,9 +37,11 @@ final class LoadingViewController: UIViewController {
         
         titleLabel.text = "알쏭달쏭"
         titleLabel.font = .font(.riaSans, ofSize: 80)
+        titleLabel.textColor = .onboardingForeground
         
         subtitleLabel.text = "기다려라"
         subtitleLabel.font = .font(.riaSans, ofSize: 20)
+        subtitleLabel.textColor = .onboardingForeground
                 
         activityIndicatorView.startAnimating()
         
@@ -70,7 +72,9 @@ final class LoadingViewController: UIViewController {
                   let avatars = self?.viewModel?.avatars,
                   let selectedAvatar = self?.viewModel?.selectedAvatar else { return }
             
-            self?.navigateToOnboarding(avatars: avatars, selectedAvatar: selectedAvatar, avatarData: avatarData)
+            self?.titleLabelAnimation { _ in
+                self?.navigateToOnboarding(avatars: avatars, selectedAvatar: selectedAvatar, avatarData: avatarData)
+            }
         }
     }
     
@@ -82,6 +86,30 @@ final class LoadingViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: handler)
             .store(in: &cancellables)
+    }
+    
+    private func titleLabelAnimation(completion: @escaping (UIViewAnimatingPosition) -> Void) {
+        guard let superview = titleLabel.superview else { return }
+
+        let currentY = superview.convert(titleLabel.frame, to: nil).minY
+        let targetY = view.safeAreaInsets.top
+                
+        let scaleFactor: CGFloat = 32 / 80 // 폰트 크기 변화
+        let fontHeightDifference = titleLabel.frame.height * (1 - scaleFactor) // 변한 폰트의 크기
+        
+        // 이동할 거리 계산
+        let translationY = targetY - currentY - (fontHeightDifference / 2)
+
+        let animator = UIViewPropertyAnimator(duration: 1, dampingRatio: 0.85) { [weak self] in
+            self?.titleLabel.transform = CGAffineTransform(translationX: 0, y: translationY)
+                .scaledBy(x: scaleFactor, y: scaleFactor)
+            
+            self?.subtitleLabel.alpha = 0
+            self?.activityIndicatorView.alpha = 0
+        }
+
+        animator.addCompletion(completion)
+        animator.startAnimation()
     }
     
     private func navigateToOnboarding(avatars: [URL], selectedAvatar: URL, avatarData: Data) {

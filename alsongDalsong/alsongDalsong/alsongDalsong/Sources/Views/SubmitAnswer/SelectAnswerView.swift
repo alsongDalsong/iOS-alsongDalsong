@@ -38,6 +38,7 @@ struct SelectAnswerView: View {
 
                 ASSearchBar(text: $viewModel.searchTerm, placeHolder: String(localized: "노래를 선택하세요"))
                     .focused($isFocused)
+
                 if viewModel.isSearching {
                     VStack {
                         Spacer()
@@ -45,6 +46,7 @@ struct SelectAnswerView: View {
                             .scaleEffect(2.0)
                         Spacer()
                     }
+                    .scrollDismissesKeyboard(.immediately)
                 } else {
                     List(viewModel.searchList) { music in
                         Button {
@@ -54,6 +56,11 @@ struct SelectAnswerView: View {
                                 await viewModel.downloadArtwork(url: url)
                             })
                             .tint(.black)
+                        }
+                        .onAppear {
+                            Task {
+                                await viewModel.fetchNextSearchList(currentMusic: music)
+                            }
                         }
                     }
                     .listStyle(.plain)

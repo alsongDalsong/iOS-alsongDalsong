@@ -22,7 +22,7 @@ public struct ASMusicAPI {
 
                     let result = try await request.response()
 
-                    if !result.topResults.isEmpty {
+                    if !result.topResults.isEmpty, offset == 0 {
                         let music = result.topResults.compactMap { topResult -> ASEntity.Music? in
                             if case .song(let song) = topResult {
                                 return ASEntity.Music(

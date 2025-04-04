@@ -31,6 +31,11 @@ final class SubmitAnswerViewModel: ObservableObject, @unchecked Sendable {
     private let musicAPI = ASMusicAPI()
     private var cancellables: Set<AnyCancellable> = []
 
+    private let pageSize: Int = 10
+    private var currentPage: Int = 0
+    private var isLoadingPage: Bool = false
+    private var isAllLoaded: Bool = false
+
     init(
         gameStatusRepository: GameStatusRepositoryProtocol,
         playersRepository: PlayersRepositoryProtocol,
@@ -55,11 +60,12 @@ final class SubmitAnswerViewModel: ObservableObject, @unchecked Sendable {
         $searchTerm
             .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .sink { [weak self] term in
-                guard let self, !term.isEmpty else {
-                    self?.resetSearchList()
-                    return
-                }
                 Task { [weak self] in
+                    if term.isEmpty {
+                        await self?.resetSearchList()
+                        return
+                    }
+                    await self?.resetSearchList()
                     try? await self?.searchMusic(text: term)
                 }
             }
@@ -159,9 +165,10 @@ final class SubmitAnswerViewModel: ObservableObject, @unchecked Sendable {
         do {
             if text.isEmpty { return }
             await updateIsSearching(with: true)
-            let searchList = try await musicAPI.search(for: text)
+            let searchList = try await musicAPI.search(for: text, pageSize, 0)
             await updateSearchList(with: searchList)
             await updateIsSearching(with: false)
+            currentPage += 1
         } catch {
             ErrorHandler.handle(error)
             throw ASError.searchMusicOnSubmit
@@ -190,6 +197,7 @@ final class SubmitAnswerViewModel: ObservableObject, @unchecked Sendable {
 
     // MARK: - 이부분 부터 RehummingViewModel
 
+    @MainActor
     func resetSearchList() {
         searchList = []
     }
@@ -211,5 +219,41 @@ final class SubmitAnswerViewModel: ObservableObject, @unchecked Sendable {
 
     func cancelSubscriptions() {
         cancellables.removeAll()
+    }
+
+    /// MusicKit을 통해 다음 페이지의 Apple Music 노래를 검색합니다.
+    /// - Parameters:
+    ///   - currentMusic: 현재 SelectMusicView.swift에서 로딩되고 있는 Music Data
+    func fetchNextSearchList(currentMusic: Music? = nil) async {
+        guard !isLoadingPage, !isAllLoaded else { return }
+
+        if let currentMusic = currentMusic {
+            guard let index = searchList.firstIndex(where: { $0.id == currentMusic.id }),
+                  index >= searchList.count - 1 else { return }
+        }
+
+        isLoadingPage = true
+
+        defer {
+            isLoadingPage = false
+        }
+
+        do {
+            Logger.debug(currentPage)
+            let nextSearchList = try await musicAPI.search(for: searchTerm, pageSize, currentPage * pageSize)
+
+            if nextSearchList.isEmpty {
+                isAllLoaded = true
+            } else {
+                currentPage += 1
+                await MainActor.run {
+                    let existingIDs = Set(searchList.map { $0.id })
+                    let filteredNextSearchList = nextSearchList.filter { !existingIDs.contains($0.id) }
+                    searchList.append(contentsOf: filteredNextSearchList)
+                }
+            }
+        } catch {
+            ErrorHandler.handle(error)
+        }
     }
 }

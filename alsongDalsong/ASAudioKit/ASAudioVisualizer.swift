@@ -9,11 +9,26 @@ public class ASAudioVisualizer {
     private let audioEngine = AVAudioEngine()
     private let audioPlayer = AVAudioPlayerNode()
 
-    private var sampleCount = 20
+    private var sampleCount = 6
     private var audioFile: AVAudioFile?
     private var playState: PlayState = .stop
+    private var _normalizedFrequencyAmplitudes: [Float] = []
     
-    public var normalizedFrequencyAmplitudes: [Float] = []
+    private let syncQueue = DispatchQueue(label: "audioVisualizer.syncQueue")
+
+    public var normalizedFrequencyAmplitudes: [Float] {
+        get {
+            syncQueue.sync {
+                _normalizedFrequencyAmplitudes
+            }
+        }
+        set {
+            syncQueue.async(flags: .barrier) { [weak self] in
+                self?._normalizedFrequencyAmplitudes = newValue
+            }
+        }
+    }
+    
     public var audioProgress: Double {
         guard let nodetime = audioPlayer.lastRenderTime,
               let playerTime = audioPlayer.playerTime(forNodeTime: nodetime),

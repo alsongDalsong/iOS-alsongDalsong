@@ -40,13 +40,19 @@ final class SamplePlayerViewController: UIViewController {
         
         viewModel.$audioProgress
             .sink { [weak self] progress in
-                self?.playerView.configure(progress: progress, normalizedFrequencyAmplitudes: self?.viewModel.normalizedFrequencyAmplitudes ?? [])
+                self?.playerView.configure(
+                    progress: progress,
+                    normalizedFrequencyAmplitudes: self?.viewModel.normalizedFrequencyAmplitudes ?? []
+                )
             }
             .store(in: &cancellables)
         
         viewModel.$normalizedFrequencyAmplitudes
             .sink { [weak self] normalizedFrequencyAmplitudes in
-                self?.playerView.configure(progress: self?.viewModel.audioProgress ?? 0, normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes)
+                self?.playerView.configure(
+                    progress: self?.viewModel.audioProgress ?? 0,
+                    normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes
+                )
             }
             .store(in: &cancellables)
     }
@@ -104,15 +110,17 @@ final class SamplePlayerViewModel {
     private func updateAudioProgressAndNormalizedFrequencyAmplitudes() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
-            self?.audioProgress = self?.audioVisualizer.audioProgress ?? 0.0
-            self?.normalizedFrequencyAmplitudes = self?.audioVisualizer.normalizedFrequencyAmplitudes ?? []
-            
-            if self?.audioProgress == 1 {
-                self?.audioProgress = 0.0
-                self?.normalizedFrequencyAmplitudes = [0, 0, 0, 0, 0, 0]
+            DispatchQueue.main.async {
+                self?.audioProgress = self?.audioVisualizer.audioProgress ?? 0.0
+                self?.normalizedFrequencyAmplitudes = self?.audioVisualizer.normalizedFrequencyAmplitudes ?? []
                 
-                self?.buttonState = .play
-                self?.isPlaying = false
+                if self?.audioProgress == 1 {
+                    self?.audioProgress = 0.0
+                    self?.normalizedFrequencyAmplitudes = [0, 0, 0, 0, 0, 0]
+                    
+                    self?.buttonState = .play
+                    self?.isPlaying = false
+                }
             }
         }
     }

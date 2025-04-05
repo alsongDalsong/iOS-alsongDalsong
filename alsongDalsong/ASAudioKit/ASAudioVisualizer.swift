@@ -37,27 +37,26 @@ public class ASAudioVisualizer {
         try? data.write(to: tempURL)
 
         guard let file = try? AVAudioFile(forReading: tempURL) else { return }
-        audioFile = file  // 파일 저장 (재생을 다시 시작할 때 사용)
-
+        audioFile = file
+        
         let format = file.processingFormat
 
         audioEngine.attach(audioPlayer)
         audioEngine.connect(audioPlayer, to: audioEngine.mainMixerNode, format: format)
-
         audioEngine.prepare()
-        try? audioEngine.start()
-
+        
         installFastFourierTransform()
     }
 
     public func play() {
         guard let file = audioFile else { return }
-        
+                
         if !audioEngine.isRunning {
             try? audioEngine.start()
         }
 
         if playState == .stop {
+            audioPlayer.stop()
             audioPlayer.scheduleFile(file, at: nil) { [weak self] in
                 self?.playState = .stop
             }
@@ -82,8 +81,8 @@ public class ASAudioVisualizer {
     }
 
     private func installFastFourierTransform() {
-        let length = UInt(1024)
-        let bufferSize = UInt32(1024)
+        let length: UInt = 1024
+        let bufferSize: UInt32 = 1024
         let direction = vDSP_DFT_Direction.FORWARD
         
         guard let setup = vDSP_DFT_zop_CreateSetup(nil, length, direction) else { return }

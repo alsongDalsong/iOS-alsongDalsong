@@ -10,23 +10,14 @@ final class PlayProgressView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupLayers()
+        setupLayer()
+        setupStyle()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setupLayers()
-    }
-    
-    private func setupLayers() {
-        layer.addSublayer(trackShapeLayer)
-        layer.addSublayer(progressShapeLayer)
-        
-        trackShapeLayer.backgroundColor = UIColor.systemGray5.cgColor
-        trackShapeLayer.cornerRadius = 4
-        trackShapeLayer.masksToBounds = true
-        
-        progressShapeLayer.backgroundColor = UIColor.darkGray.cgColor
+        setupLayer()
+        setupStyle()
     }
     
     override func layoutSubviews() {
@@ -36,6 +27,21 @@ final class PlayProgressView: UIView {
             origin: .zero,
             size: CGSize(width: progressShapeLayer.frame.width, height: bounds.height)
         )
+    }
+    
+    private func setupLayer() {
+        layer.addSublayer(trackShapeLayer)
+        layer.addSublayer(progressShapeLayer)
+    }
+    
+    private func setupStyle() {
+        trackShapeLayer.backgroundColor = UIColor.systemGray5.cgColor
+        trackShapeLayer.cornerRadius = 4
+        trackShapeLayer.masksToBounds = true
+        
+        progressShapeLayer.backgroundColor = UIColor.darkGray.cgColor
+        progressShapeLayer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+        progressShapeLayer.cornerRadius = 4
     }
     
     private func updateProgressShapeLayer() {
@@ -52,15 +58,11 @@ final class PlayProgressView: UIView {
         maskLayer.path = path.cgPath
         progressShapeLayer.mask = maskLayer
         
-        let springAnimation = CASpringAnimation(keyPath: "bounds.size.width")
-        springAnimation.fromValue = progressShapeLayer.bounds.width
-        springAnimation.toValue = targetWidth
+        let animation = CABasicAnimation(keyPath: "bounds.size.width")
+        animation.fromValue = progressShapeLayer.bounds.width
+        animation.toValue = targetWidth
         
-        CATransaction.begin()
-        CATransaction.setCompletionBlock { [weak self] in
-            self?.progressShapeLayer.bounds.size.width = targetWidth
-        }
-        progressShapeLayer.add(springAnimation, forKey: "widthAnimation")
-        CATransaction.commit()
+        progressShapeLayer.add(animation, forKey: "widthAnimation")
+        progressShapeLayer.bounds.size.width = targetWidth
     }
 }

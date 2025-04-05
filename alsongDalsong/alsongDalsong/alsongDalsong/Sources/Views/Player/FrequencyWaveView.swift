@@ -59,12 +59,18 @@ final class FrequencyWaveView: UIView {
                 height: newHeight
             )
             
-            let animation = CASpringAnimation(keyPath: "path")
-            animation.fromValue = shapeLayer.path
-            animation.toValue = UIBezierPath(roundedRect: newRect, cornerRadius: 1).cgPath
+            let newPath = UIBezierPath(roundedRect: newRect, cornerRadius: 2).cgPath
             
-            shapeLayer.add(animation, forKey: "animation")
-            shapeLayer.path = UIBezierPath(roundedRect: newRect, cornerRadius: 1).cgPath
+            let animation = CABasicAnimation(keyPath: "path")
+            animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            animation.fromValue = shapeLayer.path
+            animation.toValue = newPath
+            
+            animation.isRemovedOnCompletion = true
+            animation.fillMode = .forwards
+            
+            shapeLayer.add(animation, forKey: "pathAnimation")
+            shapeLayer.path = newPath
         }
     }
 }

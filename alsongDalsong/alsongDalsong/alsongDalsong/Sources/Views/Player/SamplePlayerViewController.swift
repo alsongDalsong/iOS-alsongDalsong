@@ -38,7 +38,7 @@ final class SamplePlayerViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        viewModel.$progress
+        viewModel.$audioProgress
             .sink { [weak self] progress in
                 self?.playerView.configure(progress: progress, normalizedFrequencyAmplitudes: self?.viewModel.normalizedFrequencyAmplitudes ?? [])
             }
@@ -46,7 +46,7 @@ final class SamplePlayerViewController: UIViewController {
         
         viewModel.$normalizedFrequencyAmplitudes
             .sink { [weak self] normalizedFrequencyAmplitudes in
-                self?.playerView.configure(progress: self?.viewModel.progress ?? 0, normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes)
+                self?.playerView.configure(progress: self?.viewModel.audioProgress ?? 0, normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes)
             }
             .store(in: &cancellables)
     }
@@ -57,11 +57,11 @@ final class SamplePlayerViewModel {
     @Published var coverImageData: Data?
     @Published var buttonState: AudioControlButtonState = .play
     
-    private let visualizer = ASAudioVisualizer()
+    private let audioVisualizer = ASAudioVisualizer()
     private var isPlaying = false
     private var timer: Timer?
     
-    @Published var progress: Double = 0.0
+    @Published var audioProgress: Double = 0.0
     @Published var normalizedFrequencyAmplitudes: [Float] = [0, 0, 0, 0, 0, 0]
     
     @MainActor
@@ -69,7 +69,7 @@ final class SamplePlayerViewModel {
         Task {
             guard let music, let url = music.previewUrl else { return }
             let (data, _) = try await URLSession.shared.data(from: url)
-            visualizer.bind(data: data)
+            audioVisualizer.bind(data: data)
         }
     }
     
@@ -85,15 +85,15 @@ final class SamplePlayerViewModel {
     @MainActor
     func togglePlay() {
         if isPlaying {
-            progress = 0.0
+            audioProgress = 0.0
             normalizedFrequencyAmplitudes = [0, 0, 0, 0, 0, 0]
             
-            visualizer.stop()
+            audioVisualizer.stop()
             timer?.invalidate()
             buttonState = .play
         } else {
-            visualizer.play()
-            startUpdatingVisualizer()
+            audioVisualizer.play()
+            updateAudioProgressAndNormalizedFrequencyAmplitudes()
             buttonState = .stop
         }
         
@@ -101,14 +101,14 @@ final class SamplePlayerViewModel {
     }
     
     @MainActor
-    private func startUpdatingVisualizer() {
+    private func updateAudioProgressAndNormalizedFrequencyAmplitudes() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
-            self?.progress = self?.visualizer.progress ?? 0.0
-            self?.normalizedFrequencyAmplitudes = self?.visualizer.normalizedFrequencyAmplitudes ?? []
+            self?.audioProgress = self?.audioVisualizer.audioProgress ?? 0.0
+            self?.normalizedFrequencyAmplitudes = self?.audioVisualizer.normalizedFrequencyAmplitudes ?? []
             
-            if self?.progress == 1 {
-                self?.progress = 0.0
+            if self?.audioProgress == 1 {
+                self?.audioProgress = 0.0
                 self?.normalizedFrequencyAmplitudes = [0, 0, 0, 0, 0, 0]
                 
                 self?.buttonState = .play

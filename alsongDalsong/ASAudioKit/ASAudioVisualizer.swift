@@ -6,17 +6,17 @@ public class ASAudioVisualizer {
         case play, pause, stop
     }
     
-    private let engine = AVAudioEngine()
-    private let player = AVAudioPlayerNode()
+    private let audioEngine = AVAudioEngine()
+    private let audioPlayer = AVAudioPlayerNode()
 
     private var sampleCount = 20
     private var audioFile: AVAudioFile?
     private var playState: PlayState = .stop
     
     public var normalizedFrequencyAmplitudes: [Float] = []
-    public var progress: Double {
-        guard let nodetime = player.lastRenderTime,
-              let playerTime = player.playerTime(forNodeTime: nodetime),
+    public var audioProgress: Double {
+        guard let nodetime = audioPlayer.lastRenderTime,
+              let playerTime = audioPlayer.playerTime(forNodeTime: nodetime),
               let audioFile else { return 0.0 }
         
         let duration = Double(audioFile.length) / audioFile.processingFormat.sampleRate
@@ -41,11 +41,11 @@ public class ASAudioVisualizer {
 
         let format = file.processingFormat
 
-        engine.attach(player)
-        engine.connect(player, to: engine.mainMixerNode, format: format)
+        audioEngine.attach(audioPlayer)
+        audioEngine.connect(audioPlayer, to: audioEngine.mainMixerNode, format: format)
 
-        engine.prepare()
-        try? engine.start()
+        audioEngine.prepare()
+        try? audioEngine.start()
 
         installFastFourierTransform()
     }
@@ -53,31 +53,31 @@ public class ASAudioVisualizer {
     public func play() {
         guard let file = audioFile else { return }
         
-        if !engine.isRunning {
-            try? engine.start()
+        if !audioEngine.isRunning {
+            try? audioEngine.start()
         }
 
         if playState == .stop {
-            player.scheduleFile(file, at: nil) { [weak self] in
+            audioPlayer.scheduleFile(file, at: nil) { [weak self] in
                 self?.playState = .stop
             }
         }
         
-        player.play()
+        audioPlayer.play()
         playState = .play
     }
     
     public func pause() {
         guard playState == .play else { return }
         
-        player.pause()
+        audioPlayer.pause()
         playState = .pause
     }
 
     public func stop() {
         guard playState == .play else { return }
 
-        player.stop()
+        audioPlayer.stop()
         playState = .stop
     }
 
@@ -88,7 +88,7 @@ public class ASAudioVisualizer {
         
         guard let setup = vDSP_DFT_zop_CreateSetup(nil, length, direction) else { return }
 
-        engine.mainMixerNode.installTap(onBus: 0, bufferSize: bufferSize, format: nil) { buffer, _ in
+        audioEngine.mainMixerNode.installTap(onBus: 0, bufferSize: bufferSize, format: nil) { buffer, _ in
             guard let channelData = buffer.floatChannelData?[0] else { return }
             self.normalizedFrequencyAmplitudes = self.fastFourierTransform(data: channelData, setup: setup)
         }

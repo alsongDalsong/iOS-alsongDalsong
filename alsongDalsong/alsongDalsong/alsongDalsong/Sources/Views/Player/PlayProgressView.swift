@@ -5,7 +5,7 @@ final class PlayProgressView: UIView {
     private let progressShapeLayer = CAShapeLayer()
     
     var progress: CGFloat = 0 {
-        didSet { updateProgress() }
+        didSet { updateProgressShapeLayer() }
     }
     
     override init(frame: CGRect) {
@@ -38,7 +38,7 @@ final class PlayProgressView: UIView {
         )
     }
     
-    private func updateProgress() {
+    private func updateProgressShapeLayer() {
         let targetWidth = bounds.width * progress
         let rect = CGRect(x: 0, y: 0, width: targetWidth, height: bounds.height)
         

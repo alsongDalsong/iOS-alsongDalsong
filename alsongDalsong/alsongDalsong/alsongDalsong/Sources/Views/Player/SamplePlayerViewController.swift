@@ -20,12 +20,12 @@ final class SamplePlayerViewController: UIViewController {
         playerView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            playerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+            playerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
+            playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24)
         ])
         
-        playerView.configure(by: viewModel.music)
+        playerView.configure(music: viewModel.music, coverImageData: viewModel.coverImageData)
         playerView.onPlayButtonTapped = viewModel.togglePlay
         
         bind()
@@ -58,17 +58,26 @@ final class SamplePlayerViewController: UIViewController {
     }
 }
 
-final class SamplePlayerViewModel {
+final class SamplePlayerViewModel: @unchecked Sendable {
     @Published var music: Music? = Music(id: "1422639704", title: "D (Half Moon) [feat. Gaeko]", artist: "DEAN", artworkUrl: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/8e/a2/d0/8ea2d001-0b52-a451-4a7c-de35d3502155/00602547860828.rgb.jpg/300x300bb.jpg"), previewUrl: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/98/4f/8e/984f8e93-2901-c8b3-5883-8281b363f723/mzaf_11734879238275302685.plus.aac.p.m4a")!, artworkBackgroundColor: "#7A3B68")
     @Published var coverImageData: Data?
-    @Published var buttonState: AudioControlButtonState = .play
     
     private let audioVisualizer = ASAudioVisualizer()
     private var isPlaying = false
     private var timer: Timer?
     
+    @Published var buttonState: AudioControlButtonState = .play
     @Published var audioProgress: Double = 0.0
     @Published var normalizedFrequencyAmplitudes: [Float] = [0, 0, 0, 0, 0, 0]
+    
+    init() {
+        getArtworkData()
+    }
+    
+    deinit {
+        audioVisualizer.stop()
+        timer?.invalidate()
+    }
     
     @MainActor
     func bindVisualizer() {
@@ -122,6 +131,13 @@ final class SamplePlayerViewModel {
                     self?.isPlaying = false
                 }
             }
+        }
+    }
+    
+    private func getArtworkData() {
+        guard let url = music?.artworkUrl else { return }
+        Task {
+            coverImageData = try await URLSession.shared.data(from: url).0
         }
     }
 }

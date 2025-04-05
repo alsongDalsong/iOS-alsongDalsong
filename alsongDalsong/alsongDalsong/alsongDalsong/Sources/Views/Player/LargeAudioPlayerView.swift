@@ -1,10 +1,6 @@
 import ASEntity
 import UIKit
 
-enum AudioPlayerType {
-    case large, answer, result
-}
-
 enum AudioControlButtonState {
     case play, stop
     
@@ -16,7 +12,7 @@ enum AudioControlButtonState {
     }
 }
 
-final class AudioPlayerView: UIView {
+final class LargeAudioPlayerView: UIView {
     private let coverImageView = UIImageView()
     private let blurView = UIVisualEffectView()
     private let backgroundView = UIView()
@@ -26,13 +22,10 @@ final class AudioPlayerView: UIView {
     private let playProgressView = PlayProgressView()
     private let frequencyWaveView = FrequencyWaveView()
     private let stackView = UIStackView()
-    
-    private var audioPlayerType: AudioPlayerType = .large
-    
+        
     var onPlayButtonTapped: (() -> Void)?
     
-    init(type: AudioPlayerType) {
-        audioPlayerType = type
+    init() {
         super.init(frame: .zero)
         setupUI()
         setupStyle()
@@ -60,11 +53,11 @@ final class AudioPlayerView: UIView {
     func setupStyle() {
         coverImageView.contentMode = .scaleAspectFill
         coverImageView.layer.cornerRadius = 12
+        coverImageView.clipsToBounds = true
         
-        blurView.effect = UIBlurEffect(style: .systemUltraThinMaterialDark)
+        blurView.effect = UIBlurEffect(style: .systemMaterial)
         blurView.layer.cornerRadius = 12
         blurView.clipsToBounds = true
-        blurView.alpha = 0.6
         
         backgroundView.layer.cornerRadius = 20
         backgroundView.layer.cornerCurve = .continuous
@@ -72,7 +65,7 @@ final class AudioPlayerView: UIView {
         backgroundView.layer.shadowColor = UIColor.gray.cgColor
         backgroundView.layer.shadowOpacity = 0.5
         backgroundView.layer.shadowOffset = CGSize(width: 0, height: 4)
-        backgroundView.layer.shadowRadius = 4
+        backgroundView.layer.shadowRadius = 2
         
         titleLabel.textColor = .label
         titleLabel.font = .systemFont(ofSize: 20)
@@ -145,12 +138,11 @@ final class AudioPlayerView: UIView {
         ])
     }
     
-    func configure(music: Music?, coverImageData: Data?) {
-        guard let music else { return }
-        titleLabel.text = music.title
-        artistLabel.text = music.artist
+    func configure(title: String, artist: String, imageData: Data?) {
+        titleLabel.text = title
+        artistLabel.text = artist
         
-        if let data = coverImageData, let image = UIImage(data: data) {
+        if let data = imageData, let image = UIImage(data: data) {
             coverImageView.image = image
             coverImageView.backgroundColor = .clear
         } else {

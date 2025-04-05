@@ -5,7 +5,10 @@ import UIKit
 
 final class SamplePlayerViewController: UIViewController {
     private let viewModel = SamplePlayerViewModel()
-    private let playerView = AudioPlayerView(type: .large)
+    private let largePlayerView = LargeAudioPlayerView()
+    private let mediumSubmitPlayerView = MediumAudioPlayerView(type: .submit)
+    private let mediumResultPlayerView = MediumAudioPlayerView(type: .result)
+    private let mediumResultPlayerView2 = MediumAudioPlayerView(type: .result)
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -15,18 +18,44 @@ final class SamplePlayerViewController: UIViewController {
         
         viewModel.bindVisualizer()
         
-        view.addSubview(playerView)
+        view.addSubview(largePlayerView)
+        view.addSubview(mediumSubmitPlayerView)
+        view.addSubview(mediumResultPlayerView)
+        view.addSubview(mediumResultPlayerView2)
         
-        playerView.translatesAutoresizingMaskIntoConstraints = false
+        largePlayerView.translatesAutoresizingMaskIntoConstraints = false
+        mediumSubmitPlayerView.translatesAutoresizingMaskIntoConstraints = false
+        mediumResultPlayerView.translatesAutoresizingMaskIntoConstraints = false
+        mediumResultPlayerView2.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            playerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
-            playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24)
+            largePlayerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
+            largePlayerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            largePlayerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            
+            mediumSubmitPlayerView.topAnchor.constraint(equalTo: largePlayerView.bottomAnchor, constant: 12),
+            mediumSubmitPlayerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            mediumSubmitPlayerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            
+            mediumResultPlayerView.topAnchor.constraint(equalTo: mediumSubmitPlayerView.bottomAnchor, constant: 12),
+            mediumResultPlayerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            mediumResultPlayerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            
+            mediumResultPlayerView2.topAnchor.constraint(equalTo: mediumResultPlayerView.bottomAnchor, constant: 12),
+            mediumResultPlayerView2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            mediumResultPlayerView2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -120)
         ])
         
-        playerView.configure(music: viewModel.music, coverImageData: viewModel.coverImageData)
-        playerView.onPlayButtonTapped = viewModel.togglePlay
+        if let music = viewModel.music, let title = music.title, let artist = music.artist {
+            largePlayerView.configure(title: title, artist: artist, imageData: viewModel.coverImageData)
+            largePlayerView.onPlayButtonTapped = viewModel.togglePlay
+                        
+            mediumSubmitPlayerView.configure(title: title, artist: artist, imageData: viewModel.coverImageData)
+            mediumSubmitPlayerView.onPlayButtonTapped = viewModel.togglePlay
+            
+            mediumResultPlayerView.configure(title: title, artist: artist, imageData: viewModel.coverImageData)
+            mediumResultPlayerView2.configure(title: title, artist: artist, imageData: viewModel.coverImageData)
+        }
         
         bind()
     }
@@ -34,13 +63,14 @@ final class SamplePlayerViewController: UIViewController {
     private func bind() {
         viewModel.$buttonState
             .sink { [weak self] state in
-                self?.playerView.configure(with: state)
+                self?.largePlayerView.configure(with: state)
+                self?.mediumSubmitPlayerView.configure(with: state)
             }
             .store(in: &cancellables)
         
         viewModel.$audioProgress
             .sink { [weak self] progress in
-                self?.playerView.configure(
+                self?.largePlayerView.configure(
                     progress: progress,
                     normalizedFrequencyAmplitudes: self?.viewModel.normalizedFrequencyAmplitudes ?? []
                 )
@@ -49,8 +79,16 @@ final class SamplePlayerViewController: UIViewController {
         
         viewModel.$normalizedFrequencyAmplitudes
             .sink { [weak self] normalizedFrequencyAmplitudes in
-                self?.playerView.configure(
+                self?.largePlayerView.configure(
                     progress: self?.viewModel.audioProgress ?? 0,
+                    normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes
+                )
+                
+                self?.mediumResultPlayerView.configure(
+                    normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes
+                )
+                
+                self?.mediumResultPlayerView2.configure(
                     normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes
                 )
             }

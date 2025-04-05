@@ -15,7 +15,7 @@ final class MediumAudioPlayerView: UIView {
     
     private var audioPlayerType: AudioPlayerType = .submit
     
-    var onPlayButtonTapped: (() -> Void)?
+    var controlButtonDidTapped: (() -> Void)?
     
     init(type: AudioPlayerType) {
         super.init(frame: .zero)
@@ -93,7 +93,7 @@ final class MediumAudioPlayerView: UIView {
     
     private func setupAction() {
         controlButton.addAction(UIAction { [weak self] _ in
-            self?.onPlayButtonTapped?()
+            self?.controlButtonDidTapped?()
         }, for: .touchUpInside)
     }
     
@@ -140,7 +140,11 @@ final class MediumAudioPlayerView: UIView {
             ])
         }
     }
-    
+}
+
+// MARK: - Configure Methods
+
+extension MediumAudioPlayerView {
     func configure(title: String, artist: String, imageData: Data?) {
         titleLabel.text = title
         artistLabel.text = artist
@@ -159,15 +163,13 @@ final class MediumAudioPlayerView: UIView {
     }
     
     func configure(with buttonState: AudioControlButtonState) {
-        UIView.animate(
-            withDuration: 0.3,
-            delay: 0,
-            options: [.curveEaseOut],
-            animations: { [weak self] in
-                self?.controlButton.transform = .identity
-            }, completion: { [weak self] _ in
-                self?.controlButton.configuration?.image = buttonState.symbol
-            }
-        )
+        UIView.animate(withDuration: 0.1, animations: {
+            self.controlButton.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        }, completion: { _ in
+            UIView.animate(withDuration: 0.2, animations: {
+                self.controlButton.transform = .identity
+                self.controlButton.configuration?.image = buttonState.symbol
+            })
+        })
     }
 }

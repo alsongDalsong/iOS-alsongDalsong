@@ -4,6 +4,9 @@ final class PlayProgressView: UIView {
     private let trackShapeLayer = CAShapeLayer()
     private let progressShapeLayer = CAShapeLayer()
     
+    /// progress
+    /// 업데이트하면 자동으로 애니메이션 적용
+    /// 해당 속성 이외의 속성, 함수에 접근 불가능
     var progress: CGFloat = 0 {
         didSet { updateProgressShapeLayer() }
     }

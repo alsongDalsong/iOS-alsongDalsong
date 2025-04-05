@@ -48,10 +48,10 @@ final class SamplePlayerViewController: UIViewController {
         
         if let music = viewModel.music, let title = music.title, let artist = music.artist {
             largePlayerView.configure(title: title, artist: artist, imageData: viewModel.coverImageData)
-            largePlayerView.onPlayButtonTapped = viewModel.togglePlay
+            largePlayerView.controlButtonDidTapped = viewModel.togglePlay
                         
             mediumSubmitPlayerView.configure(title: title, artist: artist, imageData: viewModel.coverImageData)
-            mediumSubmitPlayerView.onPlayButtonTapped = viewModel.togglePlay
+            mediumSubmitPlayerView.controlButtonDidTapped = viewModel.togglePlay
             
             mediumResultPlayerView.configure(title: title, artist: artist, imageData: viewModel.coverImageData)
             mediumResultPlayerView2.configure(title: title, artist: artist, imageData: viewModel.coverImageData)
@@ -167,6 +167,7 @@ final class SamplePlayerViewModel: @unchecked Sendable {
                     
                     self?.buttonState = .play
                     self?.isPlaying = false
+                    self?.timer?.invalidate()
                 }
             }
         }

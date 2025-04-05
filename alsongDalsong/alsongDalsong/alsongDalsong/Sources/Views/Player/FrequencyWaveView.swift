@@ -11,6 +11,10 @@ final class FrequencyWaveView: UIView {
         (bounds.width - spacing * CGFloat(shapeLayersCount - 1)) / CGFloat(shapeLayersCount)
     }
     
+    /// normalizedFrequencyAmplitudes
+    /// 범위는 0 ~ 1
+    /// 업데이트하면 자동으로 애니메이션 적용
+    /// 해당 속성 이외의 속성, 함수에 접근 불가능
     var normalizedFrequencyAmplitudes: [Float] = [0, 0, 0, 0, 0, 0] {
         didSet {
             updateFrequencyShapeLayers()

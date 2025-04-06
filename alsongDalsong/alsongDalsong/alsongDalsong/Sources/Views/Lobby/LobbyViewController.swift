@@ -76,7 +76,7 @@ final class LobbyViewController: UIViewController {
 
         inviteButton.setConfiguration(
             systemImageName: "square.and.arrow.up",
-            imageSize: 30,
+            imageSize: 24,
             text: nil,
             backgroundColor: .inviteButton,
             cornerStyle: .large,

@@ -11,7 +11,7 @@ final class LobbyViewModel: ObservableObject, @unchecked Sendable {
     private let dataDownloadRepository: DataDownloadRepositoryProtocol
 
     let playerMaxCount = 6
-    private(set) var roomNumber: String = ""
+    @Published var roomNumber: String = ""
     @Published var myId: String?
     @Published var players: [Player] = []
     @Published var host: Player?

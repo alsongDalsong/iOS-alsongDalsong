@@ -58,6 +58,22 @@ final class LobbyViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
+        
+        viewmodel.$roomNumber
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] roomNumber in
+            self?.roomNumberButton.setConfiguration(
+                text: "#" + roomNumber,
+                textStyle: .largeTitle,
+                backgroundColor: .roomNumberButton,
+                cornerStyle: .large,
+                baseForegroundColor: .asBlack,
+                shadowColor: .backButtonShadow,
+                strokeColor: .backButtonShadow,
+                strokeWidth: 3
+            )
+        }
+        .store(in: &cancellables)
     }
 
     private func setupUI() {
@@ -76,7 +92,7 @@ final class LobbyViewController: UIViewController {
 
         inviteButton.setConfiguration(
             systemImageName: "square.and.arrow.up",
-            imageSize: 30,
+            imageSize: 24,
             text: nil,
             backgroundColor: .inviteButton,
             cornerStyle: .large,

@@ -65,9 +65,9 @@ final class LobbyViewController: UIViewController {
     
     func bind() {
         viewModel.$room
+            .compactMap { $0 }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] room in
-                guard let room = room else { return }
                 self?.configure(room: room)
             }
             .store(in: &cancelables)

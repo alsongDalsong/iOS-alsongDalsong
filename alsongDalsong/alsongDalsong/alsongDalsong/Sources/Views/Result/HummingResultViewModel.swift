@@ -205,12 +205,10 @@ extension HummingResultViewModel {
 
     private func bindAudio() {
         AudioHelper.shared.playerStatePublisher
+            .filter { _, isPlaying in !isPlaying }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _, isPlaying in
-                guard let self else { return }
-                if !isPlaying {
-                    self.updateResultPhase()
-                }
+            .sink { [weak self] _, _ in
+                self?.updateResultPhase()
             }
             .store(in: &cancellables)
     }

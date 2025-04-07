@@ -74,8 +74,8 @@ final class SubmitAnswerViewModel: ObservableObject, @unchecked Sendable {
 
     private func bindRecord(on recordOrder: UInt8) {
         recordsRepository.getHumming(on: recordOrder)
+            .compactMap { $0 }
             .sink { [weak self] record in
-                guard let record else { return }
                 self?.music = Music(record)
             }
             .store(in: &cancellables)

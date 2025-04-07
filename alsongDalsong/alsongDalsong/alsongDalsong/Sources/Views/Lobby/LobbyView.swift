@@ -62,7 +62,7 @@ struct LobbyView: View {
                     }
                 } else {
                     GeometryReader { geometry in
-                        ModeView(modeInfo: viewModel.mode, width: geometry.size.width * 0.85)
+                        ModeView(viewModel: ModeViewModel(mode: viewModel.mode),width: geometry.size.width * 0.85)
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                 }

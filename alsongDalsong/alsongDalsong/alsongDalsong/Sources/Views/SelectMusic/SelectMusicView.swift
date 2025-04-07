@@ -59,6 +59,13 @@ struct SelectMusicView: View {
                             })
                             .tint(.black)
                         }
+                        .onAppear {
+                            if music == viewModel.searchList.last {
+                                Task {
+                                    await viewModel.fetchNextSearchList(currentMusic: music)
+                                }
+                            }
+                        }
                     }
                     .listStyle(.plain)
                     .scrollDismissesKeyboard(.immediately)
@@ -67,8 +74,4 @@ struct SelectMusicView: View {
         }
         .background(.asBackground)
     }
-}
-
-#Preview {
-//    SelectMusicView(v)
 }

@@ -1,10 +1,3 @@
-//
-//  ASRepositoryProtocol.h
-//  ASRepositoryProtocol
-//
-//  Created by 박상원 on 11/30/24.
-//
-
 #import <Foundation/Foundation.h>
 
 //! Project version number for ASRepositoryProtocol.

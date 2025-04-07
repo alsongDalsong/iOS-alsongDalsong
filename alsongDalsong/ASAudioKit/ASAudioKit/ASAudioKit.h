@@ -1,10 +1,3 @@
-//
-//  ASAudioKit.h
-//  ASAudioKit
-//
-//  Created by 박진성 on 11/11/24.
-//
-
 #import <Foundation/Foundation.h>
 
 //! Project version number for ASAudioKit.

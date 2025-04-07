@@ -6,6 +6,7 @@ import UIKit
 final class ASButton: UIButton {
     private var configurationData: ASButtonConfiguration?
     private var cancellables = Set<AnyCancellable>()
+    private var isAnimating = false
 
     init() {
         super.init(frame: .zero)
@@ -27,22 +28,29 @@ final class ASButton: UIButton {
     ///   - baseForegroundColor: 글씨 컬러
     func setConfiguration(
         systemImageName: String? = nil,
+        imageSize: CGFloat = 20,
         text: String? = nil,
         textStyle: UIFont.TextStyle = .largeTitle,
         backgroundColor: UIColor? = nil,
-        cornerStyle: UIButton.Configuration.CornerStyle = .medium,
+        cornerStyle: UIButton.Configuration.CornerStyle = .large,
         baseForegroundColor: UIColor = .white,
-        shadowColor: UIColor = .asShadow
+        shadowColor: UIColor = .asShadow,
+        shadowHeight: CGFloat = 8,
+        strokeColor: UIColor? = nil,
+        strokeWidth: CGFloat = 0
     ) {
         configurationData = ASButtonConfiguration(
             systemImageName: systemImageName,
+            imageSize: imageSize,
             text: text ?? configurationData?.text,
             textStyle: textStyle,
             backgroundColor: backgroundColor,
             cornerStyle: cornerStyle,
-            baseForegroundColor: baseForegroundColor
+            baseForegroundColor: baseForegroundColor,
+            strokeColor: strokeColor,
+            strokeWidth: strokeWidth
         )
-        setShadow(color: shadowColor, width: 0, height: 8)
+        setShadow(color: shadowColor, width: 0, height: shadowHeight)
         applyConfiguration()
     }
 
@@ -57,6 +65,7 @@ final class ASButton: UIButton {
             backgroundColor: type?.backgroundColor,
             cornerStyle: type?.cornerStyle ?? .medium
         )
+        setShadow(color: (type?.shadowColor) ?? .asShadow, width: 0, radius: 8)
         applyConfiguration()
     }
 
@@ -84,6 +93,7 @@ final class ASButton: UIButton {
             cornerStyle: configurationData?.cornerStyle ?? .medium,
             baseForegroundColor: configurationData?.baseForegroundColor ?? .white
         )
+        setShadow(color: .asShadow, width: 0, height: 8)
         isEnabled = false
         applyConfiguration()
     }
@@ -126,12 +136,12 @@ final class ASButton: UIButton {
         var backgroundColor: UIColor? {
             switch self {
                 case .needMorePlayers: .asOrange
-                case .startRecord: .systemRed
+                case .startRecord: .asLightRed
                 case .recording: .asLightRed
-                case .reRecord: .asOrange
+                case .reRecord: .asLightRed
                 case .complete: .asYellow
-                case .submit: .asGreen
-                case .startGame, .next: .asMint
+                case .submit: .asLightSky
+                case .startGame, .next: .asLightRed
                 case .endWaiting, .nextResultWaiting: .systemGray2
                 default: nil
             }
@@ -146,7 +156,32 @@ final class ASButton: UIButton {
         }
 
         var shadowColor: UIColor? {
-            .asShadow
+            switch self {
+                case .needMorePlayers:
+                    .redButtonShadow
+                case .startRecord:
+                    .redButtonShadow
+                case .recording:
+                    .redButtonShadow
+                case .reRecord:
+                    .redButtonShadow
+                case .complete:
+                    .redButtonShadow
+                case .submit:
+                    .blueButtonShadow
+                case .submitted:
+                    .redButtonShadow
+                case .startGame:
+                    .redButtonShadow
+                case .startWaiting:
+                    .redButtonShadow
+                case .endWaiting:
+                    .redButtonShadow
+                case .next:
+                    .redButtonShadow
+                case .nextResultWaiting:
+                    .redButtonShadow
+            }
         }
     }
 }
@@ -173,6 +208,57 @@ private extension ASButton {
         setShadow()
         configurationUpdateHandler = { [weak self] _ in
             self?.applyHighlightEffect()
+        }
+    }
+}
+
+// MARK: - Animations
+
+extension ASButton {
+    func animateConfirmation(temporaryText: String, delay: TimeInterval = 1.5) {
+        guard !isAnimating, let originConfiguration = configurationData else { return }
+        isAnimating = true
+        let updatedConfiguration = ASButtonConfiguration(
+            systemImageName: "checkmark.circle.fill",
+            imageSize: 24,
+            imageColor: .asGreen,
+            text: temporaryText,
+            textStyle: originConfiguration.textStyle,
+            backgroundColor: originConfiguration.backgroundColor,
+            cornerStyle: originConfiguration.cornerStyle,
+            baseForegroundColor: originConfiguration.baseForegroundColor,
+            strokeColor: originConfiguration.strokeColor,
+            strokeWidth: originConfiguration.strokeWidth
+        )
+
+        UIView.transition(
+            with: self,
+            duration: 0.3,
+            options: .transitionCrossDissolve,
+            animations: {
+                self.configurationData = updatedConfiguration
+                self.applyConfiguration()
+                if #available(iOS 17.0, *) {
+                    guard let symbolImageView = self.imageView else { return }
+                    symbolImageView.addSymbolEffect(.bounce)
+                }
+            },
+            completion: nil
+        )
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            UIView.transition(
+                with: self,
+                duration: 0.3,
+                options: .transitionCrossDissolve,
+                animations: {
+                    self.configurationData = originConfiguration
+                    self.applyConfiguration()
+                },
+                completion: { _ in
+                    self.isAnimating = false
+                }
+            )
         }
     }
 }

@@ -5,9 +5,11 @@ import Combine
 import UIKit
 
 final class LoadingViewController: UIViewController {
-    private let logoImageView = UIImageView(image: UIImage(named: "logo"))
-    private let activityIndicatorView = UIActivityIndicatorView(style: .large)
-    private let loadingStatusLabel = UILabel()
+    private let titleLabel = UILabel()
+    private let subtitleLabel = UILabel()
+    private let activityIndicatorView = UIActivityIndicatorView(style: .medium)
+    private let stackView = UIStackView()
+    
     private var viewModel: LoadingViewModel?
     private var inviteCode = ""
     private var cancellables = Set<AnyCancellable>()
@@ -32,25 +34,35 @@ final class LoadingViewController: UIViewController {
     
     private func setupUI() {
         view.backgroundColor = .asBackground
-        loadingStatusLabel.font = .font(forTextStyle: .body)
-        [logoImageView, activityIndicatorView, loadingStatusLabel].forEach {
-            view.addSubview($0)
-            $0.translatesAutoresizingMaskIntoConstraints = false
-        }
+        
+        titleLabel.text = "알쏭달쏭"
+        titleLabel.font = .font(.riaSans, ofSize: 80)
+        titleLabel.textColor = .onboardingForeground
+        
+        subtitleLabel.text = "기다려라"
+        subtitleLabel.font = .font(.riaSans, ofSize: 20)
+        subtitleLabel.textColor = .onboardingForeground
+                
+        activityIndicatorView.startAnimating()
+        
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 8
+        
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(subtitleLabel)
+        stackView.addArrangedSubview(activityIndicatorView)
+        
+        view.addSubview(stackView)
     }
     
     private func setupLayout() {
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
-            logoImageView.widthAnchor.constraint(equalToConstant: 356),
-            logoImageView.heightAnchor.constraint(equalToConstant: 160),
-            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 48),
-            
-            activityIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
-            loadingStatusLabel.topAnchor.constraint(equalTo: activityIndicatorView.bottomAnchor, constant: 16),
-            loadingStatusLabel.centerXAnchor.constraint(equalTo: activityIndicatorView.centerXAnchor)
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
@@ -60,12 +72,9 @@ final class LoadingViewController: UIViewController {
                   let avatars = self?.viewModel?.avatars,
                   let selectedAvatar = self?.viewModel?.selectedAvatar else { return }
             
-            self?.navigateToOnboarding(avatars: avatars, selectedAvatar: selectedAvatar, avatarData: avatarData)
-        }
-        
-        bind(viewModel?.$loadingStatus) { [weak self] status in
-            self?.loadingStatusLabel.text = status
-            self?.activityIndicatorView.startAnimating()
+            self?.titleLabelAnimation {
+                self?.navigateToOnboarding(avatars: avatars, selectedAvatar: selectedAvatar, avatarData: avatarData)
+            }
         }
     }
     
@@ -77,6 +86,32 @@ final class LoadingViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: handler)
             .store(in: &cancellables)
+    }
+    
+    private func titleLabelAnimation(completion: @escaping () -> Void) {
+        guard let superview = titleLabel.superview else { return }
+
+        let currentY = superview.convert(titleLabel.frame, to: nil).minY
+        let targetY = view.safeAreaInsets.top
+                
+        let scaleFactor: CGFloat = 32 / 80 /// 폰트 크기 변화
+        let fontHeightDifference = titleLabel.frame.height * (1 - scaleFactor)
+        
+        let translationY = targetY - currentY - (fontHeightDifference / 2)
+
+        let animator = UIViewPropertyAnimator(duration: 1, dampingRatio: 0.85) { [weak self] in
+            self?.titleLabel.transform = CGAffineTransform(translationX: 0, y: translationY)
+                .scaledBy(x: scaleFactor, y: scaleFactor)
+            
+            self?.subtitleLabel.alpha = 0
+            self?.activityIndicatorView.alpha = 0
+        }
+
+        animator.addCompletion { _ in
+            completion()
+        }
+        
+        animator.startAnimation()
     }
     
     private func navigateToOnboarding(avatars: [URL], selectedAvatar: URL, avatarData: Data) {
@@ -103,6 +138,7 @@ final class LoadingViewController: UIViewController {
         {
             window.rootViewController = navigationController
             window.makeKeyAndVisible()
+            UIView.transition(with: window, duration: 1, options: .transitionCrossDissolve, animations: nil, completion: nil)
         }
     }
     

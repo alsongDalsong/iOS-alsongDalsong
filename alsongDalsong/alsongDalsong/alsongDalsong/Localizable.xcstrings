@@ -96,6 +96,7 @@
       }
     },
     "게임 데이터 불러오는 중" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -190,6 +191,9 @@
         }
       }
     },
+    "곧 출시 예정입니다" : {
+
+    },
     "나가기" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -248,16 +252,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recording"
-          }
-        }
-      }
-    },
-    "닉네임" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nickname"
           }
         }
       }
@@ -503,6 +497,17 @@
         }
       }
     },
+    "복사 됨!" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied!"
+          }
+        }
+      }
+    },
     "부드러운" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -535,13 +540,13 @@
         }
       }
     },
-    "사부님" : {
+    "사냥꾼" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Master"
+            "value" : "Hunter"
           }
         }
       }
@@ -557,13 +562,13 @@
         }
       }
     },
-    "사냥꾼" : {
+    "사부님" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hunter"
+            "value" : "Master"
           }
         }
       }
@@ -620,6 +625,7 @@
       }
     },
     "아바타 이미지 다운로드 중" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -806,7 +812,14 @@
       }
     },
     "종료 대기 중" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waiting to exit"
+          }
+        }
+      }
     },
     "찰나의 순간" : {
       "extractionState" : "manual",
@@ -826,16 +839,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Participation failed."
-          }
-        }
-      }
-    },
-    "초대하기!" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invite!"
           }
         }
       }
@@ -880,17 +883,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancellation"
-          }
-        }
-      }
-    },
-    "튜토리얼 완료" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Complete"
           }
         }
       }

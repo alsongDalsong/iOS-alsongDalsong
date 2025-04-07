@@ -10,7 +10,6 @@ final class OnboardingViewController: UIViewController {
     private let joinRoomButton = ASButton()
     private let avatarView = ASAvatarView()
     private let nickNamePanel = NicknamePanel()
-    private let avatarRefreshButton = ASRefreshButton(size: 28)
     private let inviteCode: String
     private var viewModel: OnboardingViewModel?
     private var gameNavigationController: GameNavigationController?
@@ -60,8 +59,7 @@ final class OnboardingViewController: UIViewController {
         titleLabel.font = UIFont.font(.riaSans, ofSize: 32)
         titleLabel.textColor = .onboardingForeground
 
-        for item in [titleLabel, nickNamePanel, avatarView, createRoomButton, joinRoomButton, avatarRefreshButton] {
-
+        for item in [titleLabel, nickNamePanel, avatarView, createRoomButton, joinRoomButton] {
             view.addSubview(item)
             item.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -72,7 +70,7 @@ final class OnboardingViewController: UIViewController {
     }
 
     private func setupLayout() {
-        avatarViewBottomConstraint = avatarView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 50)
+        avatarViewBottomConstraint = avatarView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 10)
         guard let avatarViewBottomConstraint else { return }
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -86,12 +84,7 @@ final class OnboardingViewController: UIViewController {
             avatarView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             avatarView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             avatarViewBottomConstraint,
-            avatarView.heightAnchor.constraint(equalToConstant: 600),
-
-            avatarRefreshButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            avatarRefreshButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            avatarRefreshButton.widthAnchor.constraint(equalToConstant: 60),
-            avatarRefreshButton.heightAnchor.constraint(equalToConstant: 60),
+            avatarView.heightAnchor.constraint(equalToConstant: 520),
 
             createRoomButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             createRoomButton.widthAnchor.constraint(equalTo: joinRoomButton.widthAnchor),
@@ -132,11 +125,8 @@ final class OnboardingViewController: UIViewController {
             for: .touchUpInside
         )
 
-        avatarRefreshButton.addAction(
-            UIAction { [weak self] _ in
-                self?.viewModel?.refreshAvatars()
-            }, for: .touchUpInside
-        )
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapAvatarView(_:)))
+        avatarView.addGestureRecognizer(tapGestureRecognizer)
     }
 
     private func setupButton() {
@@ -166,12 +156,12 @@ final class OnboardingViewController: UIViewController {
         bind(viewModel?.$avatarData) { [weak self] data in
             guard let self = self else { return }
 
-            self.avatarViewBottomConstraint?.constant = 650
+            self.avatarViewBottomConstraint?.constant = 600
             UIView.animate(withDuration: 0.7, animations: {
                 self.view.layoutIfNeeded()
             }, completion: { _ in
                 self.avatarView.setImage(imageData: data)
-                self.avatarViewBottomConstraint?.constant = 50
+                self.avatarViewBottomConstraint?.constant = 10
                 UIView.animate(withDuration: 0.7, delay: 0.2, animations: {
                     self.view.layoutIfNeeded()
                 }, completion: nil)
@@ -372,5 +362,9 @@ private extension OnboardingViewController {
 
     @objc func appDidEnterBackground() {
         view.endEditing(true)
+    }
+
+    @objc func didTapAvatarView(_ sender: UITapGestureRecognizer) {
+        viewModel?.refreshAvatars()
     }
 }

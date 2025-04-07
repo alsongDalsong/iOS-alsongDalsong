@@ -160,11 +160,7 @@ extension HummingResultViewModel {
     private func bindPlayers() {
         playerRepository.isHost()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isHost in
-                guard let self else { return }
-                self.isHost = isHost
-            }
-            .store(in: &cancellables)
+            .assign(to: &$isHost)
     }
 
     private func bindRoomNumber() {

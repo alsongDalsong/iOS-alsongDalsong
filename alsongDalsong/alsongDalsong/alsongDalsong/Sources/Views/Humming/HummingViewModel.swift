@@ -79,6 +79,7 @@ final class HummingViewModel: @unchecked Sendable {
                 self?.dueTime = newDueTime
             }
             .store(in: &cancellables)
+        
         gameStatusRepository.getRecordOrder()
             .sink { [weak self] newRecordOrder in
                 self?.bindSubmissionStatus(with: newRecordOrder)

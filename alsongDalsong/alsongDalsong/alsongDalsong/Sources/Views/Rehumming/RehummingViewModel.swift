@@ -69,6 +69,7 @@ final class RehummingViewModel: @unchecked Sendable {
                 self?.dueTime = newDueTime
             }
             .store(in: &cancellables)
+        
         gameStatusRepository.getRecordOrder()
             .sink { [weak self] newRecordOrder in
                 self?.bindRecord(on: newRecordOrder)

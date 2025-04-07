@@ -35,6 +35,7 @@ final class ASButton: UIButton {
         cornerStyle: UIButton.Configuration.CornerStyle = .large,
         baseForegroundColor: UIColor = .white,
         shadowColor: UIColor = .asShadow,
+        shadowHeight: CGFloat = 8,
         strokeColor: UIColor? = nil,
         strokeWidth: CGFloat = 0
     ) {
@@ -49,7 +50,7 @@ final class ASButton: UIButton {
             strokeColor: strokeColor,
             strokeWidth: strokeWidth
         )
-        setShadow(color: shadowColor, width: 0, height: 8)
+        setShadow(color: shadowColor, width: 0, height: shadowHeight)
         applyConfiguration()
     }
 

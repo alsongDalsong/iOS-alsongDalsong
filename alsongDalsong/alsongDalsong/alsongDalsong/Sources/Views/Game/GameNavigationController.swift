@@ -93,16 +93,22 @@ final class GameNavigationController: @unchecked Sendable {
         let backButton = ASButton()
         backButton.setConfiguration(
             systemImageName: "arrowshape.backward.fill",
+            imageSize: 12,
             backgroundColor: .backButtonBackground,
-            cornerStyle: .medium,
+            cornerStyle: .large,
             baseForegroundColor: .backButtonForeground,
             shadowColor: .backButtonShadow,
+            shadowHeight: 4,
             strokeColor: .backButtonShadow,
             strokeWidth: 3
         )
-        backButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-        backButton.layer.shadowOffset = CGSize(width: 0, height: 2)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
         backButton.addAction(backButtonAction, for: .touchUpInside)
+
+        NSLayoutConstraint.activate([
+            backButton.widthAnchor.constraint(equalToConstant: 32),
+            backButton.heightAnchor.constraint(equalToConstant: 32)
+        ])
 
         viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         viewController.title = setTitle()

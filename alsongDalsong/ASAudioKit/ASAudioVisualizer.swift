@@ -1,7 +1,7 @@
 import Accelerate
 import AVFoundation
 
-public class ASAudioVisualizer {
+public class ASAudioVisualizer: @unchecked Sendable {
     private enum PlayState {
         case play, pause, stop
     }

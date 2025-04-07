@@ -113,15 +113,11 @@ final class MainViewController: UIViewController {
     }
     
     private func join(roomNumber: String) async throws {
-        do {
-            let endpoint = FirebaseEndpoint(path: .joinRoom, method: .post)
-                .update(\.headers, with: ["Content-Type": "application/json"])
-            let bodyData = ["roomNumber": roomNumber, "userId": player.id]
-            let body = try JSONSerialization.data(withJSONObject: bodyData, options: [])
-            try await networkManger.sendRequest(to: endpoint, body: body)
-        } catch {
-            throw error
-        }
+        let endpoint = FirebaseEndpoint(path: .joinRoom, method: .post)
+            .update(\.headers, with: ["Content-Type": "application/json"])
+        let bodyData = ["roomNumber": roomNumber, "userId": player.id]
+        let body = try JSONSerialization.data(withJSONObject: bodyData, options: [])
+        try await networkManger.sendRequest(to: endpoint, body: body)
     }
     
     private func connectToFirebase() async throws {

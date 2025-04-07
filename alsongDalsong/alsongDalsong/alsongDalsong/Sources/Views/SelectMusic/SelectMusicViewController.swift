@@ -92,11 +92,7 @@ final class SelectMusicViewController: UIViewController {
     }
     
     private func pickRandomMusic() async throws {
-        do {
-            try await viewModel.randomMusic()
-        } catch {
-            throw error
-        }
+        try await viewModel.randomMusic()
     }
     
     private func submitMusic() async throws {

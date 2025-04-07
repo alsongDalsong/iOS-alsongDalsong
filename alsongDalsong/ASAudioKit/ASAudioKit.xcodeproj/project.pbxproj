@@ -12,13 +12,14 @@
 		2985DC192D961CA500979527 /* ASAudioVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2985DC182D961CA500979527 /* ASAudioVisualizer.swift */; };
 		29978E782DA3B816003D37F0 /* ASAudioVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2985DC182D961CA500979527 /* ASAudioVisualizer.swift */; };
 		29978E792DA3B840003D37F0 /* ASAudioAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7EB01A2CFDA83B00B2BE2A /* ASAudioAnalyzer.swift */; };
+		29978F8A2DA3CB6A003D37F0 /* ASAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; platformFilter = ios; };
+		29978F8C2DA3CBC7003D37F0 /* ASAudioError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8593659C2D3F77F60086C8C4 /* ASAudioError.swift */; };
 		29B308312D9CD16C0032EAA5 /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; };
 		29B308322D9CD16C0032EAA5 /* ASLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		29B308342D9CD2820032EAA5 /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; };
 		29B308352D9CD2820032EAA5 /* ASLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		29B308372D9CD2950032EAA5 /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; };
 		29B308382D9CD2950032EAA5 /* ASLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4E8907C22CE2489A00D5B547 /* ASAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; platformFilter = ios; };
 		4EB1ED372CE88E500012FFBA /* ASAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; };
 		4EB1ED382CE88E500012FFBA /* ASAudioKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8593659D2D3F77FE0086C8C4 /* ASAudioError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8593659C2D3F77F60086C8C4 /* ASAudioError.swift */; };
@@ -160,8 +161,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29978F8A2DA3CB6A003D37F0 /* ASAudioKit.framework in Frameworks */,
 				29B308342D9CD2820032EAA5 /* ASLogKit.framework in Frameworks */,
-				4E8907C22CE2489A00D5B547 /* ASAudioKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,6 +376,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29978F8C2DA3CBC7003D37F0 /* ASAudioError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

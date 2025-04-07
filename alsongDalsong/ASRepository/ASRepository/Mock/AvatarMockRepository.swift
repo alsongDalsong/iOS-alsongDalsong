@@ -1,6 +1,5 @@
 import ASEntity
 import ASRepositoryProtocol
-import Combine
 
 public final class AvatarMockRepository: AvatarRepositoryProtocol {
     public init() {}

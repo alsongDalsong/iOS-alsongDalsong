@@ -189,9 +189,12 @@ extension HummingResultViewModel {
         hummingResultRepository.getResult()
             .receive(on: DispatchQueue.main)
             .map { $0.sorted { $0.answer.player?.order ?? 0 < $1.answer.player?.order ?? 1 } }
-            .sink(receiveCompletion: { Logger.debug($0) },
-                  receiveValue: { [weak self] sortedResult in
-                      guard let self, isValidResult(sortedResult) else { return }
+            .sink(
+                receiveCompletion: {
+                    Logger.debug($0)
+                }, receiveValue: { [weak self] sortedResult in
+                    guard let self,
+                          isValidResult(sortedResult) else { return }
 
                       totalResult = sortedResult.map { ($0.answer, $0.records, $0.submit) }
                       updateCurrentResult()

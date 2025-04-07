@@ -27,6 +27,8 @@ final class FrequencyWaveView: UIView {
     }
 
     private func setup() {
+        guard frequencyLayers.isEmpty else { return }
+        
         for i in 0..<shapeLayersCount {
             let xPosition = CGFloat(i) * (initialWidth + spacing)
             let layer = CALayer()

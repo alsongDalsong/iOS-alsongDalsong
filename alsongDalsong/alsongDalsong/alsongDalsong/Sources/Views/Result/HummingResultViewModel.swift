@@ -178,9 +178,8 @@ extension HummingResultViewModel {
             .receive(on: DispatchQueue.main)
             .dropFirst()
             .sink { [weak self] _, recordOrder in
-                guard let self else { return }
                 Logger.debug("recordOrder changed \(recordOrder)")
-                updateCurrentResult()
+                self?.updateCurrentResult()
             }
             .store(in: &cancellables)
     }

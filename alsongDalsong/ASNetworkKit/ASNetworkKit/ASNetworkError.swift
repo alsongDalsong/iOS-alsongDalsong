@@ -8,6 +8,7 @@ public enum ASNetworkError: LocalizedError {
     case firebaseSignOut
     case firebaseObserveConnection
     case firebaseListener
+    case decode
     case responseError
 
     public var errorDescription: String? {
@@ -18,7 +19,7 @@ public enum ASNetworkError: LocalizedError {
         case .firebaseSignIn: "Firebase 로그인 중 오류가 발생했습니다"
         case .firebaseSignOut: "Firebase 로그아웃 중 오류가 발생했습니다"
         case .firebaseObserveConnection: "Firebase 연결 상태 감시 중 오류가 발생했습니다"
-        case .firebaseListener: "Firebase 리스너에서 오류가 발생했습니다"
+        case .firebaseListener, .decode: "Firebase 리스너에서 오류가 발생했습니다"
         case .responseError: "네트워크 응답 오류가 발생했습니다"
         }
     }

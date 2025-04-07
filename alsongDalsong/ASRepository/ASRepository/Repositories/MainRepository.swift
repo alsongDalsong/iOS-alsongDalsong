@@ -35,12 +35,8 @@ final class MainRepository: MainRepositoryProtocol {
         databaseManager.addRoomListener(roomNumber: roomNumber)
             .retry(3)
             .sink { completion in
-                switch completion {
-                    case let .failure(error):
-                        // TODO: - Error Handling
-                        Logger.error(error.localizedDescription)
-                    case .finished:
-                        return
+                if case let .failure(error) = completion {
+                    Logger.error(error.localizedDescription)
                 }
             } receiveValue: { [weak self] room in
                 guard let self else { return }

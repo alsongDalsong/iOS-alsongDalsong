@@ -24,7 +24,7 @@ final class ASFirebaseDatabase: ASFirebaseDatabaseProtocol {
                 return self.roomPublisher.send(room)
             } catch {
                 ErrorHandler.handle(error)
-                return self.roomPublisher.send(completion: .failure(ASNetworkError.firebaseListener))
+                return self.roomPublisher.send(completion: .failure(ASNetworkError.decode))
             }
         }
         

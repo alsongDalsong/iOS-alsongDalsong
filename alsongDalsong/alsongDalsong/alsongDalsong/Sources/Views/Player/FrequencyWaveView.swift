@@ -1,16 +1,16 @@
 import UIKit
 
 final class FrequencyWaveView: UIView {
-    private var frequencyShapeLayers: [CAShapeLayer] = []
-    
+    private var frequencyLayers: [CALayer] = []
+
     private let shapeLayersCount = 6
     private let spacing: CGFloat = 1.5
     private let initialHeight: CGFloat = 3
-    
+
     private var initialWidth: CGFloat {
         (bounds.width - spacing * CGFloat(shapeLayersCount - 1)) / CGFloat(shapeLayersCount)
     }
-    
+
     /// normalizedFrequencyAmplitudes
     /// 범위는 0 ~ 1
     /// 업데이트하면 자동으로 애니메이션 적용
@@ -20,61 +20,49 @@ final class FrequencyWaveView: UIView {
             updateFrequencyShapeLayers()
         }
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
-        if frequencyShapeLayers.isEmpty {
-            setup()
-        }
+        setup()
     }
-    
+
     private func setup() {
         for i in 0..<shapeLayersCount {
-            let shapeLayer = CAShapeLayer()
             let xPosition = CGFloat(i) * (initialWidth + spacing)
-            
-            let rect = CGRect(
+            let layer = CALayer()
+            layer.frame = CGRect(
                 x: xPosition,
                 y: (bounds.height - initialHeight) / 2,
                 width: initialWidth,
                 height: initialHeight
             )
-            
-            shapeLayer.path = UIBezierPath(roundedRect: rect, cornerRadius: 2).cgPath
-            shapeLayer.fillColor = UIColor.lightGray.cgColor
-            frequencyShapeLayers.append(shapeLayer)
-            layer.addSublayer(shapeLayer)
+            layer.backgroundColor = UIColor.lightGray.cgColor
+            layer.cornerRadius = 2
+            layer.masksToBounds = true
+
+            frequencyLayers.append(layer)
+            self.layer.addSublayer(layer)
         }
     }
 
     private func updateFrequencyShapeLayers() {
-        guard normalizedFrequencyAmplitudes.count == 6 else { return }
-        
-        for (index, shapeLayer) in frequencyShapeLayers.enumerated() {
-            let normalizedFrequencyAmplitude = CGFloat(normalizedFrequencyAmplitudes[index])
-            let newHeight = max(initialHeight, bounds.height * normalizedFrequencyAmplitude)
-            
+        guard normalizedFrequencyAmplitudes.count == shapeLayersCount else { return }
+
+        for (index, layer) in frequencyLayers.enumerated() {
+            let normalized = CGFloat(normalizedFrequencyAmplitudes[index])
+            let newHeight = max(initialHeight, bounds.height * normalized)
             let xPosition = CGFloat(index) * (initialWidth + spacing)
-            
-            let newRect = CGRect(
+            let newFrame = CGRect(
                 x: xPosition,
                 y: (bounds.height - newHeight) / 2,
                 width: initialWidth,
                 height: newHeight
             )
-            
-            let newPath = UIBezierPath(roundedRect: newRect, cornerRadius: 2).cgPath
-            
-            let animation = CABasicAnimation(keyPath: "path")
-            animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            animation.fromValue = shapeLayer.path
-            animation.toValue = newPath
-            
-            animation.isRemovedOnCompletion = true
-            animation.fillMode = .forwards
-            
-            shapeLayer.add(animation, forKey: "pathAnimation")
-            shapeLayer.path = newPath
+
+            CATransaction.begin()
+            CATransaction.setAnimationDuration(0.3)
+            layer.frame = newFrame
+            CATransaction.commit()
         }
     }
 }

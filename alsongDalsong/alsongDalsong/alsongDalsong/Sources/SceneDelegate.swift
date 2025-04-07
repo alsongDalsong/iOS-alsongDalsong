@@ -34,7 +34,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         )
         
         let loadingVC = LoadingViewController(viewModel: loadingVM, inviteCode: inviteCode)
-        window?.rootViewController = SamplePlayerViewController()
+        window?.rootViewController = loadingVC
         window?.makeKeyAndVisible()
     }
 

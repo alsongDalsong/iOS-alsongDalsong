@@ -31,7 +31,6 @@ final class AnswersRepository: AnswersRepositoryProtocol {
             .compactMap(\.self)
             .flatMap { answers in
                 Just(answers.first { $0.player?.id == myId })
-                    .eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()
     }

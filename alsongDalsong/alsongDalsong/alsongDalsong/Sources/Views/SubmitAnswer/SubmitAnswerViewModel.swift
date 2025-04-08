@@ -58,7 +58,7 @@ final class SubmitAnswerViewModel: ObservableObject, @unchecked Sendable {
 
     private func bindSearchTerm() {
         $searchTerm
-            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
             .sink { [weak self] term in
                 Task { [weak self] in
                     if term.isEmpty {

@@ -14,7 +14,7 @@ final class OnboardingViewController: UIViewController {
     private var viewModel: OnboardingViewModel?
     private var gameNavigationController: GameNavigationController?
     private var cancellables = Set<AnyCancellable>()
-    private var shouldMoveKeyboard: Bool = true
+    private var shouldMoveKeyboard: Bool = false
 
     var avatarViewBottomConstraint: NSLayoutConstraint?
 
@@ -38,6 +38,7 @@ final class OnboardingViewController: UIViewController {
         setupButton()
         hideKeyboard()
         bindViewModel()
+        bindNicknamePanel()
         viewModel?.authorizeAppleMusic()
     }
 
@@ -79,7 +80,7 @@ final class OnboardingViewController: UIViewController {
             nickNamePanel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 70),
             nickNamePanel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             nickNamePanel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            nickNamePanel.heightAnchor.constraint(equalToConstant: 280),
+            nickNamePanel.heightAnchor.constraint(equalToConstant: 340),
 
             avatarView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             avatarView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
@@ -150,7 +151,9 @@ final class OnboardingViewController: UIViewController {
 
     private func bindViewModel() {
         bind(viewModel?.$nickname) { [weak self] nickname in
-            self?.nickNamePanel.updateTextField(placeholder: nickname)
+            let isPlaceholder = nickname == "캐릭터와닉네임을선택하라"
+            self?.createRoomButton.isEnabled = !isPlaceholder
+            self?.joinRoomButton.isEnabled = !isPlaceholder
         }
 
         bind(viewModel?.$avatarData) { [weak self] data in
@@ -171,6 +174,13 @@ final class OnboardingViewController: UIViewController {
         bind(viewModel?.$buttonEnabled) { [weak self] enabled in
             self?.createRoomButton.isEnabled = enabled
             self?.joinRoomButton.isEnabled = enabled
+        }
+    }
+
+    private func bindNicknamePanel() {
+        bind(nickNamePanel.$text) { [weak self] text in
+            guard let text = text else { return }
+            self?.viewModel?.setNickname(with: text)
         }
     }
 
@@ -202,6 +212,7 @@ final class OnboardingViewController: UIViewController {
     }
 
     private func joinRoom(with roomNumber: String) {
+        setRandomNicknameIfEmpty()
         Task {
             do {
                 let number = try await viewModel?.joinRoom(roomNumber: roomNumber)
@@ -214,29 +225,32 @@ final class OnboardingViewController: UIViewController {
     }
 
     private func autoJoinRoom() {
-        if let nickname = nickNamePanel.text, !nickname.isEmpty {
-            viewModel?.setNickname(with: nickname)
-        }
         joinRoom(with: inviteCode)
     }
 
     private func setNicknameAndJoinRoom(with roomNumber: String) {
-        if let nickname = nickNamePanel.text, !nickname.isEmpty {
-            viewModel?.setNickname(with: nickname)
-        }
         joinRoom(with: roomNumber)
     }
 
     private func setNicknameAndCreateRoom() async throws {
-        if let nickname = nickNamePanel.text, !nickname.isEmpty {
-            viewModel?.setNickname(with: nickname)
-        }
+        setRandomNicknameIfEmpty()
         do {
             let number = try await viewModel?.createRoom()
             guard let number else { return }
             navigateToLobby(with: number)
         } catch {
             throw error
+        }
+    }
+
+    private func setRandomNicknameIfEmpty() {
+        let trimmed = viewModel?.nickname.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        if trimmed.isEmpty {
+            let randomNickname = NickNameGenerator.generate()
+            nickNamePanel.updateTextField(placeholder: randomNickname)
+            nickNamePanel.text = randomNickname
+            viewModel?.setNickname(with: randomNickname)
         }
     }
 
@@ -365,6 +379,7 @@ private extension OnboardingViewController {
     }
 
     @objc func didTapAvatarView(_ sender: UITapGestureRecognizer) {
+        view.endEditing(true)
         viewModel?.refreshAvatars()
     }
 }

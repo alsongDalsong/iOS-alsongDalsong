@@ -86,27 +86,27 @@ public enum Mode: String, Codable, CaseIterable, Identifiable, CustomStringConve
     public var description: String {
         switch self {
         case .humming:
-            return """
+            """
             노래를 선택하고 허밍으로 시작하세요!  
             다음 사람은 따라 부르고, 마지막은 정답을 맞춰야 해요.
             """
         case .harmony:
-            return """
+            """
             각자 파트를 녹음해 하모니를 완성하세요!
             누구의 파트가 가장 어울릴까요?
             """
         case .sync:
-            return """
+            """
             모두가 동시에 노래를 부르며 정답을 맞추는 협동 모드!
             목소리가 하나로 어우러질 때, 과연 정답은?
             """
         case .instant:
-            return """
+            """
             1초짜리 음악 클립을 듣고 바로 맞추는 집중력 테스트!
             짧은 순간, 당신의 기억력을 믿어보세요.
             """
         case .tts:
-            return """
+            """
             노래 가사만 듣고 어떤 곡인지 맞춰보세요.
             가사만으로 떠오르는 그 노래, 기억해낼 수 있을까요?
             """

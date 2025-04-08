@@ -12,4 +12,8 @@ extension Font {
     static func wantedSansBold(size: CGFloat) -> Font {
         .custom("wantedSans-Bold", size: size)
     }
+
+    static func riaSans(size: CGFloat) -> Font {
+        return .custom("RiaSans-ExtraBold", size: size)
+    }
 }

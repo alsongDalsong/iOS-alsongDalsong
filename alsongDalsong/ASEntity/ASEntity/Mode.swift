@@ -1,4 +1,4 @@
-public enum Mode: String, Codable, CaseIterable, Identifiable {
+public enum Mode: String, Codable, CaseIterable, Identifiable, CustomStringConvertible {
     case humming
     case harmony
     case sync
@@ -85,26 +85,31 @@ public enum Mode: String, Codable, CaseIterable, Identifiable {
 
     public var description: String {
         switch self {
-            case .humming: return "원하는 노래를 선택하고 허밍을 하세요! \n다음 사람부터 당신의 허밍을 따라하게 됩니다."
-            case .harmony: return "각 플레이어는 하나의 파트를 녹음하고, 그 녹음을 합쳐 완벽한 하모니를 만들어야 합니다."
-            case .sync: return "동시에 부르는 음악을 맞추는 모드입니다."
-            case .instant: return "짧은 시간에 최대한의 집중을 요구하는 모드입니다. \n1초동안 랜덤으로 선택된 노래 클립을 듣고, 무엇인지 맞춰야 합니다."
-            case .tts: return "가사만 듣고 노래를 맞추는 모드입니다. \n선택된 노래의 가사를 TTS로 읽어주며, 플레이어는 해당 노래를 맞춰야 합니다."
-        }
-    }
-    
-    public var footerText: String {
-        switch self {
         case .humming:
-            "마지막 친구는 허밍을 듣고 어떤 노래인지 맞출 수 있을까요?"
+            return """
+            노래를 선택하고 허밍으로 시작하세요!  
+            다음 사람은 따라 부르고, 마지막은 정답을 맞춰야 해요.
+            """
         case .harmony:
-            "플레이어들이 녹음한 각각의 음성을 합치면서, 누구의 파트가 가장 잘 어우러지는지 확인하세요"
+            return """
+            각자 파트를 녹음해 하모니를 완성하세요!
+            누구의 파트가 가장 어울릴까요?
+            """
         case .sync:
-            "모두의 목소리가 하나가 되는 순간, 과연 정답은 무엇일까요?"
+            return """
+            모두가 동시에 노래를 부르며 정답을 맞추는 협동 모드!
+            목소리가 하나로 어우러질 때, 과연 정답은?
+            """
         case .instant:
-            "짧은 시간에 어떤 노래인지 맞출 수 있을까요?"
+            return """
+            1초짜리 음악 클립을 듣고 바로 맞추는 집중력 테스트!
+            짧은 순간, 당신의 기억력을 믿어보세요.
+            """
         case .tts:
-            "가사만으로 노래를 떠올릴 수 있을까요?"
+            return """
+            노래 가사만 듣고 어떤 곡인지 맞춰보세요.
+            가사만으로 떠오르는 그 노래, 기억해낼 수 있을까요?
+            """
         }
     }
 

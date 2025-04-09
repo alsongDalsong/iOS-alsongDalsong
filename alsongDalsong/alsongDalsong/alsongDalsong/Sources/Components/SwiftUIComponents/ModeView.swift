@@ -124,7 +124,8 @@ private extension ModeView {
                         .font(.doHyeon(size: 40))
                     
                     Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.description))
-                        .font(.doHyeon(size: 18))
+                        .font(.system(size: 18))
+                        .fontWeight(.medium)
                         .lineSpacing(6)
                         .frame(maxHeight: .infinity)
                 }
@@ -144,7 +145,8 @@ private extension ModeView {
                         .font(.system(size: 40, weight: .bold))
                     
                     Text("곧 출시 예정입니다")
-                        .font(.doHyeon(size: 18))
+                        .font(.system(size: 18))
+                        .fontWeight(.medium)
                 }
                 .foregroundColor(.white)
             }

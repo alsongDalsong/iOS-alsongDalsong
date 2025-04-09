@@ -36,7 +36,7 @@ struct SelectMusicView: View {
             if viewModel.searchTerm.isEmpty {
                 VStack(alignment: .center) {
                     Spacer()
-                    Text("음악을 선택하세요!")
+                    Text("음악을 검색하세요!")
                         .font(.doHyeon(size: 36))
                     Spacer()
                 }

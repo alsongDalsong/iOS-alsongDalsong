@@ -1,4 +1,3 @@
-import Combine
 import SwiftUI
 
 final class SelectMusicViewController: UIViewController {
@@ -7,7 +6,6 @@ final class SelectMusicViewController: UIViewController {
     private let submissionStatus = SubmissionStatusView()
     private let viewModel: SelectMusicViewModel
     private var selectMusicView = UIViewController()
-    private var cancellables: Set<AnyCancellable> = []
 
     init(selectMusicViewModel: SelectMusicViewModel) {
         self.viewModel = selectMusicViewModel
@@ -92,11 +90,7 @@ final class SelectMusicViewController: UIViewController {
     }
     
     private func pickRandomMusic() async throws {
-        do {
-            try await viewModel.randomMusic()
-        } catch {
-            throw error
-        }
+        try await viewModel.randomMusic()
     }
     
     private func submitMusic() async throws {

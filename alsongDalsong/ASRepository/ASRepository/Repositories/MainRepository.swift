@@ -33,14 +33,10 @@ final class MainRepository: MainRepositoryProtocol {
 
     func connectRoom(roomNumber: String) {
         databaseManager.addRoomListener(roomNumber: roomNumber)
-            .receive(on: DispatchQueue.main)
+            .retry(3)
             .sink { completion in
-                switch completion {
-                    case let .failure(error):
-                        // TODO: - Error Handling
-                        Logger.error(error.localizedDescription)
-                    case .finished:
-                        return
+                if case let .failure(error) = completion {
+                    Logger.error(error.localizedDescription)
                 }
             } receiveValue: { [weak self] room in
                 guard let self else { return }

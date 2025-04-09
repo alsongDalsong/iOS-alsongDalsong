@@ -1,4 +1,3 @@
-import Combine
 import SwiftUI
 
 final class SubmitAnswerViewController: UIViewController {
@@ -105,16 +104,12 @@ final class SubmitAnswerViewController: UIViewController {
     }
 
     private func submitAnswer() async throws {
-        do {
-            viewModel.stopMusic()
-            progressBar.cancelCompletion()
-            try await viewModel.submitAnswer()
-            submitButton.setConfiguration(.submitted)
-            submitButton.setDisabledState()
-            selectAnswerButton.setDisabledState()
-        } catch {
-            throw error
-        }
+        viewModel.stopMusic()
+        progressBar.cancelCompletion()
+        try await viewModel.submitAnswer()
+        submitButton.setConfiguration(.submitted)
+        submitButton.setDisabledState()
+        selectAnswerButton.setDisabledState()
     }
 
     private func setAction() {

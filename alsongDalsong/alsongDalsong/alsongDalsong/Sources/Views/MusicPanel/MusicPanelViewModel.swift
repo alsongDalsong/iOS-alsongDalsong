@@ -48,12 +48,11 @@ final class MusicPanelViewModel: @unchecked Sendable {
             .store(in: &cancellables)
         
         AudioHelper.shared.recorderStatePublisher
+            .filter { $0 }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isRecording in
-                if isRecording {
-                    self?.updateButtonState(type: .compact, .idle)
-                    self?.updateButtonState(type: .large, .idle)
-                }
+                self?.updateButtonState(type: .compact, .idle)
+                self?.updateButtonState(type: .large, .idle)
             }
             .store(in: &cancellables)
     }

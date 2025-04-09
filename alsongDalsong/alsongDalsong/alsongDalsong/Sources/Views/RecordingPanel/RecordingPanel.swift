@@ -30,12 +30,11 @@ final class RecordingPanel: UIView {
         to dataSource: Published<Bool>.Publisher
     ) {
         dataSource
+            .filter { $0 }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isRecording in
-                if isRecording {
-                    self?.reset()
-                    self?.viewModel.startRecording()
-                }
+            .sink { [weak self] _ in
+                self?.reset()
+                self?.viewModel.startRecording()
             }
             .store(in: &cancellables)
     }
@@ -62,9 +61,9 @@ final class RecordingPanel: UIView {
             }
             .store(in: &cancellables)
         viewModel.$playIndex
+            .compactMap { $0 }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] index in
-                guard let index else { return }
                 self?.updateWaveForm(index: index)
             }
             .store(in: &cancellables)

@@ -75,7 +75,7 @@ final class LargeAudioPlayerView: UIView {
         var buttonConfiguration = UIButton.Configuration.borderless()
         let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 32)
         buttonConfiguration.preferredSymbolConfigurationForImage = imageConfiguration
-        buttonConfiguration.baseForegroundColor = .asBlack
+        buttonConfiguration.baseForegroundColor = .asForeground
         buttonConfiguration.image = UIImage(systemName: "play.fill")
         
         if #available(iOS 17.0, *) { controlButton.isSymbolAnimationEnabled = true }

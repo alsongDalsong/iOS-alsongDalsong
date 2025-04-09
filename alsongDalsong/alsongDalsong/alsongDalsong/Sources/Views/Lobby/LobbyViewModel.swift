@@ -49,10 +49,7 @@ final class LobbyViewModel: ObservableObject, @unchecked Sendable {
 
         playersRepository.getPlayers()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] players in
-                self?.players = players
-            }
-            .store(in: &cancellables)
+            .assign(to: &$players)
 
         playersRepository.getHost()
             .receive(on: DispatchQueue.main)
@@ -73,17 +70,11 @@ final class LobbyViewModel: ObservableObject, @unchecked Sendable {
 
         roomInfoRepository.getRoomNumber()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] roomNumber in
-                self?.roomNumber = roomNumber
-            }
-            .store(in: &cancellables)
+            .assign(to: &$roomNumber)
 
         playersRepository.isHost()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isHost in
-                self?.isHost = isHost
-            }
-            .store(in: &cancellables)
+            .assign(to: &$isHost)
 
         playersRepository.isHost().combineLatest(playersRepository.getPlayersCount())
             .receive(on: DispatchQueue.main)

@@ -56,11 +56,9 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
     
     private func bindGameStatus() {
         gameStatusRepository.getDueTime()
+            .map { Optional($0) }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] newDueTime in
-                self?.dueTime = newDueTime
-            }
-            .store(in: &cancellables)
+            .assign(to: &$dueTime)
     }
     
     private func bindSubmissionStatus() {

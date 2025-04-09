@@ -1,90 +1,116 @@
 import Accelerate
 import AVFoundation
 
-public class ASAudioVisualizer {
+public class ASAudioVisualizer: @unchecked Sendable {
     private enum PlayState {
         case play, pause, stop
     }
     
-    private let engine = AVAudioEngine()
-    private let player = AVAudioPlayerNode()
+    private let audioEngine = AVAudioEngine()
+    private let audioPlayer = AVAudioPlayerNode()
 
-    private var sampleCount = 20
+    private var sampleCount = 6
     private var audioFile: AVAudioFile?
     private var playState: PlayState = .stop
+    private var _normalizedFrequencyAmplitudes: [Float] = []
     
-    public var fftMagnitudes: [Float] = []
+    private let syncQueue = DispatchQueue(label: "audioVisualizer.syncQueue")
+
+    public var normalizedFrequencyAmplitudes: [Float] {
+        get {
+            syncQueue.sync {
+                _normalizedFrequencyAmplitudes
+            }
+        }
+        set {
+            syncQueue.async(flags: .barrier) { [weak self] in
+                self?._normalizedFrequencyAmplitudes = newValue
+            }
+        }
+    }
     
-    public func bind(data: Data, count: Int = 20) {
-        sampleCount = count
+    public var audioProgress: Double {
+        guard let nodetime = audioPlayer.lastRenderTime,
+              let playerTime = audioPlayer.playerTime(forNodeTime: nodetime),
+              let audioFile else { return 0.0 }
+        
+        let duration = Double(audioFile.length) / audioFile.processingFormat.sampleRate
+        
+        return min(1.0, Double(playerTime.sampleTime) / playerTime.sampleRate / duration)
+    }
+    
+    public init() { }
+    
+    public func bind(data: Data, sampleCount: Int = 6) {
+        self.sampleCount = sampleCount
 
-        _ = engine.mainMixerNode
-
-        engine.prepare()
-        try? engine.start()
-
+        let session = AVAudioSession.sharedInstance()
+        try? session.setCategory(.playback, mode: .default, options: [])
+        try? session.setActive(true, options: .notifyOthersOnDeactivation)
+        
         let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".m4a")
         try? data.write(to: tempURL)
 
         guard let file = try? AVAudioFile(forReading: tempURL) else { return }
-        audioFile = file  // 파일 저장 (재생을 다시 시작할 때 사용)
-
+        audioFile = file
+        
         let format = file.processingFormat
 
-        engine.attach(player)
-        engine.connect(player, to: engine.mainMixerNode, format: format)
-
-        installFFT()
+        audioEngine.attach(audioPlayer)
+        audioEngine.connect(audioPlayer, to: audioEngine.mainMixerNode, format: format)
+        audioEngine.prepare()
+        
+        installFastFourierTransform()
     }
 
     public func play() {
         guard let file = audioFile else { return }
+                
+        if !audioEngine.isRunning {
+            try? audioEngine.start()
+        }
 
         if playState == .stop {
-            player.scheduleFile(file, at: nil) { [weak self] in
+            audioPlayer.stop()
+            audioPlayer.scheduleFile(file, at: nil) { [weak self] in
                 self?.playState = .stop
             }
         }
         
-        player.play()
+        audioPlayer.play()
         playState = .play
     }
     
     public func pause() {
         guard playState == .play else { return }
         
-        player.pause()
+        audioPlayer.pause()
         playState = .pause
     }
 
     public func stop() {
         guard playState == .play else { return }
 
-        player.stop()
+        audioPlayer.stop()
         playState = .stop
     }
 
-    private func installFFT() {
-        guard let fftSetup = vDSP_DFT_zop_CreateSetup(
-            nil,
-            UInt(1024),
-            vDSP_DFT_Direction.FORWARD
-        ) else { return }
+    private func installFastFourierTransform() {
+        let length: UInt = 1024
+        let bufferSize: UInt32 = 1024
+        let direction = vDSP_DFT_Direction.FORWARD
+        
+        guard let setup = vDSP_DFT_zop_CreateSetup(nil, length, direction) else { return }
 
-        engine.mainMixerNode.installTap(
-            onBus: 0,
-            bufferSize: UInt32(1024),
-            format: nil
-        ) { [self] buffer, _ in
+        audioEngine.mainMixerNode.installTap(onBus: 0, bufferSize: bufferSize, format: nil) { buffer, _ in
             guard let channelData = buffer.floatChannelData?[0] else { return }
-            fftMagnitudes = fft(data: channelData, setup: fftSetup)
+            self.normalizedFrequencyAmplitudes = self.fastFourierTransform(data: channelData, setup: setup)
         }
     }
 }
 
 extension ASAudioVisualizer {
-    /// Fast Fourier Transform, 고속 푸리에 변환
-    private func fft(data: UnsafeMutablePointer<Float>, setup: OpaquePointer) -> [Float] {
+    private func fastFourierTransform(data: UnsafeMutablePointer<Float>, setup: OpaquePointer) -> [Float] {
         var realIn = [Float](repeating: 0, count: 1024)
         var imagIn = [Float](repeating: 0, count: 1024)
         var realOut = [Float](repeating: 0, count: 1024)
@@ -94,22 +120,28 @@ extension ASAudioVisualizer {
             realIn[i] = data[i]
         }
         
+        /// Fast Fourier Transform 실행 (입력: realIn, imagIn / 출력: realOut, imagOut)
         vDSP_DFT_Execute(setup, &realIn, &imagIn, &realOut, &imagOut)
         
-        var magnitudes = [Float](repeating: 0, count: sampleCount)
+        var frequencyMagnitude = [Float](repeating: 0, count: sampleCount)
         
+        /// FFT 결과에서 실수(real)와 허수(imaginary)를 결합하여 진폭 계산
         realOut.withUnsafeMutableBufferPointer { realBP in
             imagOut.withUnsafeMutableBufferPointer { imagBP in
                 guard let realBPAddress = realBP.baseAddress, let imagBPAddress = imagBP.baseAddress else { return }
+                
+                // 복소수 크기 계산 (√(real² + imag²))
                 var complex = DSPSplitComplex(realp: realBPAddress, imagp: imagBPAddress)
-                vDSP_zvabs(&complex, 1, &magnitudes, 1, UInt(sampleCount))
+                vDSP_zvabs(&complex, 1, &frequencyMagnitude, 1, UInt(sampleCount))
             }
         }
         
-        var normalizedMagnitudes = [Float](repeating: 0.0, count: sampleCount)
-        var scalingFactor = Float(1)
-        vDSP_vsmul(&magnitudes, 1, &scalingFactor, &normalizedMagnitudes, 1, UInt(sampleCount))
+        /// 크기 정규화 0 ~ 1 의 값으로 만듬
+        var normalizedFrequencyAmplitudes = [Float](repeating: 0.0, count: sampleCount)
+        let maxAmplitude = frequencyMagnitude.max() ?? 1
+        var scalingFactor = 1 / maxAmplitude
+        vDSP_vsmul(&frequencyMagnitude, 1, &scalingFactor, &normalizedFrequencyAmplitudes, 1, UInt(sampleCount))
             
-        return normalizedMagnitudes
+        return normalizedFrequencyAmplitudes
     }
 }

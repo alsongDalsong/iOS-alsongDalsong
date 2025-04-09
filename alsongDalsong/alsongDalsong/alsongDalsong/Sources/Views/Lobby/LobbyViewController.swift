@@ -62,7 +62,7 @@ final class LobbyViewController: UIViewController {
         viewmodel.$roomNumber
             .receive(on: DispatchQueue.main)
             .sink { [weak self] roomNumber in
-            self?.roomNumberButton.setConfiguration(
+                self?.roomNumberButton.setConfiguration(
                 text: "#" + roomNumber,
                 textStyle: .largeTitle,
                 backgroundColor: .roomNumberButton,

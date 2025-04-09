@@ -160,11 +160,7 @@ extension HummingResultViewModel {
     private func bindPlayers() {
         playerRepository.isHost()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isHost in
-                guard let self else { return }
-                self.isHost = isHost
-            }
-            .store(in: &cancellables)
+            .assign(to: &$isHost)
     }
 
     private func bindRoomNumber() {
@@ -182,9 +178,8 @@ extension HummingResultViewModel {
             .receive(on: DispatchQueue.main)
             .dropFirst()
             .sink { [weak self] _, recordOrder in
-                guard let self else { return }
                 Logger.debug("recordOrder changed \(recordOrder)")
-                updateCurrentResult()
+                self?.updateCurrentResult()
             }
             .store(in: &cancellables)
     }
@@ -193,9 +188,12 @@ extension HummingResultViewModel {
         hummingResultRepository.getResult()
             .receive(on: DispatchQueue.main)
             .map { $0.sorted { $0.answer.player?.order ?? 0 < $1.answer.player?.order ?? 1 } }
-            .sink(receiveCompletion: { Logger.debug($0) },
-                  receiveValue: { [weak self] sortedResult in
-                      guard let self, isValidResult(sortedResult) else { return }
+            .sink(
+                receiveCompletion: {
+                    Logger.debug($0)
+                }, receiveValue: { [weak self] sortedResult in
+                    guard let self,
+                          isValidResult(sortedResult) else { return }
 
                       totalResult = sortedResult.map { ($0.answer, $0.records, $0.submit) }
                       updateCurrentResult()
@@ -205,12 +203,10 @@ extension HummingResultViewModel {
 
     private func bindAudio() {
         AudioHelper.shared.playerStatePublisher
+            .filter { _, isPlaying in !isPlaying }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _, isPlaying in
-                guard let self else { return }
-                if !isPlaying {
-                    self.updateResultPhase()
-                }
+            .sink { [weak self] _, _ in
+                self?.updateResultPhase()
             }
             .store(in: &cancellables)
     }

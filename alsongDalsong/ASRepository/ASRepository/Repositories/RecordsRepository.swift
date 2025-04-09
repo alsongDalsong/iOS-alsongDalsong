@@ -15,10 +15,7 @@ final class RecordsRepository: RecordsRepositoryProtocol {
        return mainRepository.records
             .compactMap { $0 }
             .map { records in
-                return records.filter { Int($0.recordOrder ?? 0) == recordOrder }
-            }
-            .map {
-                return $0.count
+                records.filter { Int($0.recordOrder ?? 0) == recordOrder }.count
             }
             .eraseToAnyPublisher()
     }

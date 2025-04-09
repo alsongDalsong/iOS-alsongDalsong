@@ -5,7 +5,7 @@ struct AudioVisualizerView: View {
     private let audioVisualizer = ASAudioVisualizer()
     private let timer = Timer.publish(every: 0.03, on: .main, in: .common).autoconnect()
     
-    @State private var data: [Float] = []
+    @State private var data: [Float] = Array(repeating: 0, count: 20)
     @State private var isPlaying = false
     
     private let harderBetterFasterStronger = "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview112/v4/bf/a6/1b/bfa61b15-a797-ec2d-ef44-bf9bfb9fab10/mzaf_9377760837375603436.plus.aac.p.m4a"
@@ -33,10 +33,10 @@ struct AudioVisualizerView: View {
                 .disabled(!isPlaying)
             }
             
-            Chart(Array(data.enumerated()), id: \.0) { index, magnitude in
+            Chart(Array(data.enumerated()), id: \.0) { index, amplitude in
                 BarMark(
                     x: .value("Frequency", String(index)),
-                    y: .value("Magnitude", magnitude)
+                    y: .value("Amplitude", amplitude)
                 )
                 .foregroundStyle(.blue)
             }
@@ -45,13 +45,13 @@ struct AudioVisualizerView: View {
                 
                 Task {
                     let data = try await URLSession.shared.data(from: url)
-                    audioVisualizer.bind(data: data.0)
+                    audioVisualizer.bind(data: data.0, sampleCount: 20)
                 }
             }
             .onReceive(timer) { _ in
                 if isPlaying {
                     withAnimation {
-                        data = audioVisualizer.fftMagnitudes.map { min($0, 40) }
+                        data = audioVisualizer.normalizedFrequencyAmplitudes.map { $0 * 40 }
                     }
                 }
             }

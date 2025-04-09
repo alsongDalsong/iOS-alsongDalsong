@@ -55,11 +55,9 @@ final class RehummingViewModel: @unchecked Sendable {
 
     private func bindRecord(on recordOrder: UInt8) {
         recordsRepository.getHumming(on: recordOrder)
-            .sink { [weak self] record in
-                guard let record else { return }
-                self?.music = Music(record)
-            }
-            .store(in: &cancellables)
+            .compactMap { $0 }
+            .map { Music($0) }
+            .assign(to: &$music)
     }
 
     private func bindGameStatus() {
@@ -69,6 +67,7 @@ final class RehummingViewModel: @unchecked Sendable {
                 self?.dueTime = newDueTime
             }
             .store(in: &cancellables)
+        
         gameStatusRepository.getRecordOrder()
             .sink { [weak self] newRecordOrder in
                 self?.bindRecord(on: newRecordOrder)

@@ -231,13 +231,9 @@ final class OnboardingViewController: UIViewController {
         if let nickname = nickNamePanel.text, !nickname.isEmpty {
             viewModel?.setNickname(with: nickname)
         }
-        do {
-            let number = try await viewModel?.createRoom()
-            guard let number else { return }
-            navigateToLobby(with: number)
-        } catch {
-            throw error
-        }
+        let number = try await viewModel?.createRoom()
+        guard let number else { return }
+        navigateToLobby(with: number)
     }
 
     private func isMicrophoneAuthorized() -> Bool {

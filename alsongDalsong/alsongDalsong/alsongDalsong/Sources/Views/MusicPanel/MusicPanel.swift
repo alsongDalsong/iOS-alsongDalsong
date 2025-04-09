@@ -78,6 +78,7 @@ final class MusicPanel: UIView {
                 self?.player.updateMusicPanel(image: artwork)
             }
             .store(in: &cancellables)
+        
         guard let viewModel else { return }
         player.bind(to: viewModel.$buttonState)
     }

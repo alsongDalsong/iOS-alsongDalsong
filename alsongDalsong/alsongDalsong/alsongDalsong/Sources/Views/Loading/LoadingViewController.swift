@@ -114,7 +114,7 @@ final class LoadingViewController: UIViewController {
         animator.startAnimation()
     }
     
-    private func navigateToOnboarding(avatars: [URL], selectedAvatar: URL, avatarData: Data) {
+    private func navigateToOnboarding(avatars: [(onboarding: URL, lobby: URL)], selectedAvatar: (onboarding: URL, lobby: URL), avatarData: Data) {
         let roomActionRepository = DIContainer.shared.resolve(RoomActionRepositoryProtocol.self)
         let dataDownloadRepository = DIContainer.shared.resolve(DataDownloadRepositoryProtocol.self)
         

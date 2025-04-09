@@ -6,8 +6,8 @@ import Foundation
 final class OnboardingViewModel: @unchecked Sendable {
     private let roomActionRepository: RoomActionRepositoryProtocol
     private let dataDownloadRepository: DataDownloadRepositoryProtocol
-    private var avatars: [URL] = []
-    private var selectedAvatar: URL?
+    private var avatars: [(onboarding: URL, lobby: URL)] = []
+    private var selectedAvatar: (onboarding: URL, lobby: URL)?
 
     @Published var nickname: String = NickNameGenerator.generate()
     @Published var avatarData: Data?
@@ -15,8 +15,8 @@ final class OnboardingViewModel: @unchecked Sendable {
 
     init(roomActionRepository: RoomActionRepositoryProtocol,
          dataDownloadRepository: DataDownloadRepositoryProtocol,
-         avatars: [URL],
-         selectedAvatar: URL?,
+         avatars: [(onboarding: URL, lobby: URL)],
+         selectedAvatar: (onboarding: URL, lobby: URL)?,
          avatarData: Data?
     ) {
         self.roomActionRepository = roomActionRepository
@@ -32,10 +32,10 @@ final class OnboardingViewModel: @unchecked Sendable {
 
     func refreshAvatars() {
         Task {
-            let filteredAvatars = avatars.filter { $0 != selectedAvatar }
+            let filteredAvatars = avatars.filter { $0.onboarding != selectedAvatar?.onboarding }
             guard let randomAvatarUrl = filteredAvatars.randomElement() else { return }
             selectedAvatar = randomAvatarUrl
-            avatarData = await dataDownloadRepository.downloadData(url: randomAvatarUrl)
+            avatarData = await dataDownloadRepository.downloadData(url: randomAvatarUrl.onboarding)
         }
     }
 
@@ -56,7 +56,7 @@ final class OnboardingViewModel: @unchecked Sendable {
         guard let selectedAvatar else { return nil }
         buttonEnabled = false
         do {
-            buttonEnabled = try await roomActionRepository.joinRoom(nickname: nickname, avatar: selectedAvatar, roomNumber: id)
+            buttonEnabled = try await roomActionRepository.joinRoom(nickname: nickname, avatar: selectedAvatar.lobby, roomNumber: id)
             return id
         } catch {
             buttonEnabled = true
@@ -71,7 +71,7 @@ final class OnboardingViewModel: @unchecked Sendable {
         guard let selectedAvatar else { return nil }
         buttonEnabled = false
         do {
-            let roomNumber = try await roomActionRepository.createRoom(nickname: nickname, avatar: selectedAvatar)
+            let roomNumber = try await roomActionRepository.createRoom(nickname: nickname, avatar: selectedAvatar.lobby)
             return try await joinRoom(roomNumber: roomNumber)
         } catch {
             buttonEnabled = true

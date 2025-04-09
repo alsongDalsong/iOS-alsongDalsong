@@ -39,7 +39,7 @@ public protocol SubmitsRepositoryProtocol {
 }
 
 public protocol AvatarRepositoryProtocol {
-    func getAvatarUrls() async throws -> [URL]
+    func getAvatarUrls() async throws -> [AvatarPair]
 }
 
 public protocol RoomActionRepositoryProtocol: Sendable {

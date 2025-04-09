@@ -1,3 +1,4 @@
+import ASEntity
 import ASLogKit
 import ASRepositoryProtocol
 import Foundation
@@ -5,8 +6,8 @@ import Foundation
 final class LoadingViewModel: @unchecked Sendable {
     private let avatarRepository: AvatarRepositoryProtocol
     private let dataDownloadRepository: DataDownloadRepositoryProtocol
-    private(set) var avatars: [URL] = []
-    private(set) var selectedAvatar: URL?
+    private(set) var avatars: [AvatarPair] = []
+    private(set) var selectedAvatar: AvatarPair?
 
     init(
         avatarRepository: AvatarRepositoryProtocol,
@@ -16,26 +17,30 @@ final class LoadingViewModel: @unchecked Sendable {
         self.dataDownloadRepository = dataDownloadRepository
         fetchAvatars()
     }
-    
+
     @Published var avatarData: Data?
-    
+
     func fetchAvatars() {
         Task {
             do {
                 avatars = try await avatarRepository.getAvatarUrls()
+                Logger.debug(avatars.map { ($0.lobby, $0.onboarding) })
 
                 guard let randomAvatarUrl = avatars.randomElement() else { return }
                 selectedAvatar = randomAvatarUrl
 
-                await withTaskGroup(of: Data?.self) { group in
-                    avatars.forEach { url in
+                await withTaskGroup(of: (Data?, Data?).self) { group in
+                    for avatar in avatars {
                         group.addTask { [weak self] in
-                            return await self?.dataDownloadRepository.downloadData(url: url)
+                            guard let self else { return (nil, nil) }
+                            async let onboardingData = dataDownloadRepository.downloadData(url: avatar.onboarding)
+                            async let lobbyData = dataDownloadRepository.downloadData(url: avatar.lobby)
+                            return await (onboardingData, lobbyData)
                         }
                     }
                 }
 
-                avatarData = await dataDownloadRepository.downloadData(url: randomAvatarUrl)
+                avatarData = await dataDownloadRepository.downloadData(url: randomAvatarUrl.onboarding)
             } catch {
                 ErrorHandler.handle(error)
             }

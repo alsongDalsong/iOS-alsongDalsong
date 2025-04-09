@@ -96,6 +96,7 @@
       }
     },
     "게임 데이터 불러오는 중" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -539,17 +540,6 @@
         }
       }
     },
-    "삶" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Life"
-          }
-        }
-      }
-    },
     "사냥꾼" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -557,6 +547,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hunter"
+          }
+        }
+      }
+    },
+    "삶" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Life"
           }
         }
       }
@@ -624,6 +625,7 @@
       }
     },
     "아바타 이미지 다운로드 중" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

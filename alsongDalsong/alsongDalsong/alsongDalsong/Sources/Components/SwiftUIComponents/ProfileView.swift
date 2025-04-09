@@ -56,7 +56,7 @@ struct ProfileView: View {
                 .padding(.bottom, 4)
             if let name {
                 Text(name)
-                    .foregroundStyle(isMyId ? .myIdForeground : .asBlack)
+                    .foregroundStyle(isMyId ? .asBlue : .asForeground)
                     .font(.doHyeon(size: 16))
                     .multilineTextAlignment(.center)
                     .lineLimit(2)

@@ -67,9 +67,9 @@ final class LobbyViewController: UIViewController {
                 textStyle: .largeTitle,
                 backgroundColor: .roomNumberButton,
                 cornerStyle: .large,
-                baseForegroundColor: .asBlack,
-                shadowColor: .backButtonShadow,
-                strokeColor: .backButtonShadow,
+                baseForegroundColor: .asForeground,
+                shadowColor: .buttonShadowWithLine,
+                strokeColor: .buttonShadowWithLine,
                 strokeWidth: 3
             )
         }
@@ -84,9 +84,9 @@ final class LobbyViewController: UIViewController {
             textStyle: .largeTitle,
             backgroundColor: .roomNumberButton,
             cornerStyle: .large,
-            baseForegroundColor: .asBlack,
-            shadowColor: .backButtonShadow,
-            strokeColor: .backButtonShadow,
+            baseForegroundColor: .asForeground,
+            shadowColor: .buttonShadowWithLine,
+            strokeColor: .buttonShadowWithLine,
             strokeWidth: 3
         )
 
@@ -97,14 +97,14 @@ final class LobbyViewController: UIViewController {
             backgroundColor: .inviteButton,
             cornerStyle: .large,
             baseForegroundColor: .tintColor,
-            shadowColor: .asShadow
+            shadowColor: .buttonShadowOfDefault
         )
 
         startButton.setConfiguration(
             systemImageName: "play.fill",
             text: "시작하기",
             backgroundColor: .asLightRed,
-            shadowColor: .redButtonShadow
+            shadowColor: .buttonShadowOfRed
         )
 
         view.addSubview(lobbyUIHostingController.view)

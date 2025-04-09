@@ -136,7 +136,7 @@ final class OnboardingViewController: UIViewController {
             textStyle: .title3,
             backgroundColor: .asLightRed,
             cornerStyle: .large,
-            shadowColor: .redButtonShadow
+            shadowColor: .buttonShadowOfRed
         )
         joinRoomButton.setConfiguration(
             systemImageName: "",
@@ -144,7 +144,7 @@ final class OnboardingViewController: UIViewController {
             textStyle: .title3,
             backgroundColor: .asLightSky,
             cornerStyle: .large,
-            shadowColor: .blueButtonShadow
+            shadowColor: .buttonShadowOfBlue
         )
     }
 

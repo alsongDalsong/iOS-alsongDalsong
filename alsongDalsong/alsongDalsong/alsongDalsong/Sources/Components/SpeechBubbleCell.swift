@@ -77,7 +77,7 @@ struct SpeechBubbleCell: View {
 
                     VStack(alignment: .leading) {
                         Text(music.title)
-                            .foregroundStyle(.asBlack)
+                            .foregroundStyle(.asForeground)
 
                         Text(music.artist)
                             .foregroundStyle(.gray)
@@ -89,7 +89,7 @@ struct SpeechBubbleCell: View {
                 }
             case let .record(record):
                 HStack {
-                    WaveFormWrapper(columns: record.recordAmplitudes, sampleCount: 24, circleColor: .asBlack, highlightColor: .asGreen)
+                    WaveFormWrapper(columns: record.recordAmplitudes, sampleCount: 24, circleColor: .asForeground, highlightColor: .asGreen)
                         .frame(width: 200)
                     Spacer()
                 }

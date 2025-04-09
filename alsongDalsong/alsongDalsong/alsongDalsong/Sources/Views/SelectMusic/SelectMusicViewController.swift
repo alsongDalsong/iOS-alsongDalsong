@@ -39,7 +39,7 @@ final class SelectMusicViewController: UIViewController {
     
     private func setupUI() {
         view.backgroundColor = .asBackground
-        submitButton.setConfiguration(text: String(localized: "선택 완료"), backgroundColor: .asGreen)
+        submitButton.setConfiguration(text: String(localized: "선택 완료"), backgroundColor: .asGreen, shadowColor: .buttonShadowOfGreen)
         submitButton.setDisabledState()
         let musicView = SelectMusicView(viewModel: viewModel)
         selectMusicView = UIHostingController(rootView: musicView)

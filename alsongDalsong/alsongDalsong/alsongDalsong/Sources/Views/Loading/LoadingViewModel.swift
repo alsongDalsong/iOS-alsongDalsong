@@ -24,8 +24,6 @@ final class LoadingViewModel: @unchecked Sendable {
         Task {
             do {
                 avatars = try await avatarRepository.getAvatarUrls()
-                Logger.debug(avatars.map { ($0.lobby, $0.onboarding) })
-
                 guard let randomAvatarUrl = avatars.randomElement() else { return }
                 selectedAvatar = randomAvatarUrl
 

@@ -241,17 +241,6 @@ final class OnboardingViewController: UIViewController {
         navigateToLobby(with: number)
     }
 
-    private func setRandomNicknameIfEmpty() {
-        let trimmed = viewModel?.nickname.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-
-        if trimmed.isEmpty {
-            let randomNickname = NickNameGenerator.generate()
-            nickNamePanel.updateTextField(placeholder: randomNickname)
-            nickNamePanel.text = randomNickname
-            viewModel?.setNickname(with: randomNickname)
-        }
-    }
-
     private func isMicrophoneAuthorized() -> Bool {
         let status = AVCaptureDevice.authorizationStatus(for: .audio)
 

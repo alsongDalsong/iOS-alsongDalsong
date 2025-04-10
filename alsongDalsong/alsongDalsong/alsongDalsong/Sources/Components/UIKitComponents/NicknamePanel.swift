@@ -2,7 +2,6 @@ import UIKit
 
 final class NicknamePanel: UIView {
     private var textView = UITextView()
-    private var nickNameTextFieldMaxCount = 12
     private var nickNameTextFieldMaxLine = 3
 
     @Published var text: String?
@@ -47,6 +46,10 @@ final class NicknamePanel: UIView {
         textView.backgroundColor = .clear
         textView.isScrollEnabled = false
         textView.returnKeyType = .done
+
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
+
         updateTextField(placeholder: "캐릭터와닉네임을설정하라")
         addSubview(textView)
     }
@@ -74,13 +77,14 @@ extension NicknamePanel: UITextViewDelegate {
         guard let stringRange = Range(range, in: currentText) else { return false }
         let updatedText = currentText.replacingCharacters(in: stringRange, with: text)
 
-        if updatedText.count > nickNameTextFieldMaxCount {
+        let font = textView.font ?? UIFont.font(.tmonMonsori, ofSize: 80)
+        let textWidth = textView.bounds.width
+        let lineCount = numberOfLines(for: updatedText, font: font, maxWidth: textWidth)
+
+        if lineCount > nickNameTextFieldMaxLine {
             return false
         }
 
-        if updatedText.components(separatedBy: .newlines).count > nickNameTextFieldMaxLine {
-            return false
-        }
         return true
     }
 
@@ -93,5 +97,19 @@ extension NicknamePanel: UITextViewDelegate {
 
     func textViewDidChange(_ textView: UITextView) {
         text = textView.text ?? ""
+    }
+
+    private func numberOfLines(for text: String, font: UIFont, maxWidth: CGFloat) -> Int {
+        let attributes: [NSAttributedString.Key: Any] = [.font: font]
+        let constraintSize = CGSize(width: maxWidth, height: CGFloat.greatestFiniteMagnitude)
+
+        let boundingBox = (text as NSString).boundingRect(
+            with: constraintSize,
+            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            attributes: attributes,
+            context: nil
+        )
+
+        return Int(ceil(boundingBox.height / font.lineHeight))
     }
 }

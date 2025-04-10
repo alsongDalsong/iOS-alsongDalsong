@@ -82,6 +82,7 @@ extension NicknamePanel: UITextViewDelegate {
         let lineCount = numberOfLines(for: updatedText, font: font, maxWidth: textWidth)
 
         if lineCount > nickNameTextFieldMaxLine {
+            textView.shake()
             return false
         }
 

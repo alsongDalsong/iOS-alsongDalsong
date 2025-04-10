@@ -151,7 +151,7 @@ final class OnboardingViewController: UIViewController {
 
     private func bindViewModel() {
         bind(viewModel?.$nickname) { [weak self] nickname in
-            let isPlaceholder = nickname == "캐릭터와닉네임을선택하라"
+            let isPlaceholder = nickname == "캐릭터와닉네임을설정하라"
             self?.createRoomButton.isEnabled = !isPlaceholder
             self?.joinRoomButton.isEnabled = !isPlaceholder
         }

@@ -21,11 +21,7 @@ extension Font {
         return .custom("GmarketSansTTFBold", size: size)
     }
 
-    static func gmarketSansMedium(size: CGFloat) -> Font {
-        return .custom("GmarketSansTTFMedium", size: size)
-    }
-
-    static func gmarketSansLight(size: CGFloat) -> Font {
-        return .custom("GmarketSansTTFLight", size: size)
+    static func tmonMonsori(size: CGFloat) -> Font {
+        return .custom("TMONMonsori", size: size)
     }
 }

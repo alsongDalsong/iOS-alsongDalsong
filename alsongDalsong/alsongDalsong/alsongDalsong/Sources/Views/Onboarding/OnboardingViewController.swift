@@ -212,7 +212,6 @@ final class OnboardingViewController: UIViewController {
     }
 
     private func joinRoom(with roomNumber: String) {
-        setRandomNicknameIfEmpty()
         Task {
             do {
                 let number = try await viewModel?.joinRoom(roomNumber: roomNumber)

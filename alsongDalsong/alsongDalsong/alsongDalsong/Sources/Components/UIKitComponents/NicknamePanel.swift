@@ -46,6 +46,7 @@ final class NicknamePanel: UIView {
         backgroundColor = UIColor.clear
         textView.backgroundColor = .clear
         textView.isScrollEnabled = false
+        textView.returnKeyType = .done
         updateTextField(placeholder: "캐릭터와닉네임을설정하라")
         addSubview(textView)
     }
@@ -64,6 +65,11 @@ final class NicknamePanel: UIView {
 
 extension NicknamePanel: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n" {
+            textView.resignFirstResponder()
+            return false
+        }
+
         let currentText = textView.text ?? ""
         guard let stringRange = Range(range, in: currentText) else { return false }
         let updatedText = currentText.replacingCharacters(in: stringRange, with: text)

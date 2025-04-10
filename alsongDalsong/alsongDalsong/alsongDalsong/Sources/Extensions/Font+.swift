@@ -16,4 +16,16 @@ extension Font {
     static func riaSans(size: CGFloat) -> Font {
         return .custom("RiaSans-ExtraBold", size: size)
     }
+
+    static func gmarketSansBold(size: CGFloat) -> Font {
+        return .custom("GmarketSansTTFBold", size: size)
+    }
+
+    static func gmarketSansMedium(size: CGFloat) -> Font {
+        return .custom("GmarketSansTTFMedium", size: size)
+    }
+
+    static func gmarketSansLight(size: CGFloat) -> Font {
+        return .custom("GmarketSansTTFLight", size: size)
+    }
 }

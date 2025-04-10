@@ -57,12 +57,12 @@ struct ProfileView: View {
             if let name {
                 Text(name)
                     .foregroundStyle(isMyId ? .myIdForeground : .asBlack)
-                    .font(.riaSans(size: 11))
+                    .font(.gmarketSansBold(size: 11))
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
             } else {
                 Text("비어 있음")
-                    .font(.riaSans(size: 11))
+                    .font(.gmarketSansBold(size: 11))
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
             }

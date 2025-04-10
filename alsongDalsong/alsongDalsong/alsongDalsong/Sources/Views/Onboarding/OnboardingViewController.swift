@@ -85,7 +85,7 @@ final class OnboardingViewController: UIViewController {
             avatarView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             avatarView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             avatarViewBottomConstraint,
-            avatarView.heightAnchor.constraint(equalToConstant: 520),
+            avatarView.heightAnchor.constraint(equalToConstant: 510),
 
             createRoomButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             createRoomButton.widthAnchor.constraint(equalTo: joinRoomButton.widthAnchor),

@@ -22,10 +22,10 @@ final class NicknamePanel: UIView {
     func updateTextField(placeholder: String) {
         let paragrapthStyle = NSMutableParagraphStyle()
         paragrapthStyle.alignment = .center
-        paragrapthStyle.lineSpacing = -38
+        paragrapthStyle.lineSpacing = -20
 
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.font(.riaSans, ofSize: 80),
+            .font: UIFont.font(.tmonMonsori, ofSize: 80),
             .foregroundColor: UIColor.onboardingForeground,
             .paragraphStyle: paragrapthStyle,
         ]
@@ -46,7 +46,7 @@ final class NicknamePanel: UIView {
         backgroundColor = UIColor.clear
         textView.backgroundColor = .clear
         textView.isScrollEnabled = false
-        updateTextField(placeholder: "캐릭터와닉네임을선택하라")
+        updateTextField(placeholder: "캐릭터와닉네임을설정하라")
         addSubview(textView)
     }
     

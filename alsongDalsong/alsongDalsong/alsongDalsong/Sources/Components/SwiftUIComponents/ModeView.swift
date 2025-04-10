@@ -33,9 +33,6 @@ struct ModeView: View {
                 frontCard
             } else {
                 backCard
-                    .overlay(
-                        viewModel.selectedCard.isOpened ? nil : lockedView
-                    )
             }
         }
         .rotation3DEffect(
@@ -43,41 +40,21 @@ struct ModeView: View {
             axis: (x: 0, y: 1, z: 0),
             perspective: 0.5
         )
-        .frame(width: width)
         .onTapGesture {
             withAnimation(.easeInOut(duration: 0.8)) {
                 viewModel.flipCard()
             }
         }
+        .frame(width: width)
     }
 }
 
 private extension ModeView {
-    var lockedView: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 30)
-                .fill(.ultraThinMaterial)
-                .overlay(Color.black.opacity(0.4))
-                .clipShape(RoundedRectangle(cornerRadius: 30))
-            VStack(spacing: 12) {
-                Image(systemName: "lock.fill")
-                    .font(.system(size: 30, weight: .bold))
-                    .foregroundColor(.white)
-                
-                Text("곧 출시 예정입니다")
-                    .font(.system(size: 20))
-                    .fontWeight(.bold)
-                    .foregroundColor(.white.opacity(0.8))
-            }
-        }
-    }
-    
     var cardBaseView: some View {
         Image(viewModel.selectedCard.mode.imageName)
             .resizable()
             .scaledToFit()
-            .blur(radius: viewModel.selectedCard.isFaceUp ? 0 : 10)
-            .cornerRadius(30)
+            .clipShape(.rect(cornerRadius: 30, style: .continuous))
             .shadow(color: Color.black.opacity(0.25), radius: 4, x: 0, y: 4)
     }
     
@@ -92,16 +69,18 @@ private extension ModeView {
     }
     
     var frontOverlay: some View {
-        ZStack {
+        VStack {
             VStack(alignment: .leading) {
                 HStack {
                     Image(systemName: "clock")
+                    
                     Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.duration))
                         .font(.doHyeon(size: 20))
                 }
                 
                 HStack {
                     Image(systemName: "person.fill")
+                    
                     Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.recommendedPlayers))
                         .font(.doHyeon(size: 20))
                 }
@@ -121,36 +100,55 @@ private extension ModeView {
             }
             .padding(.bottom, 25)
             .padding(.leading, 24)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+            .frame(maxWidth: .infinity, alignment: .bottomLeading)
         }
         .foregroundStyle(.white)  //TO-DO
     }
     
     var backOverlay: some View {
-        ZStack(alignment: .topLeading) {
-            RoundedRectangle(cornerRadius: 30)
-                .fill(Color.white.opacity(0.05))
-                .overlay(
-                    VStack(alignment: .leading, spacing: 50) {
-                        Text(viewModel.selectedCard.mode.title)
-                            .font(.doHyeon(size: 40))
-                            .padding(.top, 50)
-                        
-                        VStack(alignment: .leading, spacing: 20) {
-                            Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.description))
-                                .font(.system(size: 16))
-                                .fontWeight(.medium)
-                                .lineSpacing(5)
-                            
-                            Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.footerText))
-                                .font(.system(size: 13))
-                                .lineSpacing(5)
-                                .opacity(0.7)
-                        }
-                    }
-                        .padding(.horizontal, 28)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                )
+        VStack {
+            if viewModel.selectedCard.isOpened {
+                descriptionView
+            } else {
+                lockedView
+            }
         }
+    }
+    
+    var descriptionView: some View {
+        RoundedRectangle(cornerRadius: 30, style: .continuous)
+            .fill(.ultraThinMaterial)
+            .overlay(alignment: .topLeading) {
+                VStack(alignment: .leading) {
+                    Text(viewModel.selectedCard.mode.title)
+                        .font(.doHyeon(size: 40))
+                    
+                    Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.description))
+                        .font(.system(size: 18))
+                        .fontWeight(.medium)
+                        .lineSpacing(6)
+                        .frame(maxHeight: .infinity)
+                }
+                .padding(.vertical, 50)
+                .padding(.horizontal, 28)
+            }
+    }
+    
+    var lockedView: some View {
+        Rectangle()
+            .fill(.ultraThinMaterial)
+            .overlay(Color.black.opacity(0.3))
+            .clipShape(.rect(cornerRadius: 30, style: .continuous))
+            .overlay {
+                VStack(spacing: 12) {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 40, weight: .bold))
+                    
+                    Text("곧 출시 예정입니다")
+                        .font(.system(size: 18))
+                        .fontWeight(.medium)
+                }
+                .foregroundColor(.white)
+            }
     }
 }

@@ -233,14 +233,12 @@ final class OnboardingViewController: UIViewController {
     }
 
     private func setNicknameAndCreateRoom() async throws {
-        setRandomNicknameIfEmpty()
-        do {
-            let number = try await viewModel?.createRoom()
-            guard let number else { return }
-            navigateToLobby(with: number)
-        } catch {
-            throw error
+        if let nickname = nickNamePanel.text, !nickname.isEmpty {
+            viewModel?.setNickname(with: nickname)
         }
+        let number = try await viewModel?.createRoom()
+        guard let number else { return }
+        navigateToLobby(with: number)
     }
 
     private func setRandomNicknameIfEmpty() {

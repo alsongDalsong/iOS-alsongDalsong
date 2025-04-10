@@ -3,6 +3,7 @@ import Foundation
 enum ASRepositoryError: LocalizedError {
     case submitMusic
     case getAvatarUrls
+    case getBgmUrl
     case postRecording, postResetGame
     case uploadRecording
     case createRoom, joinRoom(description: String), leaveRoom, observeRoomConnection, startGame, changeMode, changeRecordOrder, resetGame, kickUser, sendRequest(description: String)
@@ -12,6 +13,7 @@ enum ASRepositoryError: LocalizedError {
         switch self {
             case .submitMusic: "음악 제출 중 오류가 발생했습니다"
             case .getAvatarUrls: "아바타 URL을 가져오는 중 오류가 발생했습니다"
+            case .getBgmUrl: "BGM URL을 가져오는 중 오류가 발생했습니다"
             case .postRecording: "녹음을 업로드하는 중 오류가 발생했습니다"
             case .postResetGame: "게임 초기화 요청 중 오류가 발생했습니다"
             case .uploadRecording: "녹음 파일을 업로드하는 중 오류가 발생했습니다"

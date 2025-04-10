@@ -7,22 +7,26 @@ final class OnboardingViewModel: @unchecked Sendable {
     private let roomActionRepository: RoomActionRepositoryProtocol
     private let dataDownloadRepository: DataDownloadRepositoryProtocol
     private var avatars: [URL] = []
+    private var bgm: URL?
     private var selectedAvatar: URL?
 
     @Published var nickname: String = NickNameGenerator.generate()
     @Published var avatarData: Data?
+    @Published var bgmData: Data?
     @Published var buttonEnabled: Bool = true
 
     init(roomActionRepository: RoomActionRepositoryProtocol,
          dataDownloadRepository: DataDownloadRepositoryProtocol,
          avatars: [URL],
          selectedAvatar: URL?,
-         avatarData: Data?
-    ) {
+         bgmData: Data?,
+         avatarData: Data?)
+    {
         self.roomActionRepository = roomActionRepository
         self.dataDownloadRepository = dataDownloadRepository
         self.avatars = avatars
         self.selectedAvatar = selectedAvatar
+        self.bgmData = bgmData
         self.avatarData = avatarData
     }
 
@@ -36,6 +40,12 @@ final class OnboardingViewModel: @unchecked Sendable {
             guard let randomAvatarUrl = filteredAvatars.randomElement() else { return }
             selectedAvatar = randomAvatarUrl
             avatarData = await dataDownloadRepository.downloadData(url: randomAvatarUrl)
+        }
+    }
+
+    func playBgm() {
+        Task {
+            await AudioHelper.shared.startPlaying(bgmData, option: .full)
         }
     }
 

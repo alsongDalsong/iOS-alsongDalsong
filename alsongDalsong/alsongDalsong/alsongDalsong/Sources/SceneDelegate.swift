@@ -27,9 +27,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         HapticManager.shared.prepare()
         
         let avatarRepository = DIContainer.shared.resolve(AvatarRepositoryProtocol.self)
+        let bgmRepository = DIContainer.shared.resolve(BgmRepositoryProtocol.self)
         let dataDownloadRepository = DIContainer.shared.resolve(DataDownloadRepositoryProtocol.self)
         let loadingVM = LoadingViewModel(
             avatarRepository: avatarRepository,
+            bgmRepository: bgmRepository,
             dataDownloadRepository: dataDownloadRepository
         )
         

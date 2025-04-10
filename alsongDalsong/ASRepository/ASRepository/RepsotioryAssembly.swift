@@ -31,6 +31,13 @@ public struct RepsotioryAssembly: Assembly {
             )
         }
 
+        container.register(BgmRepositoryProtocol.self) { r in
+            let storageManager = r.resolve(ASFirebaseStorageProtocol.self)
+            return BgmRepository(
+                storageManager: storageManager
+            )
+        }
+
         container.register(GameStatusRepositoryProtocol.self) { r in
             let mainRepository = r.resolve(MainRepositoryProtocol.self)
             return GameStatusRepository(
@@ -90,7 +97,7 @@ public struct RepsotioryAssembly: Assembly {
                 mainRepository: mainRepository
             )
         }
-        
+
         container.register(DataDownloadRepositoryProtocol.self) { r in
             let networkManager = r.resolve(ASNetworkManagerProtocol.self)
             return DataDownloadRepository(

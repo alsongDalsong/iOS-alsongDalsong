@@ -15,6 +15,7 @@ struct OnboardingPreview: PreviewProvider {
             dataDownloadRepository: dataDownloadRepository,
             avatars: [],
             selectedAvatar: nil,
+            bgmData: nil,
             avatarData: nil
         )
         return OnboardingViewController(

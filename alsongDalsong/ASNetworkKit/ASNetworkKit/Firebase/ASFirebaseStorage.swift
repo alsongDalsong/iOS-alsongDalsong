@@ -16,9 +16,21 @@ final class ASFirebaseStorage: ASFirebaseStorageProtocol {
         }
     }
     
+    func getBgmUrl(for path: String) async throws -> URL? {
+        let bgmRef = storageRef.child("bgm").child(path)
+        
+        do {
+            let bgmResult = try await bgmRef.listAll()
+            return try await fetchDownloadURLs(from: bgmResult.items).first
+        } catch {
+            ErrorHandler.handle(error)
+            throw ASNetworkError.getBgmUrls
+        }
+    }
+    
     private func fetchDownloadURLs(from items: [StorageReference]) async throws -> [URL] {
         try await withThrowingTaskGroup(of: URL.self) { taskGroup in
-            items.forEach { item in
+            for item in items {
                 taskGroup.addTask {
                     try await item.downloadURL()
                 }

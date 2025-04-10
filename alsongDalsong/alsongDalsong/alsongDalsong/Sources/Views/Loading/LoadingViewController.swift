@@ -70,10 +70,11 @@ final class LoadingViewController: UIViewController {
         bind(viewModel?.$avatarData) { [weak self] avatarData in
             guard let avatarData,
                   let avatars = self?.viewModel?.avatars,
+                  let bgmData = self?.viewModel?.bgmData,
                   let selectedAvatar = self?.viewModel?.selectedAvatar else { return }
-            
+                
             self?.titleLabelAnimation {
-                self?.navigateToOnboarding(avatars: avatars, selectedAvatar: selectedAvatar, avatarData: avatarData)
+                self?.navigateToOnboarding(avatars: avatars, selectedAvatar: selectedAvatar, bgmData: bgmData, avatarData: avatarData)
             }
         }
     }
@@ -114,7 +115,7 @@ final class LoadingViewController: UIViewController {
         animator.startAnimation()
     }
     
-    private func navigateToOnboarding(avatars: [URL], selectedAvatar: URL, avatarData: Data) {
+    private func navigateToOnboarding(avatars: [URL], selectedAvatar: URL, bgmData: Data, avatarData: Data) {
         let roomActionRepository = DIContainer.shared.resolve(RoomActionRepositoryProtocol.self)
         let dataDownloadRepository = DIContainer.shared.resolve(DataDownloadRepositoryProtocol.self)
         
@@ -123,6 +124,7 @@ final class LoadingViewController: UIViewController {
             dataDownloadRepository: dataDownloadRepository,
             avatars: avatars,
             selectedAvatar: selectedAvatar,
+            bgmData: bgmData,
             avatarData: avatarData
         )
         let onboardingVC = OnboardingViewController(

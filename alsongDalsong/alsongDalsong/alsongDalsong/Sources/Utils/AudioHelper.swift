@@ -154,7 +154,7 @@ extension AudioHelper {
     }
 
     private func updatePlayIndex() {
-        cancellable = Timer.publish(every: 0.125, on: .main, in: .common)
+        cancellable = Timer.publish(every: 0.25, on: .main, in: .common)
             .autoconnect()
             .scan(0) { count, _ in
                 count + 1
@@ -278,7 +278,7 @@ extension AudioHelper {
 
     private func calculateAmplitude() {
         Logger.debug("진폭계산 시작")
-        cancellable = Timer.publish(every: 0.125, on: .main, in: .common)
+        cancellable = Timer.publish(every: 0.25, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
                 guard let self else { return }

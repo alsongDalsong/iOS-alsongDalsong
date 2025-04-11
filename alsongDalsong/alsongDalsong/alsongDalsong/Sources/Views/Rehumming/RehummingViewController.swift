@@ -4,7 +4,7 @@ final class RehummingViewController: UIViewController {
     private let progressBar = ProgressBar()
     private let scrollView = UIScrollView()
     private let musicPanel = MusicPanel()
-    private let hummingPanel = RecordingPanel(.asMint)
+    private let hummingPanel = RecordingPanel()
     private let recordButton = ASButton()
     private let submitButton = ASButton()
     private let submissionStatus = SubmissionStatusView()

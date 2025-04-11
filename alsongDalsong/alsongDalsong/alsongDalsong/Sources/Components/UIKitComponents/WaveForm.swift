@@ -9,7 +9,7 @@ final class WaveForm: UIView {
     private var circleColor: UIColor
     private var highlightColor: UIColor
 
-    init(numOfColumns: Int = 48, circleColor: UIColor = .white, highlightColor: UIColor = .black) {
+    init(numOfColumns: Int = 24, circleColor: UIColor = .profileViewCircle, highlightColor: UIColor = .black) {
         self.numOfColumns = numOfColumns
         self.circleColor = circleColor
         self.highlightColor = highlightColor
@@ -17,8 +17,8 @@ final class WaveForm: UIView {
     }
 
     required init?(coder: NSCoder) {
-        numOfColumns = 48
-        circleColor = .white
+        numOfColumns = 24
+        circleColor = .profileViewCircle
         highlightColor = .black
         super.init(coder: coder)
     }
@@ -41,7 +41,7 @@ final class WaveForm: UIView {
     }
     
     private func drawVisualizerCircles() {
-        let diameter = bounds.width / CGFloat(2 * numOfColumns + 1)
+        let diameter = bounds.width / CGFloat(numOfColumns + numOfColumns / 2 + 1)
         columnWidth = diameter
         let startingPointY = bounds.midY - diameter / 2
         var startingPointX = bounds.minX + diameter
@@ -57,7 +57,7 @@ final class WaveForm: UIView {
 
             layer.addSublayer(circleLayer)
             columns.append(circleLayer)
-            startingPointX += 2 * diameter
+            startingPointX += diameter * 1.5
         }
     }
 

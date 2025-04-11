@@ -573,6 +573,17 @@
         }
       }
     },
+    "삶" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Life"
+          }
+        }
+      }
+    },
     "선택 완료" : {
       "localizations" : {
         "en" : {
@@ -620,17 +631,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sonny"
-          }
-        }
-      }
-    },
-    "아바타 이미지 다운로드 중" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Downloading avatar image"
           }
         }
       }

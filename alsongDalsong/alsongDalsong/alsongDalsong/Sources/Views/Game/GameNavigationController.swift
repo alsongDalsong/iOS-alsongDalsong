@@ -73,7 +73,7 @@ final class GameNavigationController: @unchecked Sendable {
 
     private func setupNavigationBar(for viewController: UIViewController) {
         navigationController.navigationBar.isHidden = false
-        navigationController.navigationBar.tintColor = .asBlack
+        navigationController.navigationBar.tintColor = .asForeground
         let fontStyle = setFont()
         navigationController.navigationBar.titleTextAttributes = [.font: fontStyle]
 
@@ -97,9 +97,9 @@ final class GameNavigationController: @unchecked Sendable {
             backgroundColor: .backButtonBackground,
             cornerStyle: .large,
             baseForegroundColor: .backButtonForeground,
-            shadowColor: .backButtonShadow,
+            shadowColor: .buttonShadowWithLine,
             shadowHeight: 4,
-            strokeColor: .backButtonShadow,
+            strokeColor: .buttonShadowWithLine,
             strokeWidth: 3
         )
         backButton.translatesAutoresizingMaskIntoConstraints = false

@@ -34,7 +34,7 @@ final class ASButton: UIButton {
         backgroundColor: UIColor? = nil,
         cornerStyle: UIButton.Configuration.CornerStyle = .large,
         baseForegroundColor: UIColor = .white,
-        shadowColor: UIColor = .asShadow,
+        shadowColor: UIColor = .buttonShadowOfDefault,
         shadowHeight: CGFloat = 8,
         strokeColor: UIColor? = nil,
         strokeWidth: CGFloat = 0
@@ -56,7 +56,8 @@ final class ASButton: UIButton {
 
     /// 버튼의 UI 관련한 Configuration을 설정하는 메서드
     func setConfiguration(
-        _ type: ASButtonType? = nil
+        _ type: ASButtonType? = nil,
+        shadowHeight: CGFloat = 8
     ) {
         configurationData = ASButtonConfiguration(
             systemImageName: type?.systemImage,
@@ -65,7 +66,7 @@ final class ASButton: UIButton {
             backgroundColor: type?.backgroundColor,
             cornerStyle: type?.cornerStyle ?? .medium
         )
-        setShadow(color: (type?.shadowColor) ?? .asShadow, width: 0, radius: 8)
+        setShadow(color: (type?.shadowColor) ?? .buttonShadowOfDefault, width: 0, height: shadowHeight)
         applyConfiguration()
     }
 
@@ -77,7 +78,7 @@ final class ASButton: UIButton {
             .receive(on: DispatchQueue.main)
             .compactMap { $0 }
             .sink { [weak self] _ in
-                self?.configuration?.baseBackgroundColor = baseBackgroundColor
+                self?.setConfiguration(backgroundColor: baseBackgroundColor, shadowColor: .buttonShadowOfGreen)
                 self?.isEnabled = true
             }
             .store(in: &cancellables)
@@ -93,7 +94,7 @@ final class ASButton: UIButton {
             cornerStyle: configurationData?.cornerStyle ?? .medium,
             baseForegroundColor: configurationData?.baseForegroundColor ?? .white
         )
-        setShadow(color: .asShadow, width: 0, height: 8)
+        setShadow(color: .buttonShadowOfDefault, width: 0)
         isEnabled = false
         applyConfiguration()
     }
@@ -135,14 +136,13 @@ final class ASButton: UIButton {
 
         var backgroundColor: UIColor? {
             switch self {
-                case .needMorePlayers: .asOrange
                 case .startRecord: .asLightRed
                 case .recording: .asLightRed
                 case .reRecord: .asLightRed
                 case .complete: .asYellow
                 case .submit: .asLightSky
                 case .startGame, .next: .asLightRed
-                case .endWaiting, .nextResultWaiting: .systemGray2
+                case .endWaiting, .nextResultWaiting, .needMorePlayers: .systemGray2
                 default: nil
             }
         }
@@ -157,30 +157,15 @@ final class ASButton: UIButton {
 
         var shadowColor: UIColor? {
             switch self {
-                case .needMorePlayers:
-                    .redButtonShadow
-                case .startRecord:
-                    .redButtonShadow
-                case .recording:
-                    .redButtonShadow
-                case .reRecord:
-                    .redButtonShadow
-                case .complete:
-                    .redButtonShadow
-                case .submit:
-                    .blueButtonShadow
-                case .submitted:
-                    .redButtonShadow
-                case .startGame:
-                    .redButtonShadow
-                case .startWaiting:
-                    .redButtonShadow
-                case .endWaiting:
-                    .redButtonShadow
-                case .next:
-                    .redButtonShadow
-                case .nextResultWaiting:
-                    .redButtonShadow
+            case .startRecord, .recording, .reRecord, .startGame, .next:
+                    .buttonShadowOfRed
+            case .complete:
+                    .buttonShadowOfYellow
+            case .submit:
+                    .buttonShadowOfBlue
+            case .submitted:
+                    .buttonShadowOfGreen
+            default: nil
             }
         }
     }

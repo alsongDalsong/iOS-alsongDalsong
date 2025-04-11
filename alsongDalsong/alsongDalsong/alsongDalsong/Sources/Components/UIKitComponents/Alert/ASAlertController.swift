@@ -103,7 +103,7 @@ class ASAlertController: UIViewController {
             textStyle: .title2,
             backgroundColor: reversedColor ? .asLightRed : .asLightSky,
             cornerStyle: .large,
-            shadowColor: reversedColor ? .redButtonShadow : .blueButtonShadow
+            shadowColor: reversedColor ? .buttonShadowOfRed : .buttonShadowOfBlue
         )
         primaryButton.addAction(UIAction { [weak self] _ in
             self?.dismiss(animated: true)
@@ -119,7 +119,7 @@ class ASAlertController: UIViewController {
             textStyle: .title2,
             backgroundColor: reversedColor ? .asLightSky : .asLightRed,
             cornerStyle: .large,
-            shadowColor: reversedColor ? .blueButtonShadow : .redButtonShadow
+            shadowColor: reversedColor ? .buttonShadowOfBlue : .buttonShadowOfRed
         )
         secondaryButton.addAction(UIAction { [weak self] _ in
             self?.dismiss(animated: true)

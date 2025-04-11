@@ -45,7 +45,7 @@ final class MusicPanelView: UIView {
         
         titleLabel.text = String(localized: "정답은...")
         titleLabel.font = .font(ofSize: 24)
-        titleLabel.textColor = .asBlack
+        titleLabel.textColor = .asForeground
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(titleLabel)
 
@@ -57,7 +57,7 @@ final class MusicPanelView: UIView {
         addSubview(albumImageView)
 
         musicNameLabel.font = .font(.wantedSansBold, ofSize: 24)
-        musicNameLabel.textColor = .asBlack
+        musicNameLabel.textColor = .asForeground
         musicNameLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(musicNameLabel)
 

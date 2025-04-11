@@ -16,7 +16,7 @@ final class ASTextField: UITextField {
         attributedPlaceholder = NSAttributedString(string: placeholder ?? "", attributes: [.foregroundColor: UIColor.lightGray])
         self.backgroundColor = backgroundColor
         font = UIFont.font(textFont, ofSize: textSize)
-        textColor = .asBlack
+        textColor = .asForeground
         attributedText?.addObserver(self, forKeyPath: "string", options: .new, context: nil)
         leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         leftViewMode = .always

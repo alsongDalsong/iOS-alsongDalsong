@@ -119,7 +119,7 @@ final class ASMusicPlayerView: UIView {
             animations: { [weak self] in
                 self?.playButton.transform = .identity
             }, completion: { [weak self] _ in
-                self?.playButton.configuration?.baseForegroundColor = self?.panelType == .large ? state.color : .asBlack
+                self?.playButton.configuration?.baseForegroundColor = self?.panelType == .large ? state.color : .asForeground
                 self?.playButton.configuration?.image = state.symbol
             }
         )

@@ -79,7 +79,7 @@ final class MediumAudioPlayerView: UIView {
             var buttonConfiguration = UIButton.Configuration.borderless()
             let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 18)
             buttonConfiguration.preferredSymbolConfigurationForImage = imageConfiguration
-            buttonConfiguration.baseForegroundColor = .asBlack
+            buttonConfiguration.baseForegroundColor = .asForeground
             buttonConfiguration.image = UIImage(systemName: "play.fill")
             
             if #available(iOS 17.0, *) { controlButton.isSymbolAnimationEnabled = true }

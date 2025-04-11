@@ -14,6 +14,12 @@ struct WaveFormWrapper: UIViewRepresentable {
     func updateUIView(_ uiView: WaveForm, context: Context) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             uiView.drawColumns(with: columns)
+            
+            for i in 0..<sampleCount {
+                DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.25) {
+                    uiView.updatePlayingIndex(i)
+                }
+            }
         }
     }
 }

@@ -89,7 +89,7 @@ struct SpeechBubbleCell: View {
                     .lineLimit(1)
                 }
         case let .record(record):
-            WaveFormWrapper(columns: record.recordAmplitudes, sampleCount: 24, circleColor: .asForeground, highlightColor: .asGreen)
+            WaveFormWrapper(columns: record.recordAmplitudes, sampleCount: 24, circleColor: .profileViewCircle, highlightColor: .asForeground)
         }
     }
 

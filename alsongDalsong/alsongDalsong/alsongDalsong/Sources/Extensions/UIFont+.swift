@@ -5,6 +5,8 @@ enum FontName: String {
     case neoDunggeunmoPro = "NeoDunggeunmoPro-Regular"
     case riaSans = "RiaSans-ExtraBold"
     case wantedSansBold = "wantedSans-Bold"
+    case gmarketSansBold = "GmarketSansTTFBold"
+    case tmonMonsori = "TmonMonsori"
 }
 
 extension UIFont {

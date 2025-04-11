@@ -14,7 +14,7 @@ final class OnboardingViewController: UIViewController {
     private var viewModel: OnboardingViewModel?
     private var gameNavigationController: GameNavigationController?
     private var cancellables = Set<AnyCancellable>()
-    private var shouldMoveKeyboard: Bool = true
+    private var shouldMoveKeyboard: Bool = false
 
     var avatarViewBottomConstraint: NSLayoutConstraint?
 
@@ -38,6 +38,7 @@ final class OnboardingViewController: UIViewController {
         setupButton()
         hideKeyboard()
         bindViewModel()
+        bindNicknamePanel()
         viewModel?.authorizeAppleMusic()
     }
 
@@ -77,14 +78,14 @@ final class OnboardingViewController: UIViewController {
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
 
             nickNamePanel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 70),
-            nickNamePanel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            nickNamePanel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            nickNamePanel.heightAnchor.constraint(equalToConstant: 280),
+            nickNamePanel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            nickNamePanel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            nickNamePanel.heightAnchor.constraint(equalToConstant: 300),
 
             avatarView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             avatarView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             avatarViewBottomConstraint,
-            avatarView.heightAnchor.constraint(equalToConstant: 520),
+            avatarView.heightAnchor.constraint(equalToConstant: 510),
 
             createRoomButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             createRoomButton.widthAnchor.constraint(equalTo: joinRoomButton.widthAnchor),
@@ -150,7 +151,9 @@ final class OnboardingViewController: UIViewController {
 
     private func bindViewModel() {
         bind(viewModel?.$nickname) { [weak self] nickname in
-            self?.nickNamePanel.updateTextField(placeholder: nickname)
+            let isPlaceholder = nickname == "캐릭터와닉네임을설정하라"
+            self?.createRoomButton.isEnabled = !isPlaceholder
+            self?.joinRoomButton.isEnabled = !isPlaceholder
         }
 
         bind(viewModel?.$avatarData) { [weak self] data in
@@ -171,6 +174,13 @@ final class OnboardingViewController: UIViewController {
         bind(viewModel?.$buttonEnabled) { [weak self] enabled in
             self?.createRoomButton.isEnabled = enabled
             self?.joinRoomButton.isEnabled = enabled
+        }
+    }
+
+    private func bindNicknamePanel() {
+        bind(nickNamePanel.$text) { [weak self] text in
+            guard let text = text else { return }
+            self?.viewModel?.setNickname(with: text)
         }
     }
 
@@ -214,16 +224,10 @@ final class OnboardingViewController: UIViewController {
     }
 
     private func autoJoinRoom() {
-        if let nickname = nickNamePanel.text, !nickname.isEmpty {
-            viewModel?.setNickname(with: nickname)
-        }
         joinRoom(with: inviteCode)
     }
 
     private func setNicknameAndJoinRoom(with roomNumber: String) {
-        if let nickname = nickNamePanel.text, !nickname.isEmpty {
-            viewModel?.setNickname(with: nickname)
-        }
         joinRoom(with: roomNumber)
     }
 
@@ -361,6 +365,7 @@ private extension OnboardingViewController {
     }
 
     @objc func didTapAvatarView(_ sender: UITapGestureRecognizer) {
+        view.endEditing(true)
         viewModel?.refreshAvatars()
     }
 }

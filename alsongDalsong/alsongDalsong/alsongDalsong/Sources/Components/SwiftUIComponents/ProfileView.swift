@@ -12,14 +12,13 @@ struct AsyncImageView: View {
                 Image(uiImage: uiImage)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
+                    .transition(.move(edge: .bottom))
             } else {
-                Image(systemName: "xmark")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .clipShape(Circle())
-                    .overlay(Circle().stroke(Color.white, lineWidth: 5))
+                Circle()
+                    .fill(.clear)
             }
         }
+        .animation(.linear(duration: 0.5), value: imageData)
         .onAppear {
             Task {
                 imageData = await imagePublisher(url)
@@ -41,6 +40,7 @@ struct ProfileView: View {
                 .background(Color.profileViewBackground)
                 .frame(width: 72, height: 72)
                 .clipShape(Circle())
+                .shadow(radius: 4, y: 8)
                 .overlay(
                     Circle().stroke(Color.profileViewCircle, lineWidth: 5)
                 )
@@ -51,8 +51,7 @@ struct ProfileView: View {
                         .offset(y: -20)
                         : nil
                 }
-                .shadow(radius: 2, y: 4)
-                .padding(.bottom, 4)
+                .padding(.bottom, 8)
             if let name {
                 Text(name)
                     .foregroundStyle(isMyId ? .asBlue : .asForeground)

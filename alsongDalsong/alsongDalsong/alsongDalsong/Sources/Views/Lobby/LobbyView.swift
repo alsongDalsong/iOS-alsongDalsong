@@ -55,6 +55,7 @@ struct LobbyView: View {
                 .padding(.top, 20)
                 .padding(.bottom, 12)
             }
+            .scrollIndicators(.hidden)
             VStack {
                 if viewModel.isHost {
                     GeometryReader { reader in

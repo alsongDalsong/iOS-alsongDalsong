@@ -12,7 +12,7 @@ public struct Player: Codable, Equatable, Identifiable, Sendable, Hashable {
         nickname: String? = nil,
         order: Int? = nil
     ) {
-        self.id = id
+        self.id = id	
         self.avatarUrl = avatarUrl
         self.nickname = nickname
         self.order = order

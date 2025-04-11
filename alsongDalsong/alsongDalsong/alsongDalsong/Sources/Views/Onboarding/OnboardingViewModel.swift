@@ -9,9 +9,9 @@ final class OnboardingViewModel: @unchecked Sendable {
     private var avatars: [URL] = []
     private var selectedAvatar: URL?
 
-    @Published var nickname: String = NickNameGenerator.generate()
+    @Published var nickname: String = ""
     @Published var avatarData: Data?
-    @Published var buttonEnabled: Bool = true
+    @Published var buttonEnabled: Bool = false
 
     init(roomActionRepository: RoomActionRepositoryProtocol,
          dataDownloadRepository: DataDownloadRepositoryProtocol,

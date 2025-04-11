@@ -56,13 +56,15 @@ struct ProfileView: View {
             if let name {
                 Text(name)
                     .foregroundStyle(isMyId ? .myIdForeground : .asBlack)
-                    .font(.doHyeon(size: 16))
+                    .font(.tmonMonsori(size: 11))
                     .multilineTextAlignment(.center)
+                    .frame(width: 68)
                     .lineLimit(2)
             } else {
                 Text("비어 있음")
-                    .font(.doHyeon(size: 16))
+                    .font(.tmonMonsori(size: 11))
                     .multilineTextAlignment(.center)
+                    .frame(width: 68)
                     .lineLimit(2)
             }
         }

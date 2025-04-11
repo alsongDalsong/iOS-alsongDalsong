@@ -12,4 +12,16 @@ extension Font {
     static func wantedSansBold(size: CGFloat) -> Font {
         .custom("wantedSans-Bold", size: size)
     }
+
+    static func riaSans(size: CGFloat) -> Font {
+        return .custom("RiaSans-ExtraBold", size: size)
+    }
+
+    static func gmarketSansBold(size: CGFloat) -> Font {
+        return .custom("GmarketSansTTFBold", size: size)
+    }
+
+    static func tmonMonsori(size: CGFloat) -> Font {
+        return .custom("TMONMonsori", size: size)
+    }
 }

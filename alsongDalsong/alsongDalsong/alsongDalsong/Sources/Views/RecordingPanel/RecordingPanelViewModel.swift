@@ -2,7 +2,7 @@ import Combine
 import Foundation
 
 final class RecordingPanelViewModel: @unchecked Sendable {
-    private let sampleCount: Int = 48
+    private let sampleCount: Int = 24
     @Published var recordedData: Data?
     @Published private(set) var recorderAmplitude: Float = 0.0
     @Published private(set) var buttonState: AudioButtonState = .idle

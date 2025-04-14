@@ -14,7 +14,7 @@ enum AudioButtonState {
     var color: UIColor {
         switch self {
             case .recording: .systemRed
-            default: .white
+            default: .asForeground
         }
     }
 }

@@ -35,16 +35,15 @@ struct SpeechBubbleCell: View {
     }
 
     var body: some View {
-        if alignment == .left {
-            HStack(spacing: 12) {
-                avatarView(info: playerInfo)
+        HStack(alignment: .top, spacing: 12) {
+            if alignment == .left {
                 speechBubble
             }
-        }
-        if alignment == .right {
-            HStack(spacing: 12) {
+            
+            avatarView(info: playerInfo)
+            
+            if alignment == .right {
                 speechBubble
-                avatarView(info: playerInfo)
             }
         }
     }
@@ -53,15 +52,19 @@ struct SpeechBubbleCell: View {
     private var speechBubble: some View {
         ZStack {
             contentView
-                .padding(.bottom, 8)
-                .padding(.leading, alignment == .left ? 36 : 0)
-                .frame(width: 230, height: messageType.bubbleHeight)
-                .bubbleStyle(
-                    alignment: alignment,
-                    fillColor: .asSystem,
-                    borderColor: .black,
-                    lineWidth: 5
-                )
+                .padding(12)
+                .frame(height: messageType.bubbleHeight)
+                .frame(maxWidth: .infinity)
+                .background {
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(lineWidth: 4)
+                        .foregroundStyle(.profileViewCircle)
+                }
+                .background {
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(.asSystem)
+                        .shadow(color: .asShadow, radius: 2, y: 4)
+                }
         }
     }
 
@@ -81,17 +84,11 @@ struct SpeechBubbleCell: View {
                         Text(music.artist)
                             .foregroundStyle(.gray)
                     }
-                    .frame(width: 130)
                     .font(.wantedSansBold(size: 20))
                     .lineLimit(1)
-                    Spacer()
                 }
-            case let .record(record):
-                HStack {
-                    WaveFormWrapper(columns: record.recordAmplitudes, sampleCount: 24, circleColor: .asForeground, highlightColor: .asGreen)
-                        .frame(width: 200)
-                    Spacer()
-                }
+        case let .record(record):
+            WaveFormWrapper(columns: record.recordAmplitudes, sampleCount: 24, circleColor: .profileViewCircle, highlightColor: .asForeground)
         }
     }
 
@@ -121,70 +118,5 @@ struct SpeechBubbleCell: View {
         Image(uiImage: UIImage(data: music.artworkData) ?? UIImage())
             .resizable()
             .aspectRatio(contentMode: .fill)
-    }
-}
-
-struct BubbleShape: Shape {
-    let alignment: MessageAlignment
-
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        if alignment == .right {
-            addSpeechTailRight(&path, in: rect)
-            addRoundedBody(&path, in: rect, isRight: true)
-        } else {
-            addRoundedBody(&path, in: rect, isRight: false)
-            addSpeechTailLeft(&path, in: rect)
-        }
-        path.closeSubpath()
-        return path
-    }
-
-    private func addSpeechTailRight(_ path: inout Path, in rect: CGRect) {
-        path.move(to: CGPoint(x: rect.maxX - 40, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.maxX - 8, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.maxX - 20, y: rect.minY + 16))
-        path.addLine(to: CGPoint(x: rect.maxX - 40, y: rect.minY))
-    }
-
-    private func addSpeechTailLeft(_ path: inout Path, in rect: CGRect) {
-        path.move(to: CGPoint(x: rect.minX + 8, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.minX + 40, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.minX + 20, y: rect.minY + 16))
-        path.addLine(to: CGPoint(x: rect.minX + 8, y: rect.minY))
-    }
-
-    private func addRoundedBody(_ path: inout Path, in rect: CGRect, isRight: Bool) {
-        let xOffset: CGFloat = isRight ? -10 : 20
-        path.addRoundedRect(
-            in: CGRect(x: rect.minX + xOffset, y: rect.minY, width: rect.width - 10, height: rect.height - 10),
-            cornerSize: CGSize(width: 12, height: 12)
-        )
-    }
-}
-
-struct BubbleBackgroundModifier: ViewModifier {
-    let alignment: MessageAlignment
-    let fillColor: Color
-    let borderColor: Color
-    let lineWidth: CGFloat
-
-    func body(content: Content) -> some View {
-        content
-            .background(
-                ZStack {
-                    BubbleShape(alignment: alignment)
-                        .stroke(borderColor, lineWidth: lineWidth)
-                    BubbleShape(alignment: alignment)
-                        .fill(fillColor)
-                        .shadow(color: .asShadow, radius: 0, x: 6, y: 6)
-                }
-            )
-    }
-}
-
-extension View {
-    func bubbleStyle(alignment: MessageAlignment, fillColor: Color, borderColor: Color, lineWidth: CGFloat) -> some View {
-        modifier(BubbleBackgroundModifier(alignment: alignment, fillColor: fillColor, borderColor: borderColor, lineWidth: lineWidth))
     }
 }

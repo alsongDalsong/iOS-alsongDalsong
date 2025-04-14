@@ -4,13 +4,11 @@ import UIKit
 final class RecordingPanel: UIView {
     private let playButton = UIButton()
     private let waveFormView = WaveForm()
-    private let customBackgroundColor: UIColor
     private let viewModel = RecordingPanelViewModel()
     private var cancellables = Set<AnyCancellable>()
     var onRecordingFinished: ((Data) -> Void)?
 
-    init(_ color: UIColor = .asMint) {
-        customBackgroundColor = color
+    init() {
         super.init(frame: .zero)
         setupButton()
         setupUI()
@@ -19,7 +17,6 @@ final class RecordingPanel: UIView {
     }
 
     required init?(coder: NSCoder) {
-        customBackgroundColor = .asMint
         super.init(coder: coder)
         setupUI()
         setupLayout()
@@ -88,7 +85,7 @@ final class RecordingPanel: UIView {
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular)
         buttonConfiguration.image = viewModel.buttonState.symbol
         buttonConfiguration.preferredSymbolConfigurationForImage = imageConfig
-        buttonConfiguration.baseForegroundColor = .white
+        buttonConfiguration.baseForegroundColor = .asForeground
         buttonConfiguration.contentInsets = .zero
         buttonConfiguration.background.backgroundColorTransformer = UIConfigurationColorTransformer { color in
             color.withAlphaComponent(0.0)
@@ -122,8 +119,16 @@ final class RecordingPanel: UIView {
     }
 
     private func setupUI() {
-        layer.cornerRadius = 12
-        layer.backgroundColor = customBackgroundColor.cgColor
+        layer.borderWidth = 4
+        layer.borderColor = UIColor.profileViewCircle.cgColor
+        layer.backgroundColor = UIColor.asSystem.cgColor
+        layer.cornerRadius = 15
+        
+        layer.shadowColor = UIColor.asShadow.cgColor
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = CGSize(width: 0, height: 4)
+        layer.shadowRadius = 2
+        
         addSubview(playButton)
         addSubview(waveFormView)
     }
@@ -137,10 +142,10 @@ final class RecordingPanel: UIView {
             playButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
             playButton.widthAnchor.constraint(equalToConstant: 32),
 
-            waveFormView.leadingAnchor.constraint(equalTo: playButton.trailingAnchor, constant: 12),
+            waveFormView.leadingAnchor.constraint(equalTo: playButton.trailingAnchor, constant: 8),
             waveFormView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
             waveFormView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
-            waveFormView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+            waveFormView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
         ])
     }
 

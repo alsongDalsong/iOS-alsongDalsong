@@ -1,7 +1,7 @@
 import Accelerate
 import AVFoundation
 
-public class ASAudioVisualizer: @unchecked Sendable {
+public class ASAudioPlayerEngine: @unchecked Sendable {
     private enum PlayState {
         case play, pause, stop
     }
@@ -109,7 +109,7 @@ public class ASAudioVisualizer: @unchecked Sendable {
     }
 }
 
-extension ASAudioVisualizer {
+extension ASAudioPlayerEngine {
     private func fastFourierTransform(data: UnsafeMutablePointer<Float>, setup: OpaquePointer) -> [Float] {
         var realIn = [Float](repeating: 0, count: 1024)
         var imagIn = [Float](repeating: 0, count: 1024)

@@ -100,7 +100,7 @@ final class SamplePlayerViewModel: @unchecked Sendable {
     @Published var music: Music? = Music(id: "1422639704", title: "D (Half Moon) [feat. Gaeko]", artist: "DEAN", artworkUrl: URL(string: "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/8e/a2/d0/8ea2d001-0b52-a451-4a7c-de35d3502155/00602547860828.rgb.jpg/300x300bb.jpg"), previewUrl: URL(string: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/98/4f/8e/984f8e93-2901-c8b3-5883-8281b363f723/mzaf_11734879238275302685.plus.aac.p.m4a")!, artworkBackgroundColor: "#7A3B68")
     @Published var coverImageData: Data?
     
-    private let audioVisualizer = ASAudioVisualizer()
+    private let playerEngine = ASAudioPlayerEngine()
     private var isPlaying = false
     private var timer: Timer?
     
@@ -113,7 +113,7 @@ final class SamplePlayerViewModel: @unchecked Sendable {
     }
     
     deinit {
-        audioVisualizer.stop()
+        playerEngine.stop()
         timer?.invalidate()
     }
     
@@ -122,7 +122,7 @@ final class SamplePlayerViewModel: @unchecked Sendable {
         Task {
             guard let music, let url = music.previewUrl else { return }
             let (data, _) = try await URLSession.shared.data(from: url)
-            audioVisualizer.bind(data: data)
+            playerEngine.bind(data: data)
         }
     }
     
@@ -141,11 +141,11 @@ final class SamplePlayerViewModel: @unchecked Sendable {
             audioProgress = 0.0
             normalizedFrequencyAmplitudes = [0, 0, 0, 0, 0, 0]
             
-            audioVisualizer.stop()
+            playerEngine.stop()
             timer?.invalidate()
             buttonState = .play
         } else {
-            audioVisualizer.play()
+            playerEngine.play()
             updateAudioProgressAndNormalizedFrequencyAmplitudes()
             buttonState = .stop
         }
@@ -158,8 +158,8 @@ final class SamplePlayerViewModel: @unchecked Sendable {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
             DispatchQueue.main.async {
-                self?.audioProgress = self?.audioVisualizer.audioProgress ?? 0.0
-                self?.normalizedFrequencyAmplitudes = self?.audioVisualizer.normalizedFrequencyAmplitudes ?? []
+                self?.audioProgress = self?.playerEngine.audioProgress ?? 0.0
+                self?.normalizedFrequencyAmplitudes = self?.playerEngine.normalizedFrequencyAmplitudes ?? []
                 
                 if self?.audioProgress == 1 {
                     self?.audioProgress = 0.0

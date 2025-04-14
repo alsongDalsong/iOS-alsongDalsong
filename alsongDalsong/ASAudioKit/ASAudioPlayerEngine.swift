@@ -102,7 +102,10 @@ public class ASAudioPlayerEngine: @unchecked Sendable {
         
         guard let setup = vDSP_DFT_zop_CreateSetup(nil, length, direction) else { return }
 
-        audioEngine.mainMixerNode.installTap(onBus: 0, bufferSize: bufferSize, format: nil) { buffer, _ in
+        let mainMixer = audioEngine.mainMixerNode
+        mainMixer.removeTap(onBus: 0)
+        
+        mainMixer.installTap(onBus: 0, bufferSize: bufferSize, format: nil) { buffer, _ in
             guard let channelData = buffer.floatChannelData?[0] else { return }
             self.normalizedFrequencyAmplitudes = self.fastFourierTransform(data: channelData, setup: setup)
         }

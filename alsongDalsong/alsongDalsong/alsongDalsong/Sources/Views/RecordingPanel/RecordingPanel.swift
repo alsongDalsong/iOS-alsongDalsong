@@ -119,10 +119,10 @@ final class RecordingPanel: UIView {
     }
 
     private func setupUI() {
-        layer.borderWidth = 3
+        layer.borderWidth = 4
         layer.borderColor = UIColor.profileViewCircle.cgColor
         layer.backgroundColor = UIColor.asSystem.cgColor
-        layer.cornerRadius = 12
+        layer.cornerRadius = 15
         
         layer.shadowColor = UIColor.asShadow.cgColor
         layer.shadowOpacity = 0.5

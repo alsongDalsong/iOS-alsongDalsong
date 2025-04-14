@@ -35,16 +35,15 @@ struct SpeechBubbleCell: View {
     }
 
     var body: some View {
-        if alignment == .left {
-            HStack(spacing: 12) {
-                avatarView(info: playerInfo)
+        HStack(alignment: .top, spacing: 12) {
+            if alignment == .left {
                 speechBubble
             }
-        }
-        if alignment == .right {
-            HStack(spacing: 12) {
+            
+            avatarView(info: playerInfo)
+            
+            if alignment == .right {
                 speechBubble
-                avatarView(info: playerInfo)
             }
         }
     }
@@ -57,12 +56,12 @@ struct SpeechBubbleCell: View {
                 .frame(height: messageType.bubbleHeight)
                 .frame(maxWidth: .infinity)
                 .background {
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .stroke(lineWidth: 3)
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(lineWidth: 4)
                         .foregroundStyle(.profileViewCircle)
                 }
                 .background {
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .fill(.asSystem)
                         .shadow(color: .asShadow, radius: 2, y: 4)
                 }

@@ -65,20 +65,18 @@ final class MusicPanelViewModel: @unchecked Sendable {
     @MainActor
     func togglePlayPause(_ type: MusicPanelType) {
         Task { [weak self] in
-            guard let self else { return }
+            guard let self = self else { return }
             
             configureAudioHelper()
             
-            if buttonState == .playing {
-                await AudioHelper.shared.stopPlaying()
-                return
-            }
-            if buttonState == .idle {
-                await AudioHelper.shared.startPlaying(
-                    self.preview,
-                    sourceType: .imported(type)
-                )
-                return
+            switch buttonState {
+            case .playing:
+                AudioHelper.shared.stopEngine()
+                
+            case .idle:
+                AudioHelper.shared.playEngine(preview)
+                
+            default: break
             }
         }
     }

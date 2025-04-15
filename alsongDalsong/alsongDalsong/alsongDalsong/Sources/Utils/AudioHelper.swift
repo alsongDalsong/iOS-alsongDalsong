@@ -12,6 +12,7 @@ final class AudioHelper: @unchecked Sendable {
 
     // MARK: - Private properties
 
+    private let playerEngine = ASAudioPlayerEngine()
     private var recorder: ASAudioRecorder?
     private var player: ASAudioPlayer?
     private var source: FileSource = .imported(.large)
@@ -26,6 +27,8 @@ final class AudioHelper: @unchecked Sendable {
     private let waveformUpdateSubject = PassthroughSubject<Int, Never>()
     private let recorderStateSubject = PassthroughSubject<Bool, Never>()
     private let recorderDataSubject = PassthroughSubject<Data, Never>()
+    private let normalizedFrequencyAmplitudes = PassthroughSubject<[Float], Never>()
+    private let playerEnginePrgress = PassthroughSubject<Double, Never>()
     
     var amplitudePublisher: AnyPublisher<Float, Never> {
         amplitudeSubject.eraseToAnyPublisher()
@@ -45,6 +48,14 @@ final class AudioHelper: @unchecked Sendable {
 
     var recorderDataPublisher: AnyPublisher<Data, Never> {
         recorderDataSubject.eraseToAnyPublisher()
+    }
+    
+    var normalizedFrequencyAmplitudesPublisher: AnyPublisher<[Float], Never> {
+        normalizedFrequencyAmplitudes.eraseToAnyPublisher()
+    }
+    
+    var playerEnginePrgressPublisher: AnyPublisher<Double, Never> {
+        playerEnginePrgress.eraseToAnyPublisher()
     }
 
     var isRecording: Bool {
@@ -90,12 +101,65 @@ final class AudioHelper: @unchecked Sendable {
 // MARK: - Play Audio
 
 extension AudioHelper {
+    /// 오디오 엔진을 재생하는 함수
+    /// - Parameters:
+    ///   - data: 재생할 오디오 데이터
+    ///   - playType: 전체 또는 부분 재생 .full, .partial(time:)
+    ///   - needsFrequencyUpdate: 음악 플레이어 진폭 [0, 0, 0, 0 ,0 ,0] 업데이트
+    ///   - needsProgressUpdate: 음악 플레이 바 업데이트
+    func playEngine(
+        _ data: Data?,
+        playType: PlayType = .full,
+        needsFrequencyUpdate: Bool = false,
+        needsProgressUpdate: Bool = false
+    ) {
+        guard let data else{ return }
+        
+        Logger.debug(#function)
+
+        playerEngine.bind(data: data)
+        
+        switch playType {
+            
+        /// playType에 따라 전체 혹은 부분 재생
+        case .full:
+            playerEngine.play()
+            
+        case .partial(time: let time):
+            playerEngine.play()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(time)) { [weak self] in
+                self?.stopEngine()
+            }
+        }
+        
+        playerStateSubject.send((source, true))
+        
+        updateFrequencyAndProgress(
+            needsFrequencyUpdate: needsFrequencyUpdate,
+            needsProgressUpdate: needsProgressUpdate
+        )
+    }
+    
+    func stopEngine() {
+        Logger.debug(#function)
+
+        normalizedFrequencyAmplitudes.send([0, 0, 0, 0, 0 ,0])
+        playerEnginePrgress.send(0)
+        
+        playerEngine.stop()
+        
+        cancellable?.cancel()
+        cancellable = nil
+        
+        playerStateSubject.send((source, false))
+    }
+    
     /// 여러 조건을 적용해 오디오를 재생하는 함수
     /// - Parameters:
     ///   - file: 재생할 오디오 데이터
     ///   - source: 녹음 파일/url에서 가져온 파일
     ///   - playType: 전체 또는 부분 재생
-    ///   - allowsConcurrent: 녹음과 동시에 재생
     func startPlaying(_ file: Data?,
                       sourceType type: FileSource = .imported(.large),
                       option: PlayType = .full,
@@ -171,7 +235,7 @@ extension AudioHelper {
     private func checkPlayerState() async -> Bool {
         if await isPlaying {
             await player?.stopPlaying()
-            await removePlayer()
+            removePlayer()
             playerStateSubject.send((source, false))
         }
         return true
@@ -270,6 +334,33 @@ extension AudioHelper {
 // MARK: - Audio Visualize
 
 extension AudioHelper {
+    private func updateFrequencyAndProgress(
+        needsFrequencyUpdate: Bool,
+        needsProgressUpdate: Bool
+    ) {
+        guard needsFrequencyUpdate && needsProgressUpdate else { return }
+        
+        cancellable = Timer.publish(every: 0.2, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                if self?.playerEngine.audioProgress == 1 {
+                    self?.normalizedFrequencyAmplitudes.send([0, 0, 0, 0, 0 ,0])
+                    self?.playerEnginePrgress.send(0)
+                    
+                    self?.cancellable?.cancel()
+                    self?.cancellable = nil
+                }
+                
+                if needsFrequencyUpdate {
+                    self?.normalizedFrequencyAmplitudes.send(self?.playerEngine.normalizedFrequencyAmplitudes ?? [0, 0, 0, 0, 0 ,0])
+                }
+                
+                if needsProgressUpdate {
+                    self?.playerEnginePrgress.send(self?.playerEngine.audioProgress ?? 0)
+                }
+            }
+    }
+    
     private func visualize() {
         Task { [weak self] in
             self?.calculateAmplitude()

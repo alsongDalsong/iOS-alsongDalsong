@@ -1,8 +1,8 @@
 import SwiftUI
 import Charts
 
-struct AudioVisualizerView: View {
-    private let audioVisualizer = ASAudioVisualizer()
+struct AudioPlayerEngineView: View {
+    private let playerEngine = ASAudioPlayerEngine()
     private let timer = Timer.publish(every: 0.03, on: .main, in: .common).autoconnect()
     
     @State private var data: [Float] = Array(repeating: 0, count: 20)
@@ -15,16 +15,16 @@ struct AudioVisualizerView: View {
             HStack {
                 Button(isPlaying ? "Pause" : "Play", systemImage: isPlaying ? "pause.fill" : "play.fill") {
                     if isPlaying {
-                        audioVisualizer.pause()
+                        playerEngine.pause()
                     } else {
-                        audioVisualizer.play()
+                        playerEngine.play()
                     }
                     
                     isPlaying.toggle()
                 }
                 
                 Button("Stop", systemImage: "stop.fill") {
-                    audioVisualizer.stop()
+                    playerEngine.stop()
                     isPlaying = false
                     withAnimation {
                         data = Array(repeating: 0, count: 20)
@@ -45,13 +45,13 @@ struct AudioVisualizerView: View {
                 
                 Task {
                     let data = try await URLSession.shared.data(from: url)
-                    audioVisualizer.bind(data: data.0, sampleCount: 20)
+                    playerEngine.bind(data: data.0, sampleCount: 20)
                 }
             }
             .onReceive(timer) { _ in
                 if isPlaying {
                     withAnimation {
-                        data = audioVisualizer.normalizedFrequencyAmplitudes.map { $0 * 40 }
+                        data = playerEngine.normalizedFrequencyAmplitudes.map { $0 * 40 }
                     }
                 }
             }
@@ -68,5 +68,5 @@ struct AudioVisualizerView: View {
 }
 
 #Preview {
-    AudioVisualizerView()
+    AudioPlayerEngineView()
 }

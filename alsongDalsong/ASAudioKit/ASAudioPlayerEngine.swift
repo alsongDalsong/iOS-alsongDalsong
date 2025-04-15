@@ -1,7 +1,7 @@
 import Accelerate
 import AVFoundation
 
-public class ASAudioVisualizer: @unchecked Sendable {
+public class ASAudioPlayerEngine: @unchecked Sendable {
     private enum PlayState {
         case play, pause, stop
     }
@@ -102,14 +102,17 @@ public class ASAudioVisualizer: @unchecked Sendable {
         
         guard let setup = vDSP_DFT_zop_CreateSetup(nil, length, direction) else { return }
 
-        audioEngine.mainMixerNode.installTap(onBus: 0, bufferSize: bufferSize, format: nil) { buffer, _ in
+        let mainMixer = audioEngine.mainMixerNode
+        mainMixer.removeTap(onBus: 0)
+        
+        mainMixer.installTap(onBus: 0, bufferSize: bufferSize, format: nil) { buffer, _ in
             guard let channelData = buffer.floatChannelData?[0] else { return }
             self.normalizedFrequencyAmplitudes = self.fastFourierTransform(data: channelData, setup: setup)
         }
     }
 }
 
-extension ASAudioVisualizer {
+extension ASAudioPlayerEngine {
     private func fastFourierTransform(data: UnsafeMutablePointer<Float>, setup: OpaquePointer) -> [Float] {
         var realIn = [Float](repeating: 0, count: 1024)
         var imagIn = [Float](repeating: 0, count: 1024)

@@ -60,7 +60,7 @@ enum ResultPhase: Equatable {
     }
 }
 
-enum PlayType {
+enum PlayType: Equatable {
     case full
     case partial(time: Int)
 }

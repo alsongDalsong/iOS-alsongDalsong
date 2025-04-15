@@ -150,7 +150,12 @@ extension HummingResultViewModel {
     func startPlaying() async {
         let audioData = resultPhase.audioData(result)
         let playOption = resultPhase.playOption
-        await AudioHelper.shared.startPlaying(audioData, option: playOption)
+        
+        if playOption == .full {
+            await AudioHelper.shared.startPlaying(audioData, option: playOption)
+        } else {
+            AudioHelper.shared.playEngine(audioData, playType: playOption)
+        }
     }
 }
 

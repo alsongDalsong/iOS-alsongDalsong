@@ -17,8 +17,8 @@ final class OnboardingViewModel: @unchecked Sendable {
          dataDownloadRepository: DataDownloadRepositoryProtocol,
          avatars: [(onboarding: URL, lobby: URL)],
          selectedAvatar: (onboarding: URL, lobby: URL)?,
-         avatarData: Data?
-    ) {
+         avatarData: Data?)
+    {
         self.roomActionRepository = roomActionRepository
         self.dataDownloadRepository = dataDownloadRepository
         self.avatars = avatars
@@ -37,6 +37,10 @@ final class OnboardingViewModel: @unchecked Sendable {
             selectedAvatar = randomAvatarUrl
             avatarData = await dataDownloadRepository.downloadData(url: randomAvatarUrl.onboarding)
         }
+    }
+
+    func playBgm() {
+        AudioHelper.shared.playBgm(name: .onboarding)
     }
 
     @MainActor

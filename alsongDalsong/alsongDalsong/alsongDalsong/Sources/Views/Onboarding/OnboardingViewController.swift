@@ -40,6 +40,7 @@ final class OnboardingViewController: UIViewController {
         bindViewModel()
         bindNicknamePanel()
         viewModel?.authorizeAppleMusic()
+        viewModel?.playBgm()
     }
 
     override func viewWillAppear(_ animated: Bool) {

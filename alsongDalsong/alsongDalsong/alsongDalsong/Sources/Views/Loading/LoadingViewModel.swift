@@ -5,17 +5,21 @@ import Foundation
 
 final class LoadingViewModel: @unchecked Sendable {
     private let avatarRepository: AvatarRepositoryProtocol
+    private let bgmRepository: BgmRepositoryProtocol
     private let dataDownloadRepository: DataDownloadRepositoryProtocol
     private(set) var avatars: [AvatarPair] = []
     private(set) var selectedAvatar: AvatarPair?
 
     init(
         avatarRepository: AvatarRepositoryProtocol,
+        bgmRepository: BgmRepositoryProtocol,
         dataDownloadRepository: DataDownloadRepositoryProtocol
     ) {
         self.avatarRepository = avatarRepository
+        self.bgmRepository = bgmRepository
         self.dataDownloadRepository = dataDownloadRepository
         fetchAvatars()
+        fetchBgms()
     }
 
     @Published var avatarData: Data?
@@ -39,6 +43,25 @@ final class LoadingViewModel: @unchecked Sendable {
                 }
 
                 avatarData = await dataDownloadRepository.downloadData(url: randomAvatarUrl.onboarding)
+            } catch {
+                ErrorHandler.handle(error)
+            }
+        }
+    }
+
+    func fetchBgms() {
+        for name in Bgm.allCases {
+            addBgm(name: name)
+        }
+    }
+
+    private func addBgm(name: Bgm) {
+        Task {
+            do {
+                let bgm = try await bgmRepository.getBgmUrl(for: name.rawValue)
+                guard let bgmUrl = bgm else { return }
+                guard let bgmData = await dataDownloadRepository.downloadData(url: bgmUrl) else { return }
+                AudioHelper.shared.addBgmData(name: name, data: bgmData)
             } catch {
                 ErrorHandler.handle(error)
             }

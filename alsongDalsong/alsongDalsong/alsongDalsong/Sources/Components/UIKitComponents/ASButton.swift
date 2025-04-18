@@ -48,7 +48,9 @@ final class ASButton: UIButton {
             cornerStyle: cornerStyle,
             baseForegroundColor: baseForegroundColor,
             strokeColor: strokeColor,
-            strokeWidth: strokeWidth
+            strokeWidth: strokeWidth,
+            shadowColor: shadowColor,
+            shadowHeight: shadowHeight
         )
         setShadow(color: shadowColor, width: 0, height: shadowHeight)
         applyConfiguration()
@@ -64,21 +66,24 @@ final class ASButton: UIButton {
             text: type?.text,
             textStyle: type?.textStyle ?? .largeTitle,
             backgroundColor: type?.backgroundColor,
-            cornerStyle: type?.cornerStyle ?? .medium
+            cornerStyle: type?.cornerStyle ?? .medium,
+            shadowColor: type?.shadowColor ?? .buttonShadowOfDefault,
+            shadowHeight: shadowHeight
         )
         setShadow(color: (type?.shadowColor) ?? .buttonShadowOfDefault, width: 0, height: shadowHeight)
         applyConfiguration()
     }
 
     func bind(
-        to dataSource: Published<Data?>.Publisher,
-        baseBackgroundColor: UIColor = .asGreen
+        to dataSource: Published<Data?>.Publisher
     ) {
         dataSource
             .receive(on: DispatchQueue.main)
             .compactMap { $0 }
             .sink { [weak self] _ in
-                self?.setConfiguration(backgroundColor: baseBackgroundColor, shadowColor: .buttonShadowOfGreen)
+                let backgroundColor = self?.configurationData?.backgroundColor
+                let shadowColor = self?.configurationData?.shadowColor ?? .buttonShadowOfDefault
+                self?.setConfiguration(backgroundColor: backgroundColor, shadowColor: shadowColor)
                 self?.isEnabled = true
             }
             .store(in: &cancellables)
@@ -86,6 +91,7 @@ final class ASButton: UIButton {
 
     /// 버튼을 비활성화하면서 스타일을 변경하는 메서드입니다.
     func setDisabledState() {
+        let previousConfiguration = configurationData
         configurationData = ASButtonConfiguration(
             systemImageName: configurationData?.systemImageName,
             text: configurationData?.text,
@@ -97,6 +103,7 @@ final class ASButton: UIButton {
         setShadow(color: .buttonShadowOfDefault, width: 0)
         isEnabled = false
         applyConfiguration()
+        configurationData = previousConfiguration
     }
 
     enum ASButtonType {
@@ -111,39 +118,36 @@ final class ASButton: UIButton {
 
         var text: String {
             switch self {
-                case .needMorePlayers: String(localized: "게임 인원 부족")
-                case .startRecord: String(localized: "녹음하기")
-                case .recording: String(localized: "녹음중")
-                case .reRecord: String(localized: "재녹음")
-                case .complete: String(localized: "완료")
-                case .submit: String(localized: "제출하기")
-                case .submitted: String(localized: "제출 완료")
-                case .startGame: String(localized: "시작하기!")
-                case .startWaiting: String(localized: "시작 대기 중")
-                case .endWaiting: String(localized: "종료 대기 중")
-                case .next: String(localized: "다음으로")
-                case .nextResultWaiting: String(localized: "다음 결과 대기 중")
+            case .needMorePlayers: String(localized: "게임 인원 부족")
+            case .startRecord: String(localized: "녹음하기")
+            case .recording: String(localized: "녹음중")
+            case .reRecord: String(localized: "재녹음")
+            case .complete: String(localized: "완료")
+            case .submit: String(localized: "제출하기")
+            case .submitted: String(localized: "제출 완료")
+            case .startGame: String(localized: "시작하기!")
+            case .startWaiting: String(localized: "시작 대기 중")
+            case .endWaiting: String(localized: "종료 대기 중")
+            case .next: String(localized: "다음으로")
+            case .nextResultWaiting: String(localized: "다음 결과 대기 중")
             }
         }
 
         var systemImage: String? {
             switch self {
-                case .startGame, .next: "play.fill"
-                case .reRecord: "arrow.clockwise"
-                default: nil
+            case .startGame, .next: "play.fill"
+            case .reRecord: "arrow.clockwise"
+            default: nil
             }
         }
 
         var backgroundColor: UIColor? {
             switch self {
-                case .startRecord: .asLightRed
-                case .recording: .asLightRed
-                case .reRecord: .asLightRed
-                case .complete: .asYellow
-                case .submit: .asLightSky
-                case .startGame, .next: .asLightRed
-                case .endWaiting, .nextResultWaiting, .needMorePlayers: .systemGray2
-                default: nil
+            case .startRecord, .recording, .reRecord, .startGame, .next, .submitted: .asLightRed
+            case .complete: .asLightSky
+            case .submit: .asLightSky
+            case .endWaiting, .nextResultWaiting, .needMorePlayers: .systemGray2
+            default: nil
             }
         }
 
@@ -157,16 +161,26 @@ final class ASButton: UIButton {
 
         var shadowColor: UIColor? {
             switch self {
-            case .startRecord, .recording, .reRecord, .startGame, .next:
-                    .buttonShadowOfRed
-            case .complete:
-                    .buttonShadowOfYellow
-            case .submit:
-                    .buttonShadowOfBlue
-            case .submitted:
-                    .buttonShadowOfGreen
+            case .startRecord, .recording, .reRecord, .startGame, .next, .submitted:
+                .buttonShadowOfRed
+            case .submit, .complete:
+                .buttonShadowOfBlue
             default: nil
             }
+        }
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+        guard isEnabled else {
+            setShadow(color: .buttonShadowOfDefault, width: 0)
+            return
+        }
+        if let shadowColor = configurationData?.shadowColor {
+            let resolved = shadowColor.resolvedColor(with: traitCollection)
+            setShadow(color: resolved, width: 0)
         }
     }
 }
@@ -180,17 +194,16 @@ private extension ASButton {
     /// 버튼이 눌렸을 때 효과를 적용하는 메서드
     func applyHighlightEffect() {
         if isHighlighted {
-            transform = CGAffineTransform(translationX: 0, y: 8)
+            transform = CGAffineTransform(translationX: 0, y: configurationData?.shadowHeight ?? 8)
             layer.shadowOffset = .zero
         } else {
             transform = .identity
-            layer.shadowOffset = CGSize(width: 0, height: 8)
+            layer.shadowOffset = CGSize(width: 0, height: configurationData?.shadowHeight ?? 8)
         }
     }
 
     /// 버튼 초기설정을 담당하는 메서드
     func setupButton() {
-        setShadow()
         configurationUpdateHandler = { [weak self] _ in
             self?.applyHighlightEffect()
         }

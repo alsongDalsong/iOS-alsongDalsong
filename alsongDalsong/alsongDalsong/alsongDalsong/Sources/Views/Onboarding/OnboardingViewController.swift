@@ -309,18 +309,6 @@ private extension OnboardingViewController {
     private func observeKeyboard() {
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(keyboardWillShow(_:)),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillHide),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
             selector: #selector(appDidEnterBackground),
             name: UIApplication.didEnterBackgroundNotification,
             object: nil
@@ -340,24 +328,6 @@ private extension OnboardingViewController {
 
     @objc func dismissKeyboard() {
         view.endEditing(true)
-    }
-
-    @objc func keyboardWillShow(_ notification: NSNotification) {
-        guard shouldMoveKeyboard else { return }
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
-            let keyboardHeight = keyboardRectangle.height
-
-            UIView.animate(withDuration: 0.3) {
-                self.view.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
-            }
-        }
-    }
-
-    @objc func keyboardWillHide() {
-        UIView.animate(withDuration: 0.3) {
-            self.view.transform = .identity
-        }
     }
 
     @objc func appDidEnterBackground() {

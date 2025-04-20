@@ -33,22 +33,24 @@ final class LoadingViewController: UIViewController {
     }
     
     private func setupUI() {
+        let screenWidth = view.bounds.width
+        let screenHeight = view.bounds.height
         view.backgroundColor = .asBackground
         
         titleLabel.text = "알쏭달쏭"
-        titleLabel.font = .font(.riaSans, ofSize: 80)
+        titleLabel.font = .font(.riaSans, ofSize: Constants.titleLabelFontSize * screenWidth)
         titleLabel.textColor = .onboardingForeground
         
         subtitleLabel.text = "기다려라"
-        subtitleLabel.font = .font(.riaSans, ofSize: 20)
+        subtitleLabel.font = .font(.riaSans, ofSize: Constants.subtitleLabelFontSize * screenWidth)
         subtitleLabel.textColor = .onboardingForeground
                 
         activityIndicatorView.startAnimating()
         
         stackView.axis = .vertical
         stackView.alignment = .center
-        stackView.spacing = 8
-        
+        stackView.spacing = Constants.stackViewSpacingRatio * screenHeight
+
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subtitleLabel)
         stackView.addArrangedSubview(activityIndicatorView)
@@ -94,7 +96,7 @@ final class LoadingViewController: UIViewController {
         let currentY = superview.convert(titleLabel.frame, to: nil).minY
         let targetY = view.safeAreaInsets.top
                 
-        let scaleFactor: CGFloat = 32 / 80 /// 폰트 크기 변화
+        let scaleFactor: CGFloat = Constants.titleAnimationFontSize / Constants.titleLabelFontSize /// 폰트 크기 변화
         let fontHeightDifference = titleLabel.frame.height * (1 - scaleFactor)
         
         let translationY = targetY - currentY - (fontHeightDifference / 2)
@@ -146,5 +148,19 @@ final class LoadingViewController: UIViewController {
         Task {
             await AVCaptureDevice.requestAccess(for: .audio)
         }
+    }
+}
+
+private extension LoadingViewController {
+    enum Constants {
+        static let standardLogicalWidth: CGFloat = 402 // iPhone 16 pro
+        static let standardLogicalHeight: CGFloat = 874 // iPhone 16 pro
+
+        static let titleLabelFontSize: CGFloat = 80 / standardLogicalWidth
+        static let titleAnimationFontSize: CGFloat = 32 / standardLogicalWidth
+
+        static let subtitleLabelFontSize: CGFloat = 20 / standardLogicalWidth
+
+        static let stackViewSpacingRatio: CGFloat = 8 / standardLogicalHeight
     }
 }

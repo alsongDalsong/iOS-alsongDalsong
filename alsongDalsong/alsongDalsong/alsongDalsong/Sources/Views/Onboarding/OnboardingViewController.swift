@@ -16,7 +16,7 @@ final class OnboardingViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     private var shouldMoveKeyboard: Bool = false
 
-    var avatarViewBottomConstraint: NSLayoutConstraint?
+    private var avatarViewBottomConstraint: NSLayoutConstraint?
 
     init(viewModel: OnboardingViewModel, inviteCode: String) {
         self.viewModel = viewModel
@@ -56,8 +56,10 @@ final class OnboardingViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .asBackground
 
+        let screenWidth = view.bounds.width
+
         titleLabel.text = "알쏭달쏭"
-        titleLabel.font = UIFont.font(.riaSans, ofSize: 32)
+        titleLabel.font = UIFont.font(.riaSans, ofSize: screenWidth * Constants.textLabelFontSizeRatio)
         titleLabel.textColor = .onboardingForeground
 
         for item in [titleLabel, nickNamePanel, avatarView, createRoomButton, joinRoomButton] {
@@ -71,31 +73,38 @@ final class OnboardingViewController: UIViewController {
     }
 
     private func setupLayout() {
-        avatarViewBottomConstraint = avatarView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 10)
+        let screenWidth = view.bounds.width
+        let screenHeight = view.bounds.height
+
+        avatarViewBottomConstraint = avatarView.bottomAnchor.constraint(
+            equalTo: view.bottomAnchor,
+            constant: Constants.avatarViewBottomRatio * screenHeight
+        )
+
         guard let avatarViewBottomConstraint else { return }
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
 
-            nickNamePanel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 70),
-            nickNamePanel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            nickNamePanel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            nickNamePanel.heightAnchor.constraint(equalToConstant: 300),
+            nickNamePanel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.nicknamePanelTopRatio * screenHeight),
+            nickNamePanel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.nicknamePanelSideRatio * screenWidth),
+            nickNamePanel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.nicknamePanelSideRatio * screenWidth),
+            nickNamePanel.heightAnchor.constraint(equalToConstant: Constants.nicknamePanelHeightRatio * screenHeight),
 
             avatarView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             avatarView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             avatarViewBottomConstraint,
-            avatarView.heightAnchor.constraint(equalToConstant: 510),
+            avatarView.heightAnchor.constraint(equalToConstant: Constants.avatarViewHeightRatio * screenHeight),
 
-            createRoomButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            createRoomButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.buttonSideRatio * screenWidth),
             createRoomButton.widthAnchor.constraint(equalTo: joinRoomButton.widthAnchor),
-            createRoomButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            createRoomButton.heightAnchor.constraint(equalToConstant: 64),
+            createRoomButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.buttonBottomRatio * screenHeight),
+            createRoomButton.heightAnchor.constraint(equalToConstant: Constants.buttonHeightRatio * screenHeight),
 
-            joinRoomButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            joinRoomButton.leadingAnchor.constraint(equalTo: createRoomButton.trailingAnchor, constant: 16),
-            joinRoomButton.heightAnchor.constraint(equalToConstant: 64),
-            joinRoomButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            joinRoomButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.buttonSideRatio * screenWidth),
+            joinRoomButton.leadingAnchor.constraint(equalTo: createRoomButton.trailingAnchor, constant: Constants.buttonSpacingRatio * screenWidth),
+            joinRoomButton.heightAnchor.constraint(equalToConstant: Constants.buttonHeightRatio * screenHeight),
+            joinRoomButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.buttonBottomRatio * screenHeight),
         ])
     }
 
@@ -158,13 +167,13 @@ final class OnboardingViewController: UIViewController {
 
         bind(viewModel?.$avatarData) { [weak self] data in
             guard let self = self else { return }
-
-            self.avatarViewBottomConstraint?.constant = 600
+            let screenHeight = view.bounds.height
+            self.avatarViewBottomConstraint?.constant = Constants.avatarViewAnimationBottomRatio * screenHeight
             UIView.animate(withDuration: 0.7, animations: {
                 self.view.layoutIfNeeded()
             }, completion: { _ in
                 self.avatarView.setImage(imageData: data)
-                self.avatarViewBottomConstraint?.constant = 10
+                self.avatarViewBottomConstraint?.constant = Constants.avatarViewBottomRatio * screenHeight
                 UIView.animate(withDuration: 0.7, delay: 0.2, animations: {
                     self.view.layoutIfNeeded()
                 }, completion: nil)
@@ -262,6 +271,24 @@ extension OnboardingViewController {
         static let craeteButtonTitle = String(localized: "방 생성하기!")
         static let joinButtonTitle = String(localized: "방 참가하기!")
         static let logoImageName = "logo"
+
+        static let standardLogicalWidth: CGFloat = 402 // iPhone 16 pro
+        static let standardLogicalHeight: CGFloat = 874 // iPhone 16 pro
+
+        static let textLabelFontSizeRatio: CGFloat = 32 / standardLogicalWidth
+
+        static let nicknamePanelTopRatio: CGFloat = 70 / standardLogicalHeight
+        static let nicknamePanelSideRatio: CGFloat = 30 / standardLogicalWidth
+        static let nicknamePanelHeightRatio: CGFloat = 300 / standardLogicalHeight
+
+        static let avatarViewBottomRatio: CGFloat = 10 / standardLogicalHeight
+        static let avatarViewAnimationBottomRatio: CGFloat = 600 / standardLogicalHeight
+        static let avatarViewHeightRatio: CGFloat = 520 / standardLogicalHeight
+
+        static let buttonHeightRatio: CGFloat = 64 / standardLogicalHeight
+        static let buttonSpacingRatio: CGFloat = 16 / standardLogicalWidth
+        static let buttonSideRatio: CGFloat = 24 / standardLogicalWidth
+        static let buttonBottomRatio: CGFloat = 10 / standardLogicalHeight
     }
 }
 

@@ -20,7 +20,11 @@ final class AudioHelper: @unchecked Sendable {
     private var cancellable: AnyCancellable?
 
     private var bgmDatas: [Bgm: Data] = [:]
-    private var bgmState: Bgm = .onboarding
+    private var bgmState: Bgm = .onboarding {
+        didSet {
+            playBgm()
+        }
+    }
     private let queue = DispatchQueue(label: "alsongDalsong.AudioHelper")
 
     // MARK: - Publishers
@@ -103,13 +107,10 @@ final class AudioHelper: @unchecked Sendable {
 // MARK: - BGM
 
 extension AudioHelper {
-    func playBgm(name: Bgm) {
-//        guard let bgmData = bgmDatas[name] else { return }
-//        Task {
-//            await play(file: bgmData, option: .full)
-//        }
+    func playBgm() {
         Task {
-            await startPlaying(bgmDatas[name])
+            print(#function)
+            await startPlaying(bgmDatas[bgmState])
         }
     }
 
@@ -117,6 +118,10 @@ extension AudioHelper {
         queue.async(flags: .barrier) {
             self.bgmDatas[name] = data
         }
+    }
+
+    func changeState(to newState: Bgm) {
+        bgmState = newState
     }
 }
 
@@ -209,7 +214,7 @@ extension AudioHelper {
         switch option {
         case .full:
             do {
-                try await player?.startPlaying(data: file)
+                try await player?.startPlaying(data: file, fade: true)
             } catch {
                 ErrorHandler.handle(error)
             }

@@ -241,7 +241,8 @@ final class OnboardingViewController: UIViewController {
 
     private func setNickname() {
         if var nickname = nickNamePanel.text {
-            if nickname == "캐릭터와닉네임을설정하라" || nickname.trimmingCharacters(in: .whitespaces).isEmpty {
+            nickname = nickname.trimmingCharacters(in: .whitespaces)
+            if nickname == "캐릭터와닉네임을설정하라" || nickname.isEmpty {
                 nickname = NickNameGenerator.generate()
             }
 

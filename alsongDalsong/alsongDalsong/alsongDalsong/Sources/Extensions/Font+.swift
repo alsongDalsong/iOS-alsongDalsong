@@ -17,10 +17,6 @@ extension Font {
         return .custom("RiaSans-ExtraBold", size: size)
     }
 
-    static func gmarketSansBold(size: CGFloat) -> Font {
-        return .custom("GmarketSansTTFBold", size: size)
-    }
-
     static func tmonMonsori(size: CGFloat) -> Font {
         return .custom("TMONMonsori", size: size)
     }

@@ -35,6 +35,7 @@ final class NicknamePanel: UIView {
         )
         
         textView.attributedText = attributedString
+        text = placeholder
     }
 
     func setupDelegate(_ delegate: UITextViewDelegate) {
@@ -87,13 +88,6 @@ extension NicknamePanel: UITextViewDelegate {
         }
 
         return true
-    }
-
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.text == "캐릭터와닉네임을설정하라" {
-            textView.text = ""
-            text = textView.text ?? ""
-        }
     }
 
     func textViewDidChange(_ textView: UITextView) {

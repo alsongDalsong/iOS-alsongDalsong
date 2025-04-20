@@ -11,7 +11,7 @@ final class OnboardingViewModel: @unchecked Sendable {
 
     @Published var nickname: String = ""
     @Published var avatarData: Data?
-    @Published var buttonEnabled: Bool = false
+    @Published var buttonEnabled: Bool = true
 
     init(roomActionRepository: RoomActionRepositoryProtocol,
          dataDownloadRepository: DataDownloadRepositoryProtocol,

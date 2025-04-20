@@ -151,7 +151,7 @@ final class OnboardingViewController: UIViewController {
 
     private func bindViewModel() {
         bind(viewModel?.$nickname) { [weak self] nickname in
-            let isPlaceholder = nickname == "캐릭터와닉네임을설정하라"
+            let isPlaceholder = nickname == ""
             self?.createRoomButton.isEnabled = !isPlaceholder
             self?.joinRoomButton.isEnabled = !isPlaceholder
         }
@@ -211,7 +211,8 @@ final class OnboardingViewController: UIViewController {
             .store(in: &cancellables)
     }
 
-    private func joinRoom(with roomNumber: String) {
+    private func setNicknameAndJoinRoom(with roomNumber: String) {
+        setNickname()
         Task {
             do {
                 let number = try await viewModel?.joinRoom(roomNumber: roomNumber)
@@ -224,20 +225,28 @@ final class OnboardingViewController: UIViewController {
     }
 
     private func autoJoinRoom() {
-        joinRoom(with: inviteCode)
+        setNicknameAndJoinRoom(with: inviteCode)
     }
 
-    private func setNicknameAndJoinRoom(with roomNumber: String) {
-        joinRoom(with: roomNumber)
+    private func manualJoinRoom(with roomNumber: String) {
+        setNicknameAndJoinRoom(with: roomNumber)
     }
 
     private func setNicknameAndCreateRoom() async throws {
-        if let nickname = nickNamePanel.text, !nickname.isEmpty {
-            viewModel?.setNickname(with: nickname)
-        }
+        setNickname()
         let number = try await viewModel?.createRoom()
         guard let number else { return }
         navigateToLobby(with: number)
+    }
+
+    private func setNickname() {
+        if var nickname = nickNamePanel.text {
+            if nickname == "캐릭터와닉네임을설정하라" || nickname.trimmingCharacters(in: .whitespaces).isEmpty {
+                nickname = NickNameGenerator.generate()
+            }
+
+            nickNamePanel.updateTextField(placeholder: nickname)
+        }
     }
 
     private func isMicrophoneAuthorized() -> Bool {
@@ -264,7 +273,7 @@ extension OnboardingViewController {
             titleText: .joinRoom,
             textFieldPlaceholder: .roomNumber
         ) { [weak self] roomNumber in
-            self?.setNicknameAndJoinRoom(with: roomNumber)
+            self?.manualJoinRoom(with: roomNumber)
             self?.shouldMoveKeyboard = true
         } secondaryButtonAction: {
             self.shouldMoveKeyboard = true

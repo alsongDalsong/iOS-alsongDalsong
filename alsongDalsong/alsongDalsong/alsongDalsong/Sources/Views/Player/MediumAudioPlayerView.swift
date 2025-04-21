@@ -20,7 +20,7 @@ final class MediumAudioPlayerView: UIView {
     init(type: AudioPlayerType) {
         super.init(frame: .zero)
         self.audioPlayerType = type
-        setupUI()
+        setupView()
         setupStyle()
         setupLayout()
         
@@ -33,7 +33,7 @@ final class MediumAudioPlayerView: UIView {
         super.init(coder: coder)
     }
     
-    private func setupUI() {
+    private func setupView() {
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(artistLabel)
         

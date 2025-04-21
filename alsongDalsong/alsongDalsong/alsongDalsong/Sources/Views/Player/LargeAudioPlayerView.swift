@@ -26,7 +26,7 @@ final class LargeAudioPlayerView: UIView {
     
     init() {
         super.init(frame: .zero)
-        setupUI()
+        setupView()
         setupStyle()
         setupLayout()
         setupAction()
@@ -36,7 +36,7 @@ final class LargeAudioPlayerView: UIView {
         super.init(coder: coder)
     }
     
-    func setupUI() {
+    func setupView() {
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(artistLabel)
         

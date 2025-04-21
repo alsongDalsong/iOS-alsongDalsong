@@ -16,7 +16,7 @@ final class OnboardingViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     private var shouldMoveKeyboard: Bool = false
 
-    var avatarViewBottomConstraint: NSLayoutConstraint?
+    private var avatarViewBottomConstraint: NSLayoutConstraint?
 
     init(viewModel: OnboardingViewModel, inviteCode: String) {
         self.viewModel = viewModel
@@ -57,8 +57,10 @@ final class OnboardingViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .asBackground
 
+        let screenWidth = view.bounds.width
+
         titleLabel.text = "알쏭달쏭"
-        titleLabel.font = UIFont.font(.riaSans, ofSize: 32)
+        titleLabel.font = UIFont.font(.riaSans, ofSize: screenWidth * Constants.textLabelFontSize)
         titleLabel.textColor = .onboardingForeground
 
         for item in [titleLabel, nickNamePanel, avatarView, createRoomButton, joinRoomButton] {
@@ -72,31 +74,38 @@ final class OnboardingViewController: UIViewController {
     }
 
     private func setupLayout() {
-        avatarViewBottomConstraint = avatarView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 10)
+        let screenWidth = view.bounds.width
+        let screenHeight = view.bounds.height
+
+        avatarViewBottomConstraint = avatarView.bottomAnchor.constraint(
+            equalTo: view.bottomAnchor,
+            constant: Constants.avatarViewBottom * screenHeight
+        )
+
         guard let avatarViewBottomConstraint else { return }
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
 
-            nickNamePanel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 70),
-            nickNamePanel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            nickNamePanel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            nickNamePanel.heightAnchor.constraint(equalToConstant: 300),
+            nickNamePanel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.nicknamePanelTop * screenHeight),
+            nickNamePanel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.nicknamePanelSide * screenWidth),
+            nickNamePanel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.nicknamePanelSide * screenWidth),
+            nickNamePanel.heightAnchor.constraint(equalToConstant: Constants.nicknamePanelHeight * screenHeight),
 
             avatarView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             avatarView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             avatarViewBottomConstraint,
-            avatarView.heightAnchor.constraint(equalToConstant: 510),
+            avatarView.heightAnchor.constraint(equalToConstant: Constants.avatarViewHeight * screenHeight),
 
-            createRoomButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            createRoomButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.buttonSide * screenWidth),
             createRoomButton.widthAnchor.constraint(equalTo: joinRoomButton.widthAnchor),
-            createRoomButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            createRoomButton.heightAnchor.constraint(equalToConstant: 64),
+            createRoomButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.buttonBottom * screenHeight),
+            createRoomButton.heightAnchor.constraint(equalToConstant: Constants.buttonHeight * screenHeight),
 
-            joinRoomButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            joinRoomButton.leadingAnchor.constraint(equalTo: createRoomButton.trailingAnchor, constant: 16),
-            joinRoomButton.heightAnchor.constraint(equalToConstant: 64),
-            joinRoomButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            joinRoomButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.buttonSide * screenWidth),
+            joinRoomButton.leadingAnchor.constraint(equalTo: createRoomButton.trailingAnchor, constant: Constants.buttonSpacing * screenWidth),
+            joinRoomButton.heightAnchor.constraint(equalToConstant: Constants.buttonHeight * screenHeight),
+            joinRoomButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.buttonBottom * screenHeight),
         ])
     }
 
@@ -152,20 +161,20 @@ final class OnboardingViewController: UIViewController {
 
     private func bindViewModel() {
         bind(viewModel?.$nickname) { [weak self] nickname in
-            let isPlaceholder = nickname == "캐릭터와닉네임을설정하라"
+            let isPlaceholder = nickname == ""
             self?.createRoomButton.isEnabled = !isPlaceholder
             self?.joinRoomButton.isEnabled = !isPlaceholder
         }
 
         bind(viewModel?.$avatarData) { [weak self] data in
             guard let self = self else { return }
-
-            self.avatarViewBottomConstraint?.constant = 600
+            let screenHeight = view.bounds.height
+            self.avatarViewBottomConstraint?.constant = Constants.avatarViewAnimationBottom * screenHeight
             UIView.animate(withDuration: 0.7, animations: {
                 self.view.layoutIfNeeded()
             }, completion: { _ in
                 self.avatarView.setImage(imageData: data)
-                self.avatarViewBottomConstraint?.constant = 10
+                self.avatarViewBottomConstraint?.constant = Constants.avatarViewBottom * screenHeight
                 UIView.animate(withDuration: 0.7, delay: 0.2, animations: {
                     self.view.layoutIfNeeded()
                 }, completion: nil)
@@ -212,7 +221,8 @@ final class OnboardingViewController: UIViewController {
             .store(in: &cancellables)
     }
 
-    private func joinRoom(with roomNumber: String) {
+    private func setNicknameAndJoinRoom(with roomNumber: String) {
+        setNickname()
         Task {
             do {
                 let number = try await viewModel?.joinRoom(roomNumber: roomNumber)
@@ -225,20 +235,29 @@ final class OnboardingViewController: UIViewController {
     }
 
     private func autoJoinRoom() {
-        joinRoom(with: inviteCode)
+        setNicknameAndJoinRoom(with: inviteCode)
     }
 
-    private func setNicknameAndJoinRoom(with roomNumber: String) {
-        joinRoom(with: roomNumber)
+    private func manualJoinRoom(with roomNumber: String) {
+        setNicknameAndJoinRoom(with: roomNumber)
     }
 
     private func setNicknameAndCreateRoom() async throws {
-        if let nickname = nickNamePanel.text, !nickname.isEmpty {
-            viewModel?.setNickname(with: nickname)
-        }
+        setNickname()
         let number = try await viewModel?.createRoom()
         guard let number else { return }
         navigateToLobby(with: number)
+    }
+
+    private func setNickname() {
+        if var nickname = nickNamePanel.text {
+            nickname = nickname.trimmingCharacters(in: .whitespaces)
+            if nickname == "캐릭터와닉네임을설정하라" || nickname.isEmpty {
+                nickname = NickNameGenerator.generate()
+            }
+
+            nickNamePanel.updateTextField(placeholder: nickname)
+        }
     }
 
     private func isMicrophoneAuthorized() -> Bool {
@@ -253,6 +272,24 @@ extension OnboardingViewController {
         static let craeteButtonTitle = String(localized: "방 생성하기!")
         static let joinButtonTitle = String(localized: "방 참가하기!")
         static let logoImageName = "logo"
+
+        static let standardLogicalWidth: CGFloat = 402 // iPhone 16 pro
+        static let standardLogicalHeight: CGFloat = 874 // iPhone 16 pro
+
+        static let textLabelFontSize: CGFloat = 32 / standardLogicalWidth
+
+        static let nicknamePanelTop: CGFloat = 70 / standardLogicalHeight
+        static let nicknamePanelSide: CGFloat = 30 / standardLogicalWidth
+        static let nicknamePanelHeight: CGFloat = 300 / standardLogicalHeight
+
+        static let avatarViewBottom: CGFloat = 10 / standardLogicalHeight
+        static let avatarViewAnimationBottom: CGFloat = 600 / standardLogicalHeight
+        static let avatarViewHeight: CGFloat = 520 / standardLogicalHeight
+
+        static let buttonHeight: CGFloat = 64 / standardLogicalHeight
+        static let buttonSpacing: CGFloat = 16 / standardLogicalWidth
+        static let buttonSide: CGFloat = 24 / standardLogicalWidth
+        static let buttonBottom: CGFloat = 10 / standardLogicalHeight
     }
 }
 
@@ -265,7 +302,7 @@ extension OnboardingViewController {
             titleText: .joinRoom,
             textFieldPlaceholder: .roomNumber
         ) { [weak self] roomNumber in
-            self?.setNicknameAndJoinRoom(with: roomNumber)
+            self?.manualJoinRoom(with: roomNumber)
             self?.shouldMoveKeyboard = true
         } secondaryButtonAction: {
             self.shouldMoveKeyboard = true
@@ -310,18 +347,6 @@ private extension OnboardingViewController {
     private func observeKeyboard() {
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(keyboardWillShow(_:)),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillHide),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
             selector: #selector(appDidEnterBackground),
             name: UIApplication.didEnterBackgroundNotification,
             object: nil
@@ -341,24 +366,6 @@ private extension OnboardingViewController {
 
     @objc func dismissKeyboard() {
         view.endEditing(true)
-    }
-
-    @objc func keyboardWillShow(_ notification: NSNotification) {
-        guard shouldMoveKeyboard else { return }
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
-            let keyboardHeight = keyboardRectangle.height
-
-            UIView.animate(withDuration: 0.3) {
-                self.view.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight)
-            }
-        }
-    }
-
-    @objc func keyboardWillHide() {
-        UIView.animate(withDuration: 0.3) {
-            self.view.transform = .identity
-        }
     }
 
     @objc func appDidEnterBackground() {

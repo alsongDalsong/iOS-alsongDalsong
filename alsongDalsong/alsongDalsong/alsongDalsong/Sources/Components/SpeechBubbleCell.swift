@@ -97,12 +97,12 @@ struct SpeechBubbleCell: View {
         VStack {
             Image(uiImage: UIImage(data: info.playerAvatarData) ?? UIImage())
                 .resizable()
-                .background(Color.asMint)
+                .background(Color.profileViewBackground)
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 75, height: 75)
                 .clipShape(Circle())
                 .overlay(
-                    Circle().stroke(Color.white, lineWidth: 5)
+                    Circle().stroke(Color.profileViewCircle, lineWidth: 5)
                 )
                 .padding(.bottom, 4)
             Text(info.playerName)

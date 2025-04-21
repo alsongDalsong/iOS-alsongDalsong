@@ -88,7 +88,7 @@ final class ProgressBar: UIView {
         if remaining > 20 {
             let workItem = DispatchWorkItem { [weak self] in
                 guard let self else { return }
-                shakeTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
+                shakeTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
                     guard let self else { return }
                     Task { @MainActor in
                         guard !self.isCancelled else { return }
@@ -125,9 +125,9 @@ final class ProgressBar: UIView {
 
     private func performShakeAnimation() {
         let animation = CAKeyframeAnimation(keyPath: "transform.translation.y")
-        animation.values = [-10, 10, -8, 8, -5, 5, 0]
-        animation.keyTimes = [0, 0.14, 0.28, 0.42, 0.56, 0.7, 1]
-        animation.duration = 0.6
+        animation.values   = [-5, 5, -4, 4, -2, 2, 0]
+        animation.keyTimes = [0, 0.15, 0.3, 0.45, 0.6, 0.75, 1]
+        animation.duration = 0.4
         animation.timingFunction = CAMediaTimingFunction(name: .linear)
         layer.add(animation, forKey: "shake")
     }

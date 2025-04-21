@@ -49,7 +49,7 @@ final class LoadingViewController: UIViewController {
         
         stackView.axis = .vertical
         stackView.alignment = .center
-        stackView.spacing = Constants.stackViewSpacingRatio * screenHeight
+        stackView.spacing = Constants.stackViewSpacing * screenHeight
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subtitleLabel)
@@ -161,6 +161,6 @@ private extension LoadingViewController {
 
         static let subtitleLabelFontSize: CGFloat = 20 / standardLogicalWidth
 
-        static let stackViewSpacingRatio: CGFloat = 8 / standardLogicalHeight
+        static let stackViewSpacing: CGFloat = 8 / standardLogicalHeight
     }
 }

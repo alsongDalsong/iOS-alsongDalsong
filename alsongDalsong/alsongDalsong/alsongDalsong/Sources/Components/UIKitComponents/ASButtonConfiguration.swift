@@ -13,6 +13,8 @@ extension ASButton {
         let baseForegroundColor: UIColor
         let strokeColor: UIColor?
         let strokeWidth: CGFloat
+        let shadowColor: UIColor?
+        let shadowHeight: CGFloat
       
         init(
             systemImageName: String? = nil,
@@ -24,7 +26,9 @@ extension ASButton {
             cornerStyle: UIButton.Configuration.CornerStyle = .medium,
             baseForegroundColor: UIColor = .white,
             strokeColor: UIColor? = nil,
-            strokeWidth: CGFloat = 0
+            strokeWidth: CGFloat = 0,
+            shadowColor: UIColor? = nil,
+            shadowHeight: CGFloat = 8
         ) {
             self.systemImageName = systemImageName
             self.imageSize = imageSize
@@ -36,6 +40,8 @@ extension ASButton {
             self.baseForegroundColor = baseForegroundColor
             self.strokeColor = strokeColor
             self.strokeWidth = strokeWidth
+            self.shadowColor = shadowColor
+            self.shadowHeight = shadowHeight
         }
         
         /// 버튼의 스타일을 만드는 메소드

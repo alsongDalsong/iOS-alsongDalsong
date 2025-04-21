@@ -86,6 +86,8 @@ final class GameNavigationController: @unchecked Sendable {
                 self?.leaveRoom()
                 self?.navigationController.popToRootViewController(animated: true)
                 self?.navigationController.navigationBar.isHidden = true
+                print("나가기")
+                AudioHelper.shared.changeState(to: .onboarding)
             }
             self?.navigationController.presentAlert(alert)
         }
@@ -129,11 +131,11 @@ final class GameNavigationController: @unchecked Sendable {
             case .submitAnswer:
                 return String(localized: "정답 맞추기")
             case .result:
-            guard let recordOrder = gameInfo.recordOrder else { return "" }
-            let playerCount = gameInfo.players.count
-            let baseResult: UInt8 = (playerCount == 2) ? 0 : (playerCount == 3 ? 1 : 2)
-            let currentRound = recordOrder - (baseResult)
-            return String(localized: "결과 확인") + " \(currentRound)/\(playerCount)"
+                guard let recordOrder = gameInfo.recordOrder else { return "" }
+                let playerCount = gameInfo.players.count
+                let baseResult: UInt8 = (playerCount == 2) ? 0 : (playerCount == 3 ? 1 : 2)
+                let currentRound = recordOrder - baseResult
+                return String(localized: "결과 확인") + " \(currentRound)/\(playerCount)"
             case .lobby:
                 return "#\(roomNumber)"
             default:
@@ -150,14 +152,19 @@ final class GameNavigationController: @unchecked Sendable {
         switch viewType {
             case .submitMusic:
                 navigateToSelectMusic()
+                AudioHelper.shared.changeState(to: .ingame)
             case .humming:
                 navigateToHumming()
+                AudioHelper.shared.changeState(to: .ingame)
             case .rehumming:
                 navigateToRehumming()
+                AudioHelper.shared.changeState(to: .ingame)
             case .submitAnswer:
                 navigateToSubmitAnswer()
+                AudioHelper.shared.changeState(to: .ingame)
             case .result:
                 navigateToResult()
+                AudioHelper.shared.changeState(to: .ingame)
             case .lobby:
                 navigateToLobby()
             default:
@@ -189,6 +196,7 @@ final class GameNavigationController: @unchecked Sendable {
         let vc = LobbyViewController(lobbyViewModel: vm)
         setupNavigationBar(for: vc)
         navigationController.pushViewController(vc, animated: true)
+        AudioHelper.shared.changeState(to: .lobby)
     }
 
     private func navigateToSelectMusic() {
@@ -329,6 +337,6 @@ private extension GameNavigationController {
             self.navigationController.popToRootViewController(animated: true)
             self.navigationController.navigationBar.isHidden = true
         }
-        self.navigationController.presentAlert(alert)
+        navigationController.presentAlert(alert)
     }
 }

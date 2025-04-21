@@ -11,14 +11,14 @@ final class OnboardingViewModel: @unchecked Sendable {
 
     @Published var nickname: String = ""
     @Published var avatarData: Data?
-    @Published var buttonEnabled: Bool = false
+    @Published var buttonEnabled: Bool = true
 
     init(roomActionRepository: RoomActionRepositoryProtocol,
          dataDownloadRepository: DataDownloadRepositoryProtocol,
          avatars: [(onboarding: URL, lobby: URL)],
          selectedAvatar: (onboarding: URL, lobby: URL)?,
-         avatarData: Data?
-    ) {
+         avatarData: Data?)
+    {
         self.roomActionRepository = roomActionRepository
         self.dataDownloadRepository = dataDownloadRepository
         self.avatars = avatars
@@ -37,6 +37,10 @@ final class OnboardingViewModel: @unchecked Sendable {
             selectedAvatar = randomAvatarUrl
             avatarData = await dataDownloadRepository.downloadData(url: randomAvatarUrl.onboarding)
         }
+    }
+
+    func playBgm() {
+        AudioHelper.shared.playBgm()
     }
 
     @MainActor

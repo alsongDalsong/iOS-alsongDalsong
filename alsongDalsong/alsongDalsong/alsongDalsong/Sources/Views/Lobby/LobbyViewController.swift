@@ -66,9 +66,9 @@ final class LobbyViewController: UIViewController {
                 text: "#" + roomNumber,
                 textStyle: .largeTitle,
                 backgroundColor: .roomNumberButton,
-                cornerStyle: .large,
                 baseForegroundColor: .asForeground,
                 shadowColor: .buttonShadowWithLine,
+                shadowHeight: 4,
                 strokeColor: .buttonShadowWithLine,
                 strokeWidth: 3
             )
@@ -77,27 +77,28 @@ final class LobbyViewController: UIViewController {
     }
 
     private func setupUI() {
+        let screenWidth = view.bounds.width
         view.backgroundColor = .asBackground
 
         roomNumberButton.setConfiguration(
             text: "#" + viewmodel.roomNumber,
             textStyle: .largeTitle,
             backgroundColor: .roomNumberButton,
-            cornerStyle: .large,
             baseForegroundColor: .asForeground,
             shadowColor: .buttonShadowWithLine,
+            shadowHeight: 4,
             strokeColor: .buttonShadowWithLine,
             strokeWidth: 3
         )
 
         inviteButton.setConfiguration(
             systemImageName: "square.and.arrow.up",
-            imageSize: 24,
+            imageSize: Constants.buttonImageSize * screenWidth,
             text: nil,
             backgroundColor: .inviteButton,
-            cornerStyle: .large,
             baseForegroundColor: .tintColor,
-            shadowColor: .buttonShadowOfDefault
+            shadowColor: .buttonShadowOfDefault,
+            shadowHeight: 4
         )
 
         startButton.setConfiguration(
@@ -142,6 +143,9 @@ final class LobbyViewController: UIViewController {
     }
 
     private func setupLayout() {
+        let screenWidth = view.bounds.width
+        let screenHeight = view.bounds.height
+
         roomNumberButton.translatesAutoresizingMaskIntoConstraints = false
         inviteButton.translatesAutoresizingMaskIntoConstraints = false
         startButton.translatesAutoresizingMaskIntoConstraints = false
@@ -149,7 +153,7 @@ final class LobbyViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             lobbyUIHostingController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            lobbyUIHostingController.view.bottomAnchor.constraint(equalTo: inviteButton.topAnchor, constant: -20),
+            lobbyUIHostingController.view.bottomAnchor.constraint(equalTo: inviteButton.topAnchor, constant: -Constants.lobbyUIHostingControllerBottom * screenHeight),
             lobbyUIHostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             lobbyUIHostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
@@ -172,6 +176,18 @@ final class LobbyViewController: UIViewController {
 
     private func gameStart() async throws {
         try await viewmodel.gameStart()
+    }
+}
+
+private extension LobbyViewController {
+    enum Constants {
+        static let standardLogicalWidth: CGFloat = 402 // iPhone 16 pro
+        static let standardLogicalHeight: CGFloat = 874 // iPhone 16 pro
+
+        static let lobbyUIHostingControllerBottom: CGFloat = 20 / standardLogicalHeight
+
+        static let buttonImageSize: CGFloat = 24 / standardLogicalWidth
+
     }
 }
 

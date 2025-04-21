@@ -4,11 +4,10 @@ import Combine
 import Foundation
 
 final class AudioHelper: @unchecked Sendable {
-
     // MARK: - Singleton
-    
+
     static let shared = AudioHelper()
-    private init() { }
+    private init() {}
 
     // MARK: - Private properties
 
@@ -20,6 +19,14 @@ final class AudioHelper: @unchecked Sendable {
     private var isConcurrent: Bool = false
     private var cancellable: AnyCancellable?
 
+    private var bgmDatas: [Bgm: Data] = [:]
+    private var bgmState: Bgm = .onboarding {
+        didSet {
+            playBgm()
+        }
+    }
+    private let queue = DispatchQueue(label: "alsongDalsong.AudioHelper")
+
     // MARK: - Publishers
 
     private let amplitudeSubject = PassthroughSubject<Float, Never>()
@@ -29,7 +36,6 @@ final class AudioHelper: @unchecked Sendable {
     private let recorderDataSubject = PassthroughSubject<Data, Never>()
     private let normalizedFrequencyAmplitudes = PassthroughSubject<[Float], Never>()
     private let playerEnginePrgress = PassthroughSubject<Double, Never>()
-    
     var amplitudePublisher: AnyPublisher<Float, Never> {
         amplitudeSubject.eraseToAnyPublisher()
     }
@@ -49,11 +55,11 @@ final class AudioHelper: @unchecked Sendable {
     var recorderDataPublisher: AnyPublisher<Data, Never> {
         recorderDataSubject.eraseToAnyPublisher()
     }
-    
+
     var normalizedFrequencyAmplitudesPublisher: AnyPublisher<[Float], Never> {
         normalizedFrequencyAmplitudes.eraseToAnyPublisher()
     }
-    
+
     var playerEnginePrgressPublisher: AnyPublisher<Double, Never> {
         playerEnginePrgress.eraseToAnyPublisher()
     }
@@ -98,6 +104,27 @@ final class AudioHelper: @unchecked Sendable {
     }
 }
 
+// MARK: - BGM
+
+extension AudioHelper {
+    func playBgm() {
+        Task {
+            print(#function)
+            await startPlaying(bgmDatas[bgmState])
+        }
+    }
+
+    func addBgmData(name: Bgm, data: Data) {
+        queue.async(flags: .barrier) {
+            self.bgmDatas[name] = data
+        }
+    }
+
+    func changeState(to newState: Bgm) {
+        bgmState = newState
+    }
+}
+
 // MARK: - Play Audio
 
 extension AudioHelper {
@@ -113,48 +140,47 @@ extension AudioHelper {
         needsFrequencyUpdate: Bool = false,
         needsProgressUpdate: Bool = false
     ) {
-        guard let data else{ return }
-        
+        guard let data else { return }
+
         Logger.debug(#function)
 
         playerEngine.bind(data: data)
-        
+
         switch playType {
-            
         /// playType에 따라 전체 혹은 부분 재생
         case .full:
             playerEngine.play()
-            
-        case .partial(time: let time):
+
+        case let .partial(time: time):
             playerEngine.play()
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(time)) { [weak self] in
                 self?.stopEngine()
             }
         }
-        
+
         playerStateSubject.send((source, true))
-        
+
         updateFrequencyAndProgress(
             needsFrequencyUpdate: needsFrequencyUpdate,
             needsProgressUpdate: needsProgressUpdate
         )
     }
-    
+
     func stopEngine() {
         Logger.debug(#function)
 
-        normalizedFrequencyAmplitudes.send([0, 0, 0, 0, 0 ,0])
+        normalizedFrequencyAmplitudes.send([0, 0, 0, 0, 0, 0])
         playerEnginePrgress.send(0)
-        
+
         playerEngine.stop()
-        
+
         cancellable?.cancel()
         cancellable = nil
-        
+
         playerStateSubject.send((source, false))
     }
-    
+
     /// 여러 조건을 적용해 오디오를 재생하는 함수
     /// - Parameters:
     ///   - file: 재생할 오디오 데이터
@@ -170,50 +196,50 @@ extension AudioHelper {
 
         sourceType(type)
         makePlayer()
-        
+
         await player?.setOnPlaybackFinished { [weak self] in
             await self?.stopPlaying()
         }
-        
+
         playerStateSubject.send((source, true))
-        
+
         if needsWaveUpdate {
             updatePlayIndex()
         }
-        
+
         await play(file: file, option: option)
     }
 
     private func play(file: Data, option: PlayType) async {
         switch option {
-            case .full:
-                do {
-                    try await player?.startPlaying(data: file)
-                } catch {
-                    ErrorHandler.handle(error)
-                }
-            
-            case let .partial(time):
-                do {
-                    try await player?.startPlaying(data: file)
-                    try await Task.sleep(for: .seconds(time))
-                    await stopPlaying()
-                } catch {
-                    ErrorHandler.handle(error)
-                }
-            
-            @unknown default: break
+        case .full:
+            do {
+                try await player?.startPlaying(data: file, fade: true)
+            } catch {
+                ErrorHandler.handle(error)
+            }
+
+        case let .partial(time):
+            do {
+                try await player?.startPlaying(data: file)
+                try await Task.sleep(for: .seconds(time))
+                await stopPlaying()
+            } catch {
+                ErrorHandler.handle(error)
+            }
+
+        @unknown default: break
         }
     }
 
     func stopPlaying() async {
         Logger.debug(#function)
-        
+
         await player?.stopPlaying()
-      
+
         removePlayer()
         removeTimer()
-        
+
         playerStateSubject.send((source, false))
     }
 
@@ -251,14 +277,14 @@ extension AudioHelper {
         makeRecorder()
         let tempURL = makeURL()
         recorderStateSubject.send(true)
-        
+
         do {
             try await recorder?.startRecording(url: tempURL)
             visualize()
             Logger.debug("녹음 시작")
 
             try await Task.sleep(for: .seconds(6))
-            
+
             await stopRecording()
             deleteFile(url: tempURL)
         } catch {
@@ -289,11 +315,11 @@ extension AudioHelper {
             .appendingPathComponent("tempCache")
         createCacheDirectory(with: tempCacheDirectory)
         let key = UUID()
-        
+
         return tempCacheDirectory
             .appendingPathComponent("\(key)")
     }
-    
+
     private func deleteFile(url: URL) {
         do {
             try FileManager.default.removeItem(at: url)
@@ -338,29 +364,29 @@ extension AudioHelper {
         needsFrequencyUpdate: Bool,
         needsProgressUpdate: Bool
     ) {
-        guard needsFrequencyUpdate && needsProgressUpdate else { return }
-        
+        guard needsFrequencyUpdate, needsProgressUpdate else { return }
+
         cancellable = Timer.publish(every: 0.2, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
                 if self?.playerEngine.audioProgress == 1 {
-                    self?.normalizedFrequencyAmplitudes.send([0, 0, 0, 0, 0 ,0])
+                    self?.normalizedFrequencyAmplitudes.send([0, 0, 0, 0, 0, 0])
                     self?.playerEnginePrgress.send(0)
-                    
+
                     self?.cancellable?.cancel()
                     self?.cancellable = nil
                 }
-                
+
                 if needsFrequencyUpdate {
-                    self?.normalizedFrequencyAmplitudes.send(self?.playerEngine.normalizedFrequencyAmplitudes ?? [0, 0, 0, 0, 0 ,0])
+                    self?.normalizedFrequencyAmplitudes.send(self?.playerEngine.normalizedFrequencyAmplitudes ?? [0, 0, 0, 0, 0, 0])
                 }
-                
+
                 if needsProgressUpdate {
                     self?.playerEnginePrgress.send(self?.playerEngine.audioProgress ?? 0)
                 }
             }
     }
-    
+
     private func visualize() {
         Task { [weak self] in
             self?.calculateAmplitude()
@@ -386,4 +412,10 @@ extension AudioHelper {
         let clampedAmplitude = min(max(newAmplitude, 0), 1)
         amplitudeSubject.send(clampedAmplitude)
     }
+}
+
+enum Bgm: String, CaseIterable {
+    case onboarding
+    case lobby
+    case ingame
 }

@@ -1,6 +1,6 @@
 import UIKit
 
-final class SubmitAnswerButton: UIButton {
+final class SelectAnswerButton: UIButton {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupStyle()

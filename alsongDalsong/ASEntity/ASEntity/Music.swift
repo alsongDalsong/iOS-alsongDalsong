@@ -27,6 +27,7 @@ public struct Music: Codable, Equatable, Identifiable, Sendable, Hashable {
 
 extension Music {
     public init(_ record: ASEntity.Record) {
+        self.artworkUrl = record.player?.avatarUrl
         self.previewUrl = record.fileUrl
     }
 }

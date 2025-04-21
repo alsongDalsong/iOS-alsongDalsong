@@ -46,15 +46,15 @@ final class SamplePlayerViewController: UIViewController {
             mediumResultPlayerView2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -120)
         ])
         
-        if let music = viewModel.music, let title = music.title, let artist = music.artist {
-            largePlayerView.configure(title: title, artist: artist, imageData: viewModel.coverImageData)
+        if let music = viewModel.music {
+            largePlayerView.configure(title: music.title, artist: music.artist, imageData: viewModel.coverImageData)
             largePlayerView.controlButtonDidTapped = viewModel.togglePlay
                         
-            mediumSubmitPlayerView.configure(title: title, artist: artist, imageData: viewModel.coverImageData)
+            mediumSubmitPlayerView.configure(title: music.title, artist: music.artist, imageData: viewModel.coverImageData)
             mediumSubmitPlayerView.controlButtonDidTapped = viewModel.togglePlay
             
-            mediumResultPlayerView.configure(title: title, artist: artist, imageData: viewModel.coverImageData)
-            mediumResultPlayerView2.configure(title: title, artist: artist, imageData: viewModel.coverImageData)
+            mediumResultPlayerView.configure(title: music.title, artist: music.artist, imageData: viewModel.coverImageData)
+            mediumResultPlayerView2.configure(title: music.title, artist: music.artist, imageData: viewModel.coverImageData)
         }
         
         bind()

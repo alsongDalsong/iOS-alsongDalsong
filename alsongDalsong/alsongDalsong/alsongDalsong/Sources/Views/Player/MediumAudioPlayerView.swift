@@ -145,7 +145,7 @@ final class MediumAudioPlayerView: UIView {
 // MARK: - Configure Methods
 
 extension MediumAudioPlayerView {
-    func configure(title: String, artist: String, imageData: Data?) {
+    func configure(title: String?, artist: String?, imageData: Data?) {
         titleLabel.text = title
         artistLabel.text = artist
         

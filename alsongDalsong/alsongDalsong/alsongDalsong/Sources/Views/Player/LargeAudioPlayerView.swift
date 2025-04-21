@@ -141,9 +141,11 @@ final class LargeAudioPlayerView: UIView {
 // MARK: - Configure Methods
 
 extension LargeAudioPlayerView {
-    func configure(title: String, artist: String, imageData: Data?) {
-        titleLabel.text = title
-        artistLabel.text = artist
+    func configure(title: String?, artist: String?, imageData: Data?) {
+        titleLabel.text = title ?? "???"
+        artistLabel.text = artist ?? "???"
+        
+        blurView.alpha = title == nil ? 1 : 0
         
         if let data = imageData, let image = UIImage(data: data) {
             coverImageView.image = image

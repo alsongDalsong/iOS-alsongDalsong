@@ -4,6 +4,7 @@ public enum ASNetworkError: LocalizedError {
     case statusError(description: String)
     case urlError
     case getAvatarUrls
+    case getBgmUrls
     case firebaseSignIn
     case firebaseSignOut
     case firebaseObserveConnection
@@ -16,6 +17,7 @@ public enum ASNetworkError: LocalizedError {
         case .statusError(let description): "\(description)"
         case .urlError: "잘못된 URL 요청입니다"
         case .getAvatarUrls: "아바타 URL을 가져오는 중 오류가 발생했습니다"
+        case .getBgmUrls: "BGM URL을 가져오는 중 오류가 발생했습니다"
         case .firebaseSignIn: "Firebase 로그인 중 오류가 발생했습니다"
         case .firebaseSignOut: "Firebase 로그아웃 중 오류가 발생했습니다"
         case .firebaseObserveConnection: "Firebase 연결 상태 감시 중 오류가 발생했습니다"

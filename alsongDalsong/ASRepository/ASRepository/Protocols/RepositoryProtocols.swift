@@ -42,6 +42,10 @@ public protocol AvatarRepositoryProtocol {
     func getAvatarUrls() async throws -> [AvatarPair]
 }
 
+public protocol BgmRepositoryProtocol {
+     func getBgmUrl(for path: String) async throws -> URL?
+ }
+
 public protocol RoomActionRepositoryProtocol: Sendable {
     func createRoom(nickname: String, avatar: URL) async throws -> String
     func joinRoom(nickname: String, avatar: URL, roomNumber: String) async throws -> Bool

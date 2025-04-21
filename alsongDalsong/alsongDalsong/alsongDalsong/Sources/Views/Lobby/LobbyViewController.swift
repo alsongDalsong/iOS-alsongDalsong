@@ -66,9 +66,9 @@ final class LobbyViewController: UIViewController {
                 text: "#" + roomNumber,
                 textStyle: .largeTitle,
                 backgroundColor: .roomNumberButton,
-                cornerStyle: .large,
                 baseForegroundColor: .asForeground,
                 shadowColor: .buttonShadowWithLine,
+                shadowHeight: 4,
                 strokeColor: .buttonShadowWithLine,
                 strokeWidth: 3
             )
@@ -83,9 +83,9 @@ final class LobbyViewController: UIViewController {
             text: "#" + viewmodel.roomNumber,
             textStyle: .largeTitle,
             backgroundColor: .roomNumberButton,
-            cornerStyle: .large,
             baseForegroundColor: .asForeground,
             shadowColor: .buttonShadowWithLine,
+            shadowHeight: 4,
             strokeColor: .buttonShadowWithLine,
             strokeWidth: 3
         )
@@ -95,9 +95,9 @@ final class LobbyViewController: UIViewController {
             imageSize: 24,
             text: nil,
             backgroundColor: .inviteButton,
-            cornerStyle: .large,
             baseForegroundColor: .tintColor,
-            shadowColor: .buttonShadowOfDefault
+            shadowColor: .buttonShadowOfDefault,
+            shadowHeight: 4
         )
 
         startButton.setConfiguration(

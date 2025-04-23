@@ -11,10 +11,12 @@ final class EffectAudioHelper: Sendable {
     private init() {
         Task {
             await effectPlayer.setVolume(0.5)
+            await buttonPlayer.setVolume(0.5)
         }
     }
     
     private let effectPlayer = ASAudioPlayer()
+    private let buttonPlayer = ASAudioPlayer()
     
     func play(name: String) {
         guard let url = Bundle.main.url(forResource: name, withExtension: "mp3") else { return }
@@ -22,6 +24,14 @@ final class EffectAudioHelper: Sendable {
         Task {
             let data = try Data(contentsOf: url)
             try await effectPlayer.startPlaying(data: data)
+        }
+    }
+    
+    func playButtonClick() {
+        guard let url = Bundle.main.url(forResource: "ButtonClick", withExtension: "mp3") else { return }
+        Task {
+            let data = try Data(contentsOf: url)
+            try await buttonPlayer.startPlaying(data: data)
         }
     }
 }

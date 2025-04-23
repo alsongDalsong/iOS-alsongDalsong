@@ -26,7 +26,7 @@ final class LargeAudioPlayerView: UIView {
     
     init() {
         super.init(frame: .zero)
-        setupUI()
+        setupView()
         setupStyle()
         setupLayout()
         setupAction()
@@ -36,7 +36,7 @@ final class LargeAudioPlayerView: UIView {
         super.init(coder: coder)
     }
     
-    func setupUI() {
+    func setupView() {
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(artistLabel)
         
@@ -141,9 +141,11 @@ final class LargeAudioPlayerView: UIView {
 // MARK: - Configure Methods
 
 extension LargeAudioPlayerView {
-    func configure(title: String, artist: String, imageData: Data?) {
-        titleLabel.text = title
-        artistLabel.text = artist
+    func configure(title: String?, artist: String?, imageData: Data?) {
+        titleLabel.text = title ?? "???"
+        artistLabel.text = artist ?? "???"
+        
+        blurView.alpha = title == nil ? 1 : 0
         
         if let data = imageData, let image = UIImage(data: data) {
             coverImageView.image = image

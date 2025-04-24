@@ -62,22 +62,22 @@ final class LobbyViewController: UIViewController {
         viewmodel.$roomNumber
             .receive(on: DispatchQueue.main)
             .sink { [weak self] roomNumber in
-                self?.roomNumberButton.setConfiguration(
+                guard let self else { return }
+                self.roomNumberButton.setConfiguration(
                 text: "#" + roomNumber,
                 textStyle: .largeTitle,
                 backgroundColor: .roomNumberButton,
                 baseForegroundColor: .asForeground,
                 shadowColor: .buttonShadowWithLine,
-                shadowHeight: 4,
+                shadowHeight: .responsiveHeight(self.view, 4),
                 strokeColor: .buttonShadowWithLine,
-                strokeWidth: 3
+                strokeWidth: .responsiveWidth(self.view, 3)
             )
         }
         .store(in: &cancellables)
     }
 
     private func setupUI() {
-        let screenWidth = view.bounds.width
         view.backgroundColor = .asBackground
 
         roomNumberButton.setConfiguration(
@@ -86,19 +86,19 @@ final class LobbyViewController: UIViewController {
             backgroundColor: .roomNumberButton,
             baseForegroundColor: .asForeground,
             shadowColor: .buttonShadowWithLine,
-            shadowHeight: 4,
+            shadowHeight: .responsiveHeight(view, 4),
             strokeColor: .buttonShadowWithLine,
-            strokeWidth: 3
+            strokeWidth: .responsiveWidth(view, 3)
         )
 
         inviteButton.setConfiguration(
             systemImageName: "square.and.arrow.up",
-            imageSize: Constants.buttonImageSize * screenWidth,
+            imageSize: .responsiveWidth(view, 24),
             text: nil,
             backgroundColor: .inviteButton,
             baseForegroundColor: .tintColor,
             shadowColor: .buttonShadowOfDefault,
-            shadowHeight: 4
+            shadowHeight: .responsiveHeight(view, 4)
         )
 
         startButton.setConfiguration(
@@ -143,51 +143,37 @@ final class LobbyViewController: UIViewController {
     }
 
     private func setupLayout() {
-        let screenWidth = view.bounds.width
-        let screenHeight = view.bounds.height
-
+        let safeArea = view.safeAreaLayoutGuide
         roomNumberButton.translatesAutoresizingMaskIntoConstraints = false
         inviteButton.translatesAutoresizingMaskIntoConstraints = false
         startButton.translatesAutoresizingMaskIntoConstraints = false
         lobbyUIHostingController.view.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            lobbyUIHostingController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            lobbyUIHostingController.view.bottomAnchor.constraint(equalTo: inviteButton.topAnchor, constant: -Constants.lobbyUIHostingControllerBottom * screenHeight),
-            lobbyUIHostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            lobbyUIHostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            lobbyUIHostingController.view.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            lobbyUIHostingController.view.bottomAnchor.constraint(equalTo: inviteButton.topAnchor, constant: .responsiveHeight(view, -20)),
+            lobbyUIHostingController.view.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            lobbyUIHostingController.view.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
 
-            roomNumberButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            roomNumberButton.trailingAnchor.constraint(equalTo: inviteButton.leadingAnchor, constant: -16),
-            roomNumberButton.bottomAnchor.constraint(equalTo: startButton.topAnchor, constant: -24),
-            roomNumberButton.heightAnchor.constraint(equalToConstant: 80),
+            roomNumberButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 24)),
+            roomNumberButton.trailingAnchor.constraint(equalTo: inviteButton.leadingAnchor, constant: .responsiveWidth(view, -16)),
+            roomNumberButton.bottomAnchor.constraint(equalTo: startButton.topAnchor, constant: .responsiveHeight(view, -24)),
+            roomNumberButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 80)),
 
-            inviteButton.bottomAnchor.constraint(equalTo: startButton.topAnchor, constant: -24),
-            inviteButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            inviteButton.widthAnchor.constraint(equalToConstant: 84),
-            inviteButton.heightAnchor.constraint(equalToConstant: 80),
+            inviteButton.bottomAnchor.constraint(equalTo: startButton.topAnchor, constant: .responsiveHeight(view, -24)),
+            inviteButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -24)),
+            inviteButton.widthAnchor.constraint(equalToConstant: .responsiveWidth(view, 84)),
+            inviteButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 80)),
 
-            startButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            startButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            startButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            startButton.heightAnchor.constraint(equalToConstant: 64),
+            startButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 24)),
+            startButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -24)),
+            startButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            startButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 64)),
         ])
     }
 
     private func gameStart() async throws {
         try await viewmodel.gameStart()
-    }
-}
-
-private extension LobbyViewController {
-    enum Constants {
-        static let standardLogicalWidth: CGFloat = 402 // iPhone 16 pro
-        static let standardLogicalHeight: CGFloat = 874 // iPhone 16 pro
-
-        static let lobbyUIHostingControllerBottom: CGFloat = 20 / standardLogicalHeight
-
-        static let buttonImageSize: CGFloat = 24 / standardLogicalWidth
-
     }
 }
 

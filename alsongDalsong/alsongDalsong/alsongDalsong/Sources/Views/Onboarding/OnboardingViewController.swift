@@ -57,10 +57,8 @@ final class OnboardingViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .asBackground
 
-        let screenWidth = view.bounds.width
-
         titleLabel.text = "알쏭달쏭"
-        titleLabel.font = UIFont.font(.riaSans, ofSize: screenWidth * Constants.textLabelFontSize)
+        titleLabel.font = UIFont.responsiveFont(view, .riaSans, 32)
         titleLabel.textColor = .onboardingForeground
 
         for item in [titleLabel, nickNamePanel, avatarView, createRoomButton, joinRoomButton] {
@@ -74,38 +72,36 @@ final class OnboardingViewController: UIViewController {
     }
 
     private func setupLayout() {
-        let screenWidth = view.bounds.width
-        let screenHeight = view.bounds.height
-
+        let safeArea = view.safeAreaLayoutGuide
         avatarViewBottomConstraint = avatarView.bottomAnchor.constraint(
-            equalTo: view.bottomAnchor,
-            constant: Constants.avatarViewBottom * screenHeight
+            equalTo: safeArea.bottomAnchor,
+            constant: .responsiveHeight(view, 40)
         )
 
         guard let avatarViewBottomConstraint else { return }
         NSLayoutConstraint.activate([
-            titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            titleLabel.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+            titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor),
 
-            nickNamePanel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.nicknamePanelTop * screenHeight),
-            nickNamePanel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.nicknamePanelSide * screenWidth),
-            nickNamePanel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.nicknamePanelSide * screenWidth),
-            nickNamePanel.heightAnchor.constraint(equalToConstant: Constants.nicknamePanelHeight * screenHeight),
+            nickNamePanel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(view, 70)),
+            nickNamePanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 40)),
+            nickNamePanel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -40)),
+            nickNamePanel.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 300)),
 
-            avatarView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            avatarView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            avatarView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            avatarView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             avatarViewBottomConstraint,
-            avatarView.heightAnchor.constraint(equalToConstant: Constants.avatarViewHeight * screenHeight),
+            avatarView.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 520)),
 
-            createRoomButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.buttonSide * screenWidth),
+            createRoomButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 24)),
             createRoomButton.widthAnchor.constraint(equalTo: joinRoomButton.widthAnchor),
-            createRoomButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.buttonBottom * screenHeight),
-            createRoomButton.heightAnchor.constraint(equalToConstant: Constants.buttonHeight * screenHeight),
+            createRoomButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: .responsiveHeight(view, -10)),
+            createRoomButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 64)),
 
-            joinRoomButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.buttonSide * screenWidth),
-            joinRoomButton.leadingAnchor.constraint(equalTo: createRoomButton.trailingAnchor, constant: Constants.buttonSpacing * screenWidth),
-            joinRoomButton.heightAnchor.constraint(equalToConstant: Constants.buttonHeight * screenHeight),
-            joinRoomButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.buttonBottom * screenHeight),
+            joinRoomButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -24)),
+            joinRoomButton.leadingAnchor.constraint(equalTo: createRoomButton.trailingAnchor, constant: .responsiveWidth(view, 16)),
+            joinRoomButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 64)),
+            joinRoomButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: .responsiveHeight(view, -10)),
         ])
     }
 
@@ -168,13 +164,12 @@ final class OnboardingViewController: UIViewController {
 
         bind(viewModel?.$avatarData) { [weak self] data in
             guard let self = self else { return }
-            let screenHeight = view.bounds.height
-            self.avatarViewBottomConstraint?.constant = Constants.avatarViewAnimationBottom * screenHeight
+            self.avatarViewBottomConstraint?.constant = .responsiveHeight(view, 600)
             UIView.animate(withDuration: 0.7, animations: {
                 self.view.layoutIfNeeded()
             }, completion: { _ in
                 self.avatarView.setImage(imageData: data)
-                self.avatarViewBottomConstraint?.constant = Constants.avatarViewBottom * screenHeight
+                self.avatarViewBottomConstraint?.constant = .responsiveHeight(self.view, 40)
                 UIView.animate(withDuration: 0.7, delay: 0.2, animations: {
                     self.view.layoutIfNeeded()
                 }, completion: nil)
@@ -272,24 +267,6 @@ extension OnboardingViewController {
         static let craeteButtonTitle = String(localized: "방 생성하기!")
         static let joinButtonTitle = String(localized: "방 참가하기!")
         static let logoImageName = "logo"
-
-        static let standardLogicalWidth: CGFloat = 402 // iPhone 16 pro
-        static let standardLogicalHeight: CGFloat = 874 // iPhone 16 pro
-
-        static let textLabelFontSize: CGFloat = 32 / standardLogicalWidth
-
-        static let nicknamePanelTop: CGFloat = 70 / standardLogicalHeight
-        static let nicknamePanelSide: CGFloat = 30 / standardLogicalWidth
-        static let nicknamePanelHeight: CGFloat = 300 / standardLogicalHeight
-
-        static let avatarViewBottom: CGFloat = 10 / standardLogicalHeight
-        static let avatarViewAnimationBottom: CGFloat = 600 / standardLogicalHeight
-        static let avatarViewHeight: CGFloat = 520 / standardLogicalHeight
-
-        static let buttonHeight: CGFloat = 64 / standardLogicalHeight
-        static let buttonSpacing: CGFloat = 16 / standardLogicalWidth
-        static let buttonSide: CGFloat = 24 / standardLogicalWidth
-        static let buttonBottom: CGFloat = 10 / standardLogicalHeight
     }
 }
 

@@ -23,4 +23,13 @@ extension UIFont {
         }
         return customFont
     }
+
+    @MainActor
+    static func responsiveFont(_ view: UIView, _ style: FontName = .dohyeon, _ size: CGFloat) -> UIFont {
+        let baseHeight: CGFloat = 874 // iPhone 16 Pro height 기준
+        let currentHeight = view.bounds.height
+        let scaledSize = (size / baseHeight) * currentHeight
+
+        return UIFont.font(style, ofSize: scaledSize)
+    }
 }

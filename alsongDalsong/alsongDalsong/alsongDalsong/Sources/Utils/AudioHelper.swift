@@ -255,6 +255,18 @@ extension AudioHelper {
         playerStateSubject.send((source, false))
     }
 
+    func pause() async {
+        Task {
+            await player?.pause()
+        }
+    }
+
+    func resume() async {
+        Task {
+            await player?.resume()
+        }
+    }
+
     private func updatePlayIndex() {
         cancellable = Timer.publish(every: 0.25, on: .main, in: .common)
             .autoconnect()

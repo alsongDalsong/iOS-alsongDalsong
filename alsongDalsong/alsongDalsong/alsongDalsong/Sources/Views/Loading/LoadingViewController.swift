@@ -38,18 +38,18 @@ final class LoadingViewController: UIViewController {
         view.backgroundColor = .asBackground
         
         titleLabel.text = "알쏭달쏭"
-        titleLabel.font = .font(.riaSans, ofSize: Constants.titleLabelFontSize * screenWidth)
+        titleLabel.font = UIFont.responsiveFont(view, .riaSans, 80)
         titleLabel.textColor = .onboardingForeground
         
         subtitleLabel.text = "기다려라"
-        subtitleLabel.font = .font(.riaSans, ofSize: Constants.subtitleLabelFontSize * screenWidth)
+        subtitleLabel.font = UIFont.responsiveFont(view, .riaSans, 20)
         subtitleLabel.textColor = .onboardingForeground
                 
         activityIndicatorView.startAnimating()
         
         stackView.axis = .vertical
         stackView.alignment = .center
-        stackView.spacing = Constants.stackViewSpacing * screenHeight
+        stackView.spacing = .responsiveHeight(view, 8)
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subtitleLabel)
@@ -59,12 +59,13 @@ final class LoadingViewController: UIViewController {
     }
     
     private func setupLayout() {
+        let safeArea = view.safeAreaLayoutGuide
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            stackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            stackView.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor)
         ])
     }
     
@@ -96,7 +97,7 @@ final class LoadingViewController: UIViewController {
         let currentY = superview.convert(titleLabel.frame, to: nil).minY
         let targetY = view.safeAreaInsets.top
                 
-        let scaleFactor: CGFloat = Constants.titleAnimationFontSize / Constants.titleLabelFontSize /// 폰트 크기 변화
+        let scaleFactor: CGFloat = .responsiveHeight(view, 32) / .responsiveHeight(view, 80) /// 폰트 크기 변화
         let fontHeightDifference = titleLabel.frame.height * (1 - scaleFactor)
         
         let translationY = targetY - currentY - (fontHeightDifference / 2)
@@ -148,19 +149,5 @@ final class LoadingViewController: UIViewController {
         Task {
             await AVCaptureDevice.requestAccess(for: .audio)
         }
-    }
-}
-
-private extension LoadingViewController {
-    enum Constants {
-        static let standardLogicalWidth: CGFloat = 402 // iPhone 16 pro
-        static let standardLogicalHeight: CGFloat = 874 // iPhone 16 pro
-
-        static let titleLabelFontSize: CGFloat = 80 / standardLogicalWidth
-        static let titleAnimationFontSize: CGFloat = 32 / standardLogicalWidth
-
-        static let subtitleLabelFontSize: CGFloat = 20 / standardLogicalWidth
-
-        static let stackViewSpacing: CGFloat = 8 / standardLogicalHeight
     }
 }

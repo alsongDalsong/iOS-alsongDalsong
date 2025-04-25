@@ -35,35 +35,35 @@ final class SelectAnswerButton: UIButton {
     }
     
     private func setupStyle() {
-        layer.cornerRadius = 12
+        layer.cornerRadius = .responsiveWidth(self, 12)
         layer.cornerCurve = .continuous
         backgroundColor = .systemBackground
         layer.borderColor = UIColor.systemGroupedBackground.cgColor
-        layer.borderWidth = 3
+        layer.borderWidth = .responsiveWidth(self, 3)
         layer.shadowColor = UIColor.gray.cgColor
         layer.shadowOpacity = 0.5
-        layer.shadowOffset = CGSize(width: 0, height: 4)
-        layer.shadowRadius = 2
-        
+        layer.shadowOffset = CGSize(width: .responsiveWidth(self, 0), height: .responsiveHeight(self, 4))
+        layer.shadowRadius = .responsiveWidth(self, 2)
+
         coverImageView.contentMode = .scaleAspectFill
-        coverImageView.layer.cornerRadius = 12
+        coverImageView.layer.cornerRadius = .responsiveWidth(self, 12)
         coverImageView.clipsToBounds = true
         coverImageView.backgroundColor = .systemGray4
 
         songTitleLabel.textColor = .label
-        songTitleLabel.font = .systemFont(ofSize: 14)
+        songTitleLabel.font = .systemFont(ofSize: .responsiveHeight(self, 14))
 
         artistLabel.textColor = .secondaryLabel
-        artistLabel.font = .systemFont(ofSize: 12)
+        artistLabel.font = .systemFont(ofSize: .responsiveHeight(self, 12))
 
         stackView.axis = .vertical
         stackView.alignment = .leading
-        stackView.spacing = 4
-        
+        stackView.spacing = .responsiveHeight(self, 4)
+
         configuration = .plain()
         var titleAttribute = AttributedString("정답을 선택해 주세요")
         titleAttribute.foregroundColor = .label
-        titleAttribute.font = .systemFont(ofSize: 18, weight: .semibold)
+        titleAttribute.font = .systemFont(ofSize: .responsiveHeight(self, 18), weight: .semibold)
         configuration?.attributedTitle = titleAttribute
                 
         configurationUpdateHandler = { [weak self] _ in
@@ -76,23 +76,23 @@ final class SelectAnswerButton: UIButton {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: 80),
-            
-            coverImageView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            coverImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
-            coverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            coverImageView.heightAnchor.constraint(equalToConstant: 60),
-            coverImageView.widthAnchor.constraint(equalToConstant: 60),
+            heightAnchor.constraint(equalToConstant: .responsiveHeight(self, 80)),
 
-            stackView.leadingAnchor.constraint(equalTo: coverImageView.trailingAnchor, constant: 10),
+            coverImageView.topAnchor.constraint(equalTo: topAnchor, constant: .responsiveHeight(self, 10)),
+            coverImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: .responsiveHeight(self, -10)),
+            coverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .responsiveWidth(self, 10)),
+            coverImageView.heightAnchor.constraint(equalToConstant: .responsiveHeight(self, 60)),
+            coverImageView.widthAnchor.constraint(equalToConstant: .responsiveWidth(self, 60)),
+
+            stackView.leadingAnchor.constraint(equalTo: coverImageView.trailingAnchor, constant: .responsiveWidth(self, 10)),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10)
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(self, -10))
         ])
     }
     
     private func applyHighlightEffect() {
         if isHighlighted {
-            transform = CGAffineTransform(translationX: 0, y: 4)
+            transform = CGAffineTransform(translationX: .responsiveWidth(self, 0), y: .responsiveHeight(self, 4))
             layer.shadowColor = UIColor.clear.cgColor
         } else {
             transform = .identity

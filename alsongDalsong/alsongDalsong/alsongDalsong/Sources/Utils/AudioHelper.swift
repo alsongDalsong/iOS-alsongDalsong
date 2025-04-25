@@ -25,6 +25,7 @@ final class AudioHelper: @unchecked Sendable {
             playBgm()
         }
     }
+
     private let queue = DispatchQueue(label: "alsongDalsong.AudioHelper")
 
     // MARK: - Publishers
@@ -110,7 +111,7 @@ extension AudioHelper {
     func playBgm() {
         Task {
             print(#function)
-            await startPlaying(bgmDatas[bgmState])
+            await startPlaying(bgmDatas[bgmState], option: .loop)
         }
     }
 
@@ -157,6 +158,9 @@ extension AudioHelper {
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(time)) { [weak self] in
                 self?.stopEngine()
             }
+
+        case .loop:
+            playerEngine.play()
         }
 
         playerStateSubject.send((source, true))
@@ -218,7 +222,6 @@ extension AudioHelper {
             } catch {
                 ErrorHandler.handle(error)
             }
-
         case let .partial(time):
             do {
                 try await player?.startPlaying(data: file)
@@ -227,7 +230,12 @@ extension AudioHelper {
             } catch {
                 ErrorHandler.handle(error)
             }
-
+        case .loop:
+            do {
+                try await player?.startPlaying(data: file, fade: true, isLoop: true)
+            } catch {
+                ErrorHandler.handle(error)
+            }
         @unknown default: break
         }
     }

@@ -19,7 +19,7 @@ public actor ASAudioPlayer: NSObject {
     }
 
     /// 녹음파일을 재생하고 옵션에 따라 재생시간을 설정합니다.
-    public func startPlaying(data: Data, option: PlayType = .full, fade: Bool = false) throws {
+    public func startPlaying(data: Data, option: PlayType = .full, fade: Bool = false, isLoop: Bool = false) throws {
         do {
             try configureAudioSession()
             audioPlayer = try AVAudioPlayer(data: data)
@@ -27,6 +27,7 @@ public actor ASAudioPlayer: NSObject {
             audioPlayer?.delegate = self
             audioPlayer?.prepareToPlay()
             audioPlayer?.isMeteringEnabled = true
+            audioPlayer?.numberOfLoops = isLoop ? -1 : 0
         } catch {
             // TODO: 오디오 객체생성 실패 시 처리
             ErrorHandler.handle(error)

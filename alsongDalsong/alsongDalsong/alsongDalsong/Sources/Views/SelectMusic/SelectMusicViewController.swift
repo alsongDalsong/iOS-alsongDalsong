@@ -59,20 +59,20 @@ final class SelectMusicViewController: UIViewController {
             progressBar.topAnchor.constraint(equalTo: safeArea.topAnchor),
             progressBar.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             progressBar.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            progressBar.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 16)),
+            progressBar.heightAnchor.constraint(equalToConstant: .responsiveHeight(16)),
 
             selectMusicView.view.topAnchor.constraint(equalTo: progressBar.bottomAnchor),
             selectMusicView.view.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             selectMusicView.view.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            selectMusicView.view.bottomAnchor.constraint(equalTo: submitButton.topAnchor, constant: .responsiveHeight(view, -20)),
+            selectMusicView.view.bottomAnchor.constraint(equalTo: submitButton.topAnchor, constant: .responsiveHeight(-20)),
 
-            submissionStatus.topAnchor.constraint(equalTo: submitButton.topAnchor, constant: .responsiveHeight(view, -16)),
-            submissionStatus.trailingAnchor.constraint(equalTo: submitButton.trailingAnchor, constant: .responsiveWidth(view, 16)),
+            submissionStatus.topAnchor.constraint(equalTo: submitButton.topAnchor, constant: .responsiveHeight(-16)),
+            submissionStatus.trailingAnchor.constraint(equalTo: submitButton.trailingAnchor, constant: .responsiveWidth(16)),
 
-            submitButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 24)),
-            submitButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -24)),
-            submitButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
-            submitButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 64)),
+            submitButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(24)),
+            submitButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-24)),
+            submitButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: .responsiveHeight(-16)),
+            submitButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(64)),
         ])
     }
     

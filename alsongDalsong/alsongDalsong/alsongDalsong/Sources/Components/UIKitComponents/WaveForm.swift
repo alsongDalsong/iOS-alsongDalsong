@@ -88,12 +88,12 @@ final class WaveForm: UIView {
     }
 
     private func computeNewPath(for layer: CAShapeLayer, with amplitude: CGFloat) -> CGPath {
-        let width = columnWidth ?? 8.0
+        let width = columnWidth ?? .responsiveWidth(8.0)
         let maxHeightGain = bounds.height - 3 * width
         let heightGain = maxHeightGain * amplitude
         let newHeight = width + heightGain
-        let newOrigin = CGPoint(x: layer.path?.boundingBox.origin.x ?? 0,
-                                y: (layer.superlayer?.bounds.midY ?? 0) - (newHeight / 2))
+        let newOrigin = CGPoint(x: layer.path?.boundingBox.origin.x ?? .responsiveWidth(0),
+                                y: (layer.superlayer?.bounds.midY ?? .responsiveHeight(0)) - (newHeight / 2))
         let newSize = CGSize(width: width, height: newHeight)
 
         return UIBezierPath(roundedRect: CGRect(origin: newOrigin, size: newSize), cornerRadius: width / 2).cgPath

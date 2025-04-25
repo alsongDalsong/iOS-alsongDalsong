@@ -41,7 +41,7 @@ extension FrequencyWaveView {
                 height: initialHeight
             )
             layer.backgroundColor = UIColor.lightGray.cgColor
-            layer.cornerRadius = .responsiveWidth(self, 2)
+            layer.cornerRadius = .responsiveWidth(2)
             layer.masksToBounds = true
             
             frequencyLayers.append(layer)

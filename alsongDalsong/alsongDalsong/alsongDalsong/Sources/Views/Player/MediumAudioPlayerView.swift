@@ -51,33 +51,33 @@ final class MediumAudioPlayerView: UIView {
     }
     
     private func setupStyle() {
-        backgroundView.layer.cornerRadius = .responsiveWidth(self, 12)
+        backgroundView.layer.cornerRadius = .responsiveWidth(12)
         backgroundView.layer.cornerCurve = .continuous
         backgroundView.backgroundColor = .systemGroupedBackground
         backgroundView.layer.shadowColor = UIColor.gray.cgColor
         backgroundView.layer.shadowOpacity = 0.5
-        backgroundView.layer.shadowOffset = CGSize(width: .responsiveWidth(self, 0), height: .responsiveHeight(self, 4))
-        backgroundView.layer.shadowRadius = .responsiveWidth(self, 2)
+        backgroundView.layer.shadowOffset = CGSize(width: .responsiveWidth(0), height: .responsiveHeight(4))
+        backgroundView.layer.shadowRadius = .responsiveWidth(2)
 
         if audioPlayerType == .submit {
             backgroundView.backgroundColor = .systemBackground
             backgroundView.layer.borderColor = UIColor.systemGroupedBackground.cgColor
-            backgroundView.layer.borderWidth = .responsiveWidth(self, 3)
+            backgroundView.layer.borderWidth = .responsiveWidth(3)
         }
         
         coverImageView.contentMode = .scaleAspectFill
-        coverImageView.layer.cornerRadius = .responsiveWidth(self, 12)
+        coverImageView.layer.cornerRadius = .responsiveWidth(12)
         coverImageView.clipsToBounds = true
         
         titleLabel.textColor = .label
-        titleLabel.font = .systemFont(ofSize: .responsiveHeight(self, 14))
+        titleLabel.font = .systemFont(ofSize: .responsiveHeight(14))
 
         artistLabel.textColor = .secondaryLabel
-        artistLabel.font = .systemFont(ofSize: .responsiveHeight(self, 12))
+        artistLabel.font = .systemFont(ofSize: .responsiveHeight(12))
 
         if audioPlayerType == .submit {
             var buttonConfiguration = UIButton.Configuration.borderless()
-            let imageConfiguration = UIImage.SymbolConfiguration(pointSize: .responsiveWidth(self, 18))
+            let imageConfiguration = UIImage.SymbolConfiguration(pointSize: .responsiveWidth(18))
             buttonConfiguration.preferredSymbolConfigurationForImage = imageConfiguration
             buttonConfiguration.baseForegroundColor = .asForeground
             buttonConfiguration.image = UIImage(systemName: "play.fill")
@@ -88,7 +88,7 @@ final class MediumAudioPlayerView: UIView {
         
         stackView.axis = .vertical
         stackView.alignment = .leading
-        stackView.spacing = .responsiveHeight(self, 4)
+        stackView.spacing = .responsiveHeight(4)
     }
     
     private func setupAction() {
@@ -108,13 +108,13 @@ final class MediumAudioPlayerView: UIView {
             backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
             backgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            coverImageView.topAnchor.constraint(equalTo: topAnchor, constant: .responsiveHeight(self, 10)),
-            coverImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: .responsiveHeight(self, -10)),
-            coverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .responsiveWidth(self, 10)),
-            coverImageView.heightAnchor.constraint(equalToConstant: .responsiveHeight(self, 60)),
-            coverImageView.widthAnchor.constraint(equalToConstant: .responsiveWidth(self, 60)),
+            coverImageView.topAnchor.constraint(equalTo: topAnchor, constant: .responsiveHeight(10)),
+            coverImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: .responsiveHeight(-10)),
+            coverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .responsiveWidth(10)),
+            coverImageView.heightAnchor.constraint(equalToConstant: .responsiveHeight(60)),
+            coverImageView.widthAnchor.constraint(equalToConstant: .responsiveWidth(60)),
 
-            stackView.leadingAnchor.constraint(equalTo: coverImageView.trailingAnchor, constant: .responsiveWidth(self, 10)),
+            stackView.leadingAnchor.constraint(equalTo: coverImageView.trailingAnchor, constant: .responsiveWidth(10)),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
         
@@ -122,7 +122,7 @@ final class MediumAudioPlayerView: UIView {
             controlButton.translatesAutoresizingMaskIntoConstraints = false
 
             NSLayoutConstraint.activate([
-                controlButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(self, -10)),
+                controlButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(-10)),
                 controlButton.centerYAnchor.constraint(equalTo: centerYAnchor)
             ])
         }
@@ -131,11 +131,11 @@ final class MediumAudioPlayerView: UIView {
             frequencyWaveView.translatesAutoresizingMaskIntoConstraints = false
 
             NSLayoutConstraint.activate([
-                stackView.trailingAnchor.constraint(equalTo: frequencyWaveView.leadingAnchor, constant: .responsiveWidth(self, -10)),
+                stackView.trailingAnchor.constraint(equalTo: frequencyWaveView.leadingAnchor, constant: .responsiveWidth(-10)),
 
-                frequencyWaveView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(self, -20)),
-                frequencyWaveView.widthAnchor.constraint(equalToConstant: .responsiveWidth(self, 20)),
-                frequencyWaveView.heightAnchor.constraint(equalToConstant: .responsiveHeight(self, 16)),
+                frequencyWaveView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(-20)),
+                frequencyWaveView.widthAnchor.constraint(equalToConstant: .responsiveWidth(20)),
+                frequencyWaveView.heightAnchor.constraint(equalToConstant: .responsiveHeight(16)),
                 frequencyWaveView.centerYAnchor.constraint(equalTo: centerYAnchor)
             ])
         }

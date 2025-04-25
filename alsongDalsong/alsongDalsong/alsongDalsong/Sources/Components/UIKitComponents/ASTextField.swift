@@ -9,16 +9,21 @@ final class ASTextField: UITextField {
         placeholder: String?,
         backgroundColor: UIColor = .asSystem,
         textFont: FontName = .dohyeon,
-        textSize: CGFloat = 32
+        textSize: CGFloat = .responsiveHeight(32)
     ) {
-        layer.cornerRadius = 12
+        layer.cornerRadius = .responsiveWidth(12)
 
         attributedPlaceholder = NSAttributedString(string: placeholder ?? "", attributes: [.foregroundColor: UIColor.lightGray])
         self.backgroundColor = backgroundColor
         font = UIFont.font(textFont, ofSize: textSize)
         textColor = .asForeground
         attributedText?.addObserver(self, forKeyPath: "string", options: .new, context: nil)
-        leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
+        leftView = UIView(frame: CGRect(
+            x: .responsiveWidth(0),
+            y: .responsiveHeight(0),
+            width: .responsiveWidth(10),
+            height: .responsiveHeight(0)
+        ))
         leftViewMode = .always
     }
 

@@ -54,8 +54,8 @@ private extension ModeView {
         Image(viewModel.selectedCard.mode.imageName)
             .resizable()
             .scaledToFit()
-            .clipShape(.rect(cornerRadius: 30, style: .continuous))
-            .shadow(color: Color.black.opacity(0.25), radius: 4, x: 0, y: 4)
+            .clipShape(.rect(cornerRadius: .responsiveWidth(30), style: .continuous))
+            .shadow(color: Color.black.opacity(0.25), radius: .responsiveWidth(4), x: .responsiveWidth(0), y: .responsiveHeight(4))
     }
     
     var frontCard: some View {
@@ -75,31 +75,31 @@ private extension ModeView {
                     Image(systemName: "clock")
                     
                     Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.duration))
-                        .font(.doHyeon(size: 20))
+                        .font(.doHyeon(size: .responsiveHeight(20)))
                 }
                 
                 HStack {
                     Image(systemName: "person.fill")
                     
                     Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.recommendedPlayers))
-                        .font(.doHyeon(size: 20))
+                        .font(.doHyeon(size: .responsiveHeight(20)))
                 }
             }
-            .padding(.top, 16)
-            .padding(.trailing, 24)
+            .padding(.top, .responsiveHeight(16))
+            .padding(.trailing, .responsiveWidth(24))
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
             
             VStack(alignment: .leading) {
                 Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.title))
-                    .font(.doHyeon(size: 40))
+                    .font(.doHyeon(size: .responsiveHeight(40)))
                     .layoutPriority(1)
                 
                 Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.summary))
-                    .font(.doHyeon(size: 24))
+                    .font(.doHyeon(size: .responsiveHeight(24)))
                     .minimumScaleFactor(0.01)
             }
-            .padding(.bottom, 25)
-            .padding(.leading, 24)
+            .padding(.bottom, .responsiveHeight(25))
+            .padding(.leading, .responsiveWidth(24))
             .frame(maxWidth: .infinity, alignment: .bottomLeading)
         }
         .foregroundStyle(.white)  //TO-DO
@@ -116,21 +116,21 @@ private extension ModeView {
     }
     
     var descriptionView: some View {
-        RoundedRectangle(cornerRadius: 30, style: .continuous)
+        RoundedRectangle(cornerRadius: .responsiveWidth(30), style: .continuous)
             .fill(.ultraThinMaterial)
             .overlay(alignment: .topLeading) {
                 VStack(alignment: .leading) {
                     Text(viewModel.selectedCard.mode.title)
-                        .font(.doHyeon(size: 40))
-                    
+                        .font(.doHyeon(size: .responsiveHeight(40)))
+
                     Text(LocalizedStringResource(stringLiteral: viewModel.selectedCard.mode.description))
-                        .font(.system(size: 18))
+                        .font(.system(size: .responsiveHeight(18)))
                         .fontWeight(.medium)
-                        .lineSpacing(6)
+                        .lineSpacing(.responsiveHeight(6))
                         .frame(maxHeight: .infinity)
                 }
-                .padding(.vertical, 50)
-                .padding(.horizontal, 28)
+                .padding(.vertical, .responsiveHeight(50))
+                .padding(.horizontal, .responsiveWidth(28))
             }
     }
     
@@ -138,14 +138,14 @@ private extension ModeView {
         Rectangle()
             .fill(.ultraThinMaterial)
             .overlay(Color.black.opacity(0.3))
-            .clipShape(.rect(cornerRadius: 30, style: .continuous))
+            .clipShape(.rect(cornerRadius: .responsiveWidth(30), style: .continuous))
             .overlay {
                 VStack(spacing: 12) {
                     Image(systemName: "lock.fill")
-                        .font(.system(size: 40, weight: .bold))
-                    
+                        .font(.system(size: .responsiveHeight(40), weight: .bold))
+
                     Text("곧 출시 예정입니다")
-                        .font(.system(size: 18))
+                        .font(.system(size: .responsiveHeight(18)))
                         .fontWeight(.medium)
                 }
                 .foregroundColor(.white)

@@ -14,7 +14,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         ASFirebaseAuth.configure()
         var inviteCode = ""
-        
+
         if let url = connectionOptions.urlContexts.first?.url {
             let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
             if let roomNumber = components?.queryItems?.first(where: { item in

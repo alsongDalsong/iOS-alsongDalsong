@@ -58,7 +58,7 @@ final class OnboardingViewController: UIViewController {
         view.backgroundColor = .asBackground
 
         titleLabel.text = "알쏭달쏭"
-        titleLabel.font = UIFont.responsiveFont(view, .riaSans, 32)
+        titleLabel.font = UIFont.font(.riaSans, ofSize: .responsiveHeight(32))
         titleLabel.textColor = .onboardingForeground
 
         for item in [titleLabel, nickNamePanel, avatarView, createRoomButton, joinRoomButton] {
@@ -75,7 +75,7 @@ final class OnboardingViewController: UIViewController {
         let safeArea = view.safeAreaLayoutGuide
         avatarViewBottomConstraint = avatarView.bottomAnchor.constraint(
             equalTo: safeArea.bottomAnchor,
-            constant: .responsiveHeight(view, 40)
+            constant: .responsiveHeight(40)
         )
 
         guard let avatarViewBottomConstraint else { return }
@@ -83,25 +83,25 @@ final class OnboardingViewController: UIViewController {
             titleLabel.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
             titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor),
 
-            nickNamePanel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(view, 70)),
-            nickNamePanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 40)),
-            nickNamePanel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -40)),
-            nickNamePanel.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 300)),
+            nickNamePanel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(70)),
+            nickNamePanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(50)),
+            nickNamePanel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-50)),
+            nickNamePanel.heightAnchor.constraint(equalToConstant: .responsiveHeight(300)),
 
             avatarView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             avatarView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             avatarViewBottomConstraint,
-            avatarView.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 520)),
+            avatarView.heightAnchor.constraint(equalToConstant: .responsiveHeight(520)),
 
-            createRoomButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 24)),
+            createRoomButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(24)),
             createRoomButton.widthAnchor.constraint(equalTo: joinRoomButton.widthAnchor),
-            createRoomButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: .responsiveHeight(view, -10)),
-            createRoomButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 64)),
+            createRoomButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: .responsiveHeight(-16)),
+            createRoomButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(64)),
 
-            joinRoomButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -24)),
-            joinRoomButton.leadingAnchor.constraint(equalTo: createRoomButton.trailingAnchor, constant: .responsiveWidth(view, 16)),
-            joinRoomButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 64)),
-            joinRoomButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: .responsiveHeight(view, -10)),
+            joinRoomButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-24)),
+            joinRoomButton.leadingAnchor.constraint(equalTo: createRoomButton.trailingAnchor, constant: .responsiveWidth(16)),
+            joinRoomButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(64)),
+            joinRoomButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: .responsiveHeight(-16)),
         ])
     }
 
@@ -164,12 +164,12 @@ final class OnboardingViewController: UIViewController {
 
         bind(viewModel?.$avatarData) { [weak self] data in
             guard let self = self else { return }
-            self.avatarViewBottomConstraint?.constant = .responsiveHeight(view, 600)
+            self.avatarViewBottomConstraint?.constant = .responsiveHeight(600)
             UIView.animate(withDuration: 0.7, animations: {
                 self.view.layoutIfNeeded()
             }, completion: { _ in
                 self.avatarView.setImage(imageData: data)
-                self.avatarViewBottomConstraint?.constant = .responsiveHeight(self.view, 40)
+                self.avatarViewBottomConstraint?.constant = .responsiveHeight(40)
                 UIView.animate(withDuration: 0.7, delay: 0.2, animations: {
                     self.view.layoutIfNeeded()
                 }, completion: nil)

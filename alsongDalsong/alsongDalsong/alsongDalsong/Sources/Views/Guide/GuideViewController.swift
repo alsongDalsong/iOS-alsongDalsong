@@ -63,14 +63,14 @@ final class GuideViewController: UIViewController {
         
         let safeArea = view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(view, 272)),
+            titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(272)),
             titleLabel.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: .responsiveHeight(view, 48)),
-            descriptionLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 16)),
-            descriptionLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -16)),
-            cautionLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: .responsiveHeight(view, 8)),
-            cautionLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 16)),
-            cautionLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -16)),
+            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: .responsiveHeight(48)),
+            descriptionLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(16)),
+            descriptionLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-16)),
+            cautionLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: .responsiveHeight(8)),
+            cautionLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(16)),
+            cautionLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-16)),
         ])
     }
     
@@ -78,10 +78,10 @@ final class GuideViewController: UIViewController {
         if let imageContainerView {
             view.addSubview(imageContainerView)
             NSLayoutConstraint.activate([
-                imageContainerView.widthAnchor.constraint(equalToConstant: .responsiveWidth(view, 32)),
-                imageContainerView.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 32)),
-                imageContainerView.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: .responsiveHeight(view, -4)),
-                imageContainerView.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: .responsiveWidth(view, 4)),
+                imageContainerView.widthAnchor.constraint(equalToConstant: .responsiveWidth(32)),
+                imageContainerView.heightAnchor.constraint(equalToConstant: .responsiveHeight(32)),
+                imageContainerView.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: .responsiveHeight(-4)),
+                imageContainerView.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: .responsiveWidth(4)),
             ])
         }
         

@@ -30,21 +30,21 @@ final class SamplePlayerViewController: UIViewController {
         mediumResultPlayerView2.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            largePlayerView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(view, 12)),
-            largePlayerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 24)),
-            largePlayerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -24)),
+            largePlayerView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(12)),
+            largePlayerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(24)),
+            largePlayerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-24)),
 
-            mediumSubmitPlayerView.topAnchor.constraint(equalTo: largePlayerView.bottomAnchor, constant: .responsiveHeight(view, 12)),
-            mediumSubmitPlayerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 24)),
-            mediumSubmitPlayerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -24)),
+            mediumSubmitPlayerView.topAnchor.constraint(equalTo: largePlayerView.bottomAnchor, constant: .responsiveHeight(12)),
+            mediumSubmitPlayerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(24)),
+            mediumSubmitPlayerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-24)),
 
-            mediumResultPlayerView.topAnchor.constraint(equalTo: mediumSubmitPlayerView.bottomAnchor, constant: .responsiveHeight(view, 12)),
-            mediumResultPlayerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 24)),
-            mediumResultPlayerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -24)),
+            mediumResultPlayerView.topAnchor.constraint(equalTo: mediumSubmitPlayerView.bottomAnchor, constant: .responsiveHeight(12)),
+            mediumResultPlayerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(24)),
+            mediumResultPlayerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-24)),
 
-            mediumResultPlayerView2.topAnchor.constraint(equalTo: mediumResultPlayerView.bottomAnchor, constant: .responsiveHeight(view, 12)),
-            mediumResultPlayerView2.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 24)),
-            mediumResultPlayerView2.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -120))
+            mediumResultPlayerView2.topAnchor.constraint(equalTo: mediumResultPlayerView.bottomAnchor, constant: .responsiveHeight(12)),
+            mediumResultPlayerView2.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(24)),
+            mediumResultPlayerView2.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-120))
         ])
         
         if let music = viewModel.music {

@@ -42,9 +42,9 @@ final class InputAlertController: ASAlertController {
         textField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             textField.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-            textField.heightAnchor.constraint(equalToConstant: 44),
+            textField.heightAnchor.constraint(equalToConstant: .responsiveHeight(44)),
         ])
-        textField.heightAnchor.constraint(equalToConstant: 43).priority = .defaultHigh
+        textField.heightAnchor.constraint(equalToConstant: .responsiveHeight(43)).priority = .defaultHigh
     }
 
     convenience init(

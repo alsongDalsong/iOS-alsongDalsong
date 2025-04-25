@@ -38,18 +38,18 @@ final class LoadingViewController: UIViewController {
         view.backgroundColor = .asBackground
         
         titleLabel.text = "알쏭달쏭"
-        titleLabel.font = UIFont.responsiveFont(view, .riaSans, 80)
+        titleLabel.font = UIFont.font(.riaSans, ofSize: .responsiveHeight(80))
         titleLabel.textColor = .onboardingForeground
         
         subtitleLabel.text = "기다려라"
-        subtitleLabel.font = UIFont.responsiveFont(view, .riaSans, 20)
+        subtitleLabel.font = UIFont.font(.riaSans, ofSize: .responsiveHeight(20))
         subtitleLabel.textColor = .onboardingForeground
                 
         activityIndicatorView.startAnimating()
         
         stackView.axis = .vertical
         stackView.alignment = .center
-        stackView.spacing = .responsiveHeight(view, 8)
+        stackView.spacing = .responsiveHeight(8)
 
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(subtitleLabel)
@@ -97,7 +97,7 @@ final class LoadingViewController: UIViewController {
         let currentY = superview.convert(titleLabel.frame, to: nil).minY
         let targetY = view.safeAreaInsets.top
                 
-        let scaleFactor: CGFloat = .responsiveHeight(view, 32) / .responsiveHeight(view, 80) /// 폰트 크기 변화
+        let scaleFactor: CGFloat = .responsiveHeight(32) / .responsiveHeight(80) /// 폰트 크기 변화
         let fontHeightDifference = titleLabel.frame.height * (1 - scaleFactor)
         
         let translationY = targetY - currentY - (fontHeightDifference / 2)

@@ -11,9 +11,9 @@ final class ASPanel: UIView {
     }
 
     private func setupUI() {
-        layer.cornerRadius = 12
+        layer.cornerRadius = .responsiveWidth(12)
         layer.borderColor = UIColor.profileViewCircle.cgColor
-        layer.borderWidth = 3
+        layer.borderWidth = .responsiveWidth(3)
         backgroundColor = .asSystem
         setShadow()
     }

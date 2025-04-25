@@ -49,7 +49,7 @@ final class ProgressBar: UIView {
         addSubview(progressBar)
         
         progressBar.translatesAutoresizingMaskIntoConstraints = false
-        progressBarWidthConstraint = progressBar.widthAnchor.constraint(equalToConstant: 0)
+        progressBarWidthConstraint = progressBar.widthAnchor.constraint(equalToConstant: .responsiveWidth(0))
         NSLayoutConstraint.activate([
             progressBar.leadingAnchor.constraint(equalTo: leadingAnchor),
             progressBar.topAnchor.constraint(equalTo: topAnchor),
@@ -108,7 +108,7 @@ final class ProgressBar: UIView {
             options: .curveLinear,
             animations: { [weak self] in
                 guard let self else { return }
-                progressBarWidthConstraint?.constant = 0
+                progressBarWidthConstraint?.constant = .responsiveWidth(0)
                 progressBar.backgroundColor = .asLightRed
                 layoutIfNeeded()
             },

@@ -49,7 +49,7 @@ final class RehummingViewController: UIViewController {
         submitButton.setConfiguration(.submit)
         submitButton.setDisabledState()
         buttonStack.axis = .horizontal
-        buttonStack.spacing = .responsiveWidth(view, 16)
+        buttonStack.spacing = .responsiveWidth(16)
         buttonStack.addArrangedSubview(recordButton)
         buttonStack.addArrangedSubview(submitButton)
         scrollView.addSubview(musicPanel)
@@ -90,30 +90,30 @@ final class RehummingViewController: UIViewController {
             progressBar.topAnchor.constraint(equalTo: safeArea.topAnchor),
             progressBar.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             progressBar.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            progressBar.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 16)),
+            progressBar.heightAnchor.constraint(equalToConstant: .responsiveHeight(16)),
 
             scrollView.topAnchor.constraint(equalTo: progressBar.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: buttonStack.topAnchor),
-            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: hummingPanel.bottomAnchor, constant: .responsiveHeight(view, 16)),
+            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: hummingPanel.bottomAnchor, constant: .responsiveHeight(16)),
 
-            musicPanel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: .responsiveHeight(view, 32)),
-            musicPanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 32)),
-            musicPanel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -32)),
+            musicPanel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: .responsiveHeight(32)),
+            musicPanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(32)),
+            musicPanel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-32)),
 
-            hummingPanel.topAnchor.constraint(equalTo: musicPanel.bottomAnchor, constant: .responsiveHeight(view, 32)),
-            hummingPanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 20)),
-            hummingPanel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -20)),
-            hummingPanel.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 84)),
+            hummingPanel.topAnchor.constraint(equalTo: musicPanel.bottomAnchor, constant: .responsiveHeight(32)),
+            hummingPanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(20)),
+            hummingPanel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-20)),
+            hummingPanel.heightAnchor.constraint(equalToConstant: .responsiveHeight(84)),
 
-            submissionStatus.topAnchor.constraint(equalTo: buttonStack.topAnchor, constant: .responsiveHeight(view, -16)),
-            submissionStatus.trailingAnchor.constraint(equalTo: buttonStack.trailingAnchor, constant: .responsiveWidth(view, 16)),
+            submissionStatus.topAnchor.constraint(equalTo: buttonStack.topAnchor, constant: .responsiveHeight(-16)),
+            submissionStatus.trailingAnchor.constraint(equalTo: buttonStack.trailingAnchor, constant: .responsiveWidth(16)),
 
-            buttonStack.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 24)),
-            buttonStack.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -24)),
-            buttonStack.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
-            buttonStack.heightAnchor.constraint(greaterThanOrEqualToConstant: .responsiveHeight(view, 64)),
+            buttonStack.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(24)),
+            buttonStack.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-24)),
+            buttonStack.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: .responsiveHeight(-16)),
+            buttonStack.heightAnchor.constraint(greaterThanOrEqualToConstant: .responsiveHeight(64)),
         ])
     }
 

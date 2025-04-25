@@ -28,16 +28,16 @@ final class ASButton: UIButton {
     ///   - baseForegroundColor: 글씨 컬러
     func setConfiguration(
         systemImageName: String? = nil,
-        imageSize: CGFloat = 20,
+        imageSize: CGFloat = .responsiveWidth(20),
         text: String? = nil,
         textStyle: UIFont.TextStyle = .largeTitle,
         backgroundColor: UIColor? = nil,
         cornerStyle: UIButton.Configuration.CornerStyle = .large,
         baseForegroundColor: UIColor = .white,
         shadowColor: UIColor = .buttonShadowOfDefault,
-        shadowHeight: CGFloat = 8,
+        shadowHeight: CGFloat = .responsiveHeight(8),
         strokeColor: UIColor? = nil,
-        strokeWidth: CGFloat = 0
+        strokeWidth: CGFloat = .responsiveWidth(0)
     ) {
         configurationData = ASButtonConfiguration(
             systemImageName: systemImageName,
@@ -52,14 +52,14 @@ final class ASButton: UIButton {
             shadowColor: shadowColor,
             shadowHeight: shadowHeight
         )
-        setShadow(color: shadowColor, width: 0, height: shadowHeight)
+        setShadow(color: shadowColor, width: .responsiveWidth(0), height: shadowHeight)
         applyConfiguration()
     }
 
     /// 버튼의 UI 관련한 Configuration을 설정하는 메서드
     func setConfiguration(
         _ type: ASButtonType? = nil,
-        shadowHeight: CGFloat = 8
+        shadowHeight: CGFloat = .responsiveHeight(8)
     ) {
         configurationData = ASButtonConfiguration(
             systemImageName: type?.systemImage,
@@ -70,7 +70,7 @@ final class ASButton: UIButton {
             shadowColor: type?.shadowColor ?? .buttonShadowOfDefault,
             shadowHeight: shadowHeight
         )
-        setShadow(color: (type?.shadowColor) ?? .buttonShadowOfDefault, width: 0, height: shadowHeight)
+        setShadow(color: (type?.shadowColor) ?? .buttonShadowOfDefault, width: .responsiveWidth(0), height: shadowHeight)
         applyConfiguration()
     }
 
@@ -100,7 +100,7 @@ final class ASButton: UIButton {
             cornerStyle: configurationData?.cornerStyle ?? .medium,
             baseForegroundColor: configurationData?.baseForegroundColor ?? .white
         )
-        setShadow(color: .buttonShadowOfDefault, width: 0)
+        setShadow(color: .buttonShadowOfDefault, width: .responsiveWidth(0))
         isEnabled = false
         applyConfiguration()
         configurationData = previousConfiguration
@@ -175,12 +175,12 @@ final class ASButton: UIButton {
 
         guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
         guard isEnabled else {
-            setShadow(color: .buttonShadowOfDefault, width: 0)
+            setShadow(color: .buttonShadowOfDefault, width: .responsiveWidth(0))
             return
         }
         if let shadowColor = configurationData?.shadowColor {
             let resolved = shadowColor.resolvedColor(with: traitCollection)
-            setShadow(color: resolved, width: 0)
+            setShadow(color: resolved, width: .responsiveWidth(0))
         }
     }
 }
@@ -194,11 +194,11 @@ private extension ASButton {
     /// 버튼이 눌렸을 때 효과를 적용하는 메서드
     func applyHighlightEffect() {
         if isHighlighted {
-            transform = CGAffineTransform(translationX: 0, y: configurationData?.shadowHeight ?? 8)
+            transform = CGAffineTransform(translationX: 0, y: configurationData?.shadowHeight ?? .responsiveHeight(8))
             layer.shadowOffset = .zero
         } else {
             transform = .identity
-            layer.shadowOffset = CGSize(width: 0, height: configurationData?.shadowHeight ?? 8)
+            layer.shadowOffset = CGSize(width: .responsiveWidth(0), height: configurationData?.shadowHeight ?? .responsiveHeight(8))
         }
     }
 
@@ -218,7 +218,7 @@ extension ASButton {
         isAnimating = true
         let updatedConfiguration = ASButtonConfiguration(
             systemImageName: "checkmark.circle.fill",
-            imageSize: 24,
+            imageSize: .responsiveWidth(24),
             imageColor: .asGreen,
             text: temporaryText,
             textStyle: originConfiguration.textStyle,

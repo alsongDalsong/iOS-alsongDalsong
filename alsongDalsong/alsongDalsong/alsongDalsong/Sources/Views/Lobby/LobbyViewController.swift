@@ -69,9 +69,9 @@ final class LobbyViewController: UIViewController {
                 backgroundColor: .roomNumberButton,
                 baseForegroundColor: .asForeground,
                 shadowColor: .buttonShadowWithLine,
-                shadowHeight: .responsiveHeight(self.view, 4),
+                shadowHeight: .responsiveHeight(4),
                 strokeColor: .buttonShadowWithLine,
-                strokeWidth: .responsiveWidth(self.view, 3)
+                strokeWidth: .responsiveWidth(3)
             )
         }
         .store(in: &cancellables)
@@ -86,19 +86,19 @@ final class LobbyViewController: UIViewController {
             backgroundColor: .roomNumberButton,
             baseForegroundColor: .asForeground,
             shadowColor: .buttonShadowWithLine,
-            shadowHeight: .responsiveHeight(view, 4),
+            shadowHeight: .responsiveHeight(4),
             strokeColor: .buttonShadowWithLine,
-            strokeWidth: .responsiveWidth(view, 3)
+            strokeWidth: .responsiveWidth(3)
         )
 
         inviteButton.setConfiguration(
             systemImageName: "square.and.arrow.up",
-            imageSize: .responsiveWidth(view, 24),
+            imageSize: .responsiveWidth(24),
             text: nil,
             backgroundColor: .inviteButton,
             baseForegroundColor: .tintColor,
             shadowColor: .buttonShadowOfDefault,
-            shadowHeight: .responsiveHeight(view, 4)
+            shadowHeight: .responsiveHeight(4)
         )
 
         startButton.setConfiguration(
@@ -151,24 +151,24 @@ final class LobbyViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             lobbyUIHostingController.view.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            lobbyUIHostingController.view.bottomAnchor.constraint(equalTo: inviteButton.topAnchor, constant: .responsiveHeight(view, -20)),
+            lobbyUIHostingController.view.bottomAnchor.constraint(equalTo: inviteButton.topAnchor, constant: .responsiveHeight(-20)),
             lobbyUIHostingController.view.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             lobbyUIHostingController.view.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
 
-            roomNumberButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 24)),
-            roomNumberButton.trailingAnchor.constraint(equalTo: inviteButton.leadingAnchor, constant: .responsiveWidth(view, -16)),
-            roomNumberButton.bottomAnchor.constraint(equalTo: startButton.topAnchor, constant: .responsiveHeight(view, -24)),
-            roomNumberButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 80)),
+            roomNumberButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(24)),
+            roomNumberButton.trailingAnchor.constraint(equalTo: inviteButton.leadingAnchor, constant: .responsiveWidth(-16)),
+            roomNumberButton.bottomAnchor.constraint(equalTo: startButton.topAnchor, constant: .responsiveHeight(-24)),
+            roomNumberButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(80)),
 
-            inviteButton.bottomAnchor.constraint(equalTo: startButton.topAnchor, constant: .responsiveHeight(view, -24)),
-            inviteButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -24)),
-            inviteButton.widthAnchor.constraint(equalToConstant: .responsiveWidth(view, 84)),
-            inviteButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 80)),
+            inviteButton.bottomAnchor.constraint(equalTo: startButton.topAnchor, constant: .responsiveHeight(-24)),
+            inviteButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-24)),
+            inviteButton.widthAnchor.constraint(equalToConstant: .responsiveWidth(84)),
+            inviteButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(80)),
 
-            startButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 24)),
-            startButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -24)),
-            startButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
-            startButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 64)),
+            startButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(24)),
+            startButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-24)),
+            startButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: .responsiveHeight(-16)),
+            startButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(64)),
         ])
     }
 

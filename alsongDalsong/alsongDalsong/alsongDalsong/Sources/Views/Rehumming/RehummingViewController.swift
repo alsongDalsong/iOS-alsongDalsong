@@ -49,7 +49,7 @@ final class RehummingViewController: UIViewController {
         submitButton.setConfiguration(.submit)
         submitButton.setDisabledState()
         buttonStack.axis = .horizontal
-        buttonStack.spacing = 16
+        buttonStack.spacing = .responsiveWidth(view, 16)
         buttonStack.addArrangedSubview(recordButton)
         buttonStack.addArrangedSubview(submitButton)
         scrollView.addSubview(musicPanel)
@@ -78,6 +78,7 @@ final class RehummingViewController: UIViewController {
     }
 
     private func setupLayout() {
+        let safeArea = view.safeAreaLayoutGuide
         progressBar.translatesAutoresizingMaskIntoConstraints = false
         musicPanel.translatesAutoresizingMaskIntoConstraints = false
         hummingPanel.translatesAutoresizingMaskIntoConstraints = false
@@ -86,33 +87,33 @@ final class RehummingViewController: UIViewController {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            progressBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            progressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            progressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            progressBar.heightAnchor.constraint(equalToConstant: 16),
-            
+            progressBar.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            progressBar.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            progressBar.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            progressBar.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 16)),
+
             scrollView.topAnchor.constraint(equalTo: progressBar.bottomAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: buttonStack.topAnchor),
-            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: hummingPanel.bottomAnchor, constant: 16),
+            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: hummingPanel.bottomAnchor, constant: .responsiveHeight(view, 16)),
 
-            musicPanel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 32),
-            musicPanel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            musicPanel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            musicPanel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: .responsiveHeight(view, 32)),
+            musicPanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 32)),
+            musicPanel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -32)),
 
-            hummingPanel.topAnchor.constraint(equalTo: musicPanel.bottomAnchor, constant: 32),
-            hummingPanel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            hummingPanel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            hummingPanel.heightAnchor.constraint(equalToConstant: 84),
+            hummingPanel.topAnchor.constraint(equalTo: musicPanel.bottomAnchor, constant: .responsiveHeight(view, 32)),
+            hummingPanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 20)),
+            hummingPanel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -20)),
+            hummingPanel.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 84)),
 
-            submissionStatus.topAnchor.constraint(equalTo: buttonStack.topAnchor, constant: -16),
-            submissionStatus.trailingAnchor.constraint(equalTo: buttonStack.trailingAnchor, constant: 16),
+            submissionStatus.topAnchor.constraint(equalTo: buttonStack.topAnchor, constant: .responsiveHeight(view, -16)),
+            submissionStatus.trailingAnchor.constraint(equalTo: buttonStack.trailingAnchor, constant: .responsiveWidth(view, 16)),
 
-            buttonStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            buttonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            buttonStack.heightAnchor.constraint(greaterThanOrEqualToConstant: 64),
+            buttonStack.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 24)),
+            buttonStack.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -24)),
+            buttonStack.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            buttonStack.heightAnchor.constraint(greaterThanOrEqualToConstant: .responsiveHeight(view, 64)),
         ])
     }
 

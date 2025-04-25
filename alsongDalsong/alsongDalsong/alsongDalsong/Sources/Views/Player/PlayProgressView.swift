@@ -42,22 +42,22 @@ extension PlayProgressView {
     
     private func setupStyle() {
         trackShapeLayer.backgroundColor = UIColor.systemGray5.cgColor
-        trackShapeLayer.cornerRadius = 4
+        trackShapeLayer.cornerRadius = .responsiveWidth(self, 4)
         trackShapeLayer.masksToBounds = true
         
         progressShapeLayer.backgroundColor = UIColor.darkGray.cgColor
         progressShapeLayer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
-        progressShapeLayer.cornerRadius = 4
+        progressShapeLayer.cornerRadius = .responsiveWidth(self, 4)
     }
     
     private func updateProgressShapeLayer() {
         let targetWidth = bounds.width * min(progress, 1)
-        let rect = CGRect(x: 0, y: 0, width: targetWidth, height: bounds.height)
-        
+        let rect = CGRect(x: .responsiveWidth(self, 0), y: .responsiveWidth(self, 0), width: targetWidth, height: bounds.height)
+
         let path = UIBezierPath(
             roundedRect: rect,
             byRoundingCorners: progress == 1 ? [.allCorners] : [.topLeft, .bottomLeft],
-            cornerRadii: CGSize(width: 4, height: 4)
+            cornerRadii: CGSize(width: .responsiveWidth(self, 4), height: .responsiveHeight(self, 4))
         )
         
         let maskLayer = CAShapeLayer()

@@ -51,29 +51,29 @@ final class LargeAudioPlayerView: UIView {
     
     func setupStyle() {
         coverImageView.contentMode = .scaleAspectFill
-        coverImageView.layer.cornerRadius = 12
+        coverImageView.layer.cornerRadius = .responsiveWidth(self, 12)
         coverImageView.clipsToBounds = true
         
         blurView.effect = UIBlurEffect(style: .systemMaterial)
-        blurView.layer.cornerRadius = 12
+        blurView.layer.cornerRadius = .responsiveWidth(self, 12)
         blurView.clipsToBounds = true
         
-        backgroundView.layer.cornerRadius = 20
+        backgroundView.layer.cornerRadius = .responsiveWidth(self, 20)
         backgroundView.layer.cornerCurve = .continuous
         backgroundView.backgroundColor = .systemGroupedBackground
         backgroundView.layer.shadowColor = UIColor.gray.cgColor
         backgroundView.layer.shadowOpacity = 0.5
-        backgroundView.layer.shadowOffset = CGSize(width: 0, height: 4)
-        backgroundView.layer.shadowRadius = 2
-        
+        backgroundView.layer.shadowOffset = CGSize(width: .responsiveWidth(self, 0), height: .responsiveHeight(self, 4))
+        backgroundView.layer.shadowRadius = .responsiveWidth(self, 2)
+
         titleLabel.textColor = .label
-        titleLabel.font = .systemFont(ofSize: 20)
-        
+        titleLabel.font = .systemFont(ofSize: .responsiveHeight(self, 20))
+
         artistLabel.textColor = .secondaryLabel
-        artistLabel.font = .systemFont(ofSize: 18)
-        
+        artistLabel.font = .systemFont(ofSize: .responsiveHeight(self, 18))
+
         var buttonConfiguration = UIButton.Configuration.borderless()
-        let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 32)
+        let imageConfiguration = UIImage.SymbolConfiguration(pointSize: .responsiveWidth(self, 32))
         buttonConfiguration.preferredSymbolConfigurationForImage = imageConfiguration
         buttonConfiguration.baseForegroundColor = .asForeground
         buttonConfiguration.image = UIImage(systemName: "play.fill")
@@ -83,7 +83,7 @@ final class LargeAudioPlayerView: UIView {
         
         stackView.axis = .vertical
         stackView.alignment = .center
-        stackView.spacing = 4
+        stackView.spacing = .responsiveHeight(self, 4)
     }
     
     func setupLayout() {
@@ -97,8 +97,8 @@ final class LargeAudioPlayerView: UIView {
         
         NSLayoutConstraint.activate([
             coverImageView.topAnchor.constraint(equalTo: topAnchor),
-            coverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            coverImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            coverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .responsiveWidth(self, 16)),
+            coverImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(self, -16)),
             coverImageView.heightAnchor.constraint(equalTo: coverImageView.widthAnchor),
             
             blurView.topAnchor.constraint(equalTo: coverImageView.topAnchor),
@@ -106,28 +106,28 @@ final class LargeAudioPlayerView: UIView {
             blurView.trailingAnchor.constraint(equalTo: coverImageView.trailingAnchor),
             blurView.bottomAnchor.constraint(equalTo: coverImageView.bottomAnchor),
             
-            backgroundView.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: 32),
+            backgroundView.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: .responsiveHeight(self, 32)),
             backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
             backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
             backgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            stackView.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 12),
-            stackView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 12),
-            stackView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -12),
-            
-            playProgressView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 12),
+            stackView.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: .responsiveHeight(self, 12)),
+            stackView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: .responsiveWidth(self, 12)),
+            stackView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: .responsiveWidth(self, -12)),
+
+            playProgressView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: .responsiveHeight(self, 12)),
             playProgressView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
             playProgressView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-            playProgressView.heightAnchor.constraint(equalToConstant: 8),
-            
-            controlButton.topAnchor.constraint(equalTo: playProgressView.bottomAnchor, constant: 12),
+            playProgressView.heightAnchor.constraint(equalToConstant: .responsiveHeight(self, 8)),
+
+            controlButton.topAnchor.constraint(equalTo: playProgressView.bottomAnchor, constant: .responsiveHeight(self, 12)),
             controlButton.centerXAnchor.constraint(equalTo: playProgressView.centerXAnchor),
-            controlButton.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -12),
-            
-            frequencyWaveView.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 18),
-            frequencyWaveView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -18),
-            frequencyWaveView.widthAnchor.constraint(equalToConstant: 24),
-            frequencyWaveView.heightAnchor.constraint(equalToConstant: 18)
+            controlButton.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: .responsiveHeight(self, -12)),
+
+            frequencyWaveView.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: .responsiveHeight(self, 18)),
+            frequencyWaveView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: .responsiveWidth(self, -18)),
+            frequencyWaveView.widthAnchor.constraint(equalToConstant: .responsiveWidth(self, 24)),
+            frequencyWaveView.heightAnchor.constraint(equalToConstant: .responsiveHeight(self, 18))
         ])
     }
     

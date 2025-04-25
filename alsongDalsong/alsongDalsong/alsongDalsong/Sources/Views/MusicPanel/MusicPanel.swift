@@ -118,8 +118,8 @@ final class MusicPanel: UIView {
         NSLayoutConstraint.activate([
             noMusicLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             noMusicLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-            noMusicLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 16),
-            noMusicLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -16),
+            noMusicLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: .responsiveWidth(self, 16)),
+            noMusicLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: .responsiveWidth(self, -16)),
         ])
     }
 
@@ -135,7 +135,7 @@ final class MusicPanel: UIView {
 
     private func setupLabelStack() {
         labelStack.axis = .vertical
-        labelStack.spacing = 0
+        labelStack.spacing = .responsiveHeight(self, 0)
         labelStack.addArrangedSubview(titleLabel)
         labelStack.addArrangedSubview(artistLabel)
     }
@@ -147,14 +147,14 @@ final class MusicPanel: UIView {
             panel.leadingAnchor.constraint(equalTo: leadingAnchor),
             panel.trailingAnchor.constraint(equalTo: trailingAnchor),
 
-            player.topAnchor.constraint(equalTo: topAnchor, constant: 24),
-            player.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
-            player.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
-            player.bottomAnchor.constraint(equalTo: labelStack.topAnchor, constant: -12),
+            player.topAnchor.constraint(equalTo: topAnchor, constant: .responsiveHeight(self, 24)),
+            player.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .responsiveWidth(self, 24)),
+            player.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(self, -24)),
+            player.bottomAnchor.constraint(equalTo: labelStack.topAnchor, constant: .responsiveHeight(self, -12)),
 
             labelStack.centerXAnchor.constraint(equalTo: centerXAnchor),
-            labelStack.widthAnchor.constraint(equalTo: player.widthAnchor, constant: -16),
-            labelStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -24),
+            labelStack.widthAnchor.constraint(equalTo: player.widthAnchor, constant: .responsiveWidth(self, -16)),
+            labelStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: .responsiveHeight(self, -24)),
         ])
     }
 
@@ -165,13 +165,13 @@ final class MusicPanel: UIView {
             panel.leadingAnchor.constraint(equalTo: leadingAnchor),
             panel.trailingAnchor.constraint(equalTo: trailingAnchor),
 
-            player.topAnchor.constraint(equalTo: topAnchor, constant: 12),
-            player.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
-            player.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
+            player.topAnchor.constraint(equalTo: topAnchor, constant: .responsiveHeight(self, 12)),
+            player.bottomAnchor.constraint(equalTo: bottomAnchor, constant: .responsiveHeight(self, -12)),
+            player.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .responsiveWidth(self, 12)),
             player.trailingAnchor.constraint(equalTo: trailingAnchor),
 
-            labelStack.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 8),
-            labelStack.widthAnchor.constraint(equalToConstant: 160),
+            labelStack.centerXAnchor.constraint(equalTo: centerXAnchor, constant: .responsiveWidth(self, 8)),
+            labelStack.widthAnchor.constraint(equalToConstant: .responsiveWidth(self, 160)),
             labelStack.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
     }

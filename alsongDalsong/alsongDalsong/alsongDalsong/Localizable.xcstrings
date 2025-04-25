@@ -573,17 +573,6 @@
         }
       }
     },
-    "삶" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Life"
-          }
-        }
-      }
-    },
     "선택 완료" : {
       "localizations" : {
         "en" : {
@@ -677,7 +666,11 @@
         }
       }
     },
+    "음악을 검색하세요!" : {
+
+    },
     "음악을 선택하세요!" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

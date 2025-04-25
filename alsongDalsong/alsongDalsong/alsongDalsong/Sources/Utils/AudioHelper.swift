@@ -141,6 +141,9 @@ extension AudioHelper {
         needsFrequencyUpdate: Bool = false,
         needsProgressUpdate: Bool = false
     ) {
+        Task {
+            await stopPlaying()
+        }
         guard let data else { return }
 
         Logger.debug(#function)
@@ -195,6 +198,7 @@ extension AudioHelper {
                       option: PlayType = .full,
                       needsWaveUpdate: Bool = false) async
     {
+        stopEngine()
         guard await checkRecorderState(), await checkPlayerState() else { return }
         guard let file else { return }
 
@@ -280,6 +284,7 @@ extension AudioHelper {
 
 extension AudioHelper {
     func startRecording() async {
+        stopEngine()
         guard await checkRecorderState(), await checkPlayerState() else { return }
 
         makeRecorder()

@@ -26,12 +26,6 @@ final class MusicPanelViewModel: @unchecked Sendable {
         bindAudioHelper()
     }
     
-    deinit {
-        Task {
-            await AudioHelper.shared.stopPlaying()
-        }
-    }
-    
     private func bindAudioHelper() {
         AudioHelper.shared.playerStatePublisher
             .receive(on: DispatchQueue.main)

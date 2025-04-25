@@ -50,10 +50,6 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
         bindSearchTerm()
     }
     
-    deinit {
-        stopMusic()
-    }
-    
     private func bindGameStatus() {
         gameStatusRepository.getDueTime()
             .map { Optional($0) }
@@ -76,7 +72,7 @@ final class SelectMusicViewModel: ObservableObject, @unchecked Sendable {
     
     private func bindSearchTerm() {
         $searchTerm
-            .removeDuplicates() 
+            .removeDuplicates()
             .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .sink { [weak self] term in
                 Task { [weak self] in

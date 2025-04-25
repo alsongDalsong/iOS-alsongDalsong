@@ -20,7 +20,7 @@ final class HummingResultTableViewDiffableDataSource: UITableViewDiffableDataSou
                             row: indexPath.row,
                             messageType: .record(record)
                         )
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, .responsiveWidth(16))
                     }
 
                 case 1:
@@ -31,7 +31,7 @@ final class HummingResultTableViewDiffableDataSource: UITableViewDiffableDataSou
                             row: recordsCount,
                             messageType: .music(submit)
                         )
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, .responsiveWidth(16))
                     }
                 default:
                     return cell

@@ -53,7 +53,12 @@ class HummingResultViewController: UIViewController {
         resultTableView.separatorStyle = .none
         resultTableView.allowsSelection = false
         resultTableView.backgroundColor = .asBackground
-        resultTableView.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
+        resultTableView.contentInset = UIEdgeInsets(
+            top: .responsiveHeight(view, 10),
+            left: .responsiveWidth(view, 0),
+            bottom: .responsiveHeight(view, 0),
+            right: .responsiveWidth(view, 0)
+        )
     }
 
     private func setButton() {
@@ -71,25 +76,26 @@ class HummingResultViewController: UIViewController {
     }
 
     private func setupLayout() {
+        let safeArea = view.safeAreaLayoutGuide
         answerView.translatesAutoresizingMaskIntoConstraints = false
         resultTableView.translatesAutoresizingMaskIntoConstraints = false
         nextButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            answerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            answerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            answerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            answerView.heightAnchor.constraint(equalToConstant: 130),
+            answerView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(view, 20)),
+            answerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 16)),
+            answerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -16)),
+            answerView.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 130)),
 
-            resultTableView.topAnchor.constraint(equalTo: answerView.bottomAnchor, constant: 20),
-            resultTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            resultTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            resultTableView.bottomAnchor.constraint(equalTo: nextButton.topAnchor, constant: -30),
+            resultTableView.topAnchor.constraint(equalTo: answerView.bottomAnchor, constant: .responsiveHeight(view, 20)),
+            resultTableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            resultTableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            resultTableView.bottomAnchor.constraint(equalTo: nextButton.topAnchor, constant: .responsiveHeight(view, -30)),
 
-            nextButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            nextButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            nextButton.heightAnchor.constraint(equalToConstant: 64),
-            nextButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            nextButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 24)),
+            nextButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -24)),
+            nextButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 64)),
+            nextButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
         ])
     }
 

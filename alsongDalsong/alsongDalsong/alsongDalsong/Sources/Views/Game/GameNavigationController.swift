@@ -95,21 +95,21 @@ final class GameNavigationController: @unchecked Sendable {
         let backButton = ASButton()
         backButton.setConfiguration(
             systemImageName: "arrowshape.backward.fill",
-            imageSize: 12,
+            imageSize: .responsiveWidth(navigationController.view, 12),
             backgroundColor: .backButtonBackground,
             cornerStyle: .large,
             baseForegroundColor: .backButtonForeground,
             shadowColor: .buttonShadowWithLine,
-            shadowHeight: 4,
+            shadowHeight: .responsiveHeight(navigationController.view, 4),
             strokeColor: .buttonShadowWithLine,
-            strokeWidth: 3
+            strokeWidth: .responsiveWidth(navigationController.view, 3)
         )
         backButton.translatesAutoresizingMaskIntoConstraints = false
         backButton.addAction(backButtonAction, for: .touchUpInside)
 
         NSLayoutConstraint.activate([
-            backButton.widthAnchor.constraint(equalToConstant: 32),
-            backButton.heightAnchor.constraint(equalToConstant: 32)
+            backButton.widthAnchor.constraint(equalToConstant: .responsiveWidth(navigationController.view, 32)),
+            backButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(navigationController.view, 32))
         ])
 
         viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
@@ -204,7 +204,6 @@ final class GameNavigationController: @unchecked Sendable {
         let answersRepository = DIContainer.shared.resolve(AnswersRepositoryProtocol.self)
         let gameStatusRepository = DIContainer.shared.resolve(GameStatusRepositoryProtocol.self)
         let dataDownloadRepository = DIContainer.shared.resolve(DataDownloadRepositoryProtocol.self)
-        let roomActionRepository = DIContainer.shared.resolve(RoomActionRepositoryProtocol.self)
 
         let vm = SelectMusicViewModel(
             playersRepository: playersRepository,

@@ -75,7 +75,7 @@ struct SpeechBubbleCell: View {
             case let .music(music):
             HStack {
                     artworkView(music)
-                        .frame(width: .responsiveWidth(60), height: .responsiveWidth(60))
+                        .frame(width: .responsiveWidth(60), height: .responsiveHeight(60))
                         .clipShape(RoundedRectangle(cornerRadius: .responsiveWidth(6)))
 
                     VStack(alignment: .leading) {

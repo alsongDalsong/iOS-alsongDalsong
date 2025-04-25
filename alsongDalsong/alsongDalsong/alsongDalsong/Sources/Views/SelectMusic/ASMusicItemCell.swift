@@ -11,29 +11,29 @@ struct ASMusicItemCell: View {
             if let artworkData, let uiImage = UIImage(data: artworkData) {
                 Image(uiImage: uiImage)
                     .resizable()
-                    .frame(width: 60, height: 60)
-                    .clipShape(RoundedRectangle(cornerRadius: 4))
-                    .padding(.horizontal, 8)
+                    .frame(width: .responsiveWidth(60), height: .responsiveHeight(60))
+                    .clipShape(RoundedRectangle(cornerRadius: .responsiveWidth(4)))
+                    .padding(.horizontal, .responsiveWidth(8))
             } else if let music, let artworkColor = music.artworkBackgroundColor {
                 Rectangle()
                     .foregroundColor(Color(hex: artworkColor))
-                    .frame(width: 60, height: 60)
-                    .clipShape(RoundedRectangle(cornerRadius: 4))
-                    .padding(.horizontal, 8)
+                    .frame(width: .responsiveWidth(60), height: .responsiveHeight(60))
+                    .clipShape(RoundedRectangle(cornerRadius: .responsiveWidth(4)))
+                    .padding(.horizontal, .responsiveWidth(8))
             } else {
                 Image(systemName: "music.quarternote.3")
-                    .frame(width: 60, height: 60)
+                    .frame(width: .responsiveWidth(60), height: .responsiveHeight(60))
                     .background(.asSystem)
-                    .clipShape(RoundedRectangle(cornerRadius: 4))
-                    .padding(.horizontal, 8)
+                    .clipShape(RoundedRectangle(cornerRadius: .responsiveWidth(4)))
+                    .padding(.horizontal, .responsiveWidth(8))
             }
             VStack(alignment: .leading) {
                 Text(music?.title ?? String(localized: "선택된 곡 없음"))
-                    .font(.wantedSansBold(size: 16))
+                    .font(.wantedSansBold(size: .responsiveHeight(16)))
                     .lineLimit(1)
                 Text(music?.artist ?? String(localized: "아티스트"))
                     .foregroundStyle(.gray)
-                    .font(.wantedSansBold(size: 16))
+                    .font(.wantedSansBold(size: .responsiveHeight(16)))
                     .lineLimit(1)
             }
         }

@@ -49,29 +49,30 @@ final class SelectMusicViewController: UIViewController {
     }
     
     private func setupLayout() {
+        let safeArea = view.safeAreaLayoutGuide
         progressBar.translatesAutoresizingMaskIntoConstraints = false
         submissionStatus.translatesAutoresizingMaskIntoConstraints = false
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         selectMusicView.view.translatesAutoresizingMaskIntoConstraints = false
     
         NSLayoutConstraint.activate([
-            progressBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            progressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            progressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            progressBar.heightAnchor.constraint(equalToConstant: 16),
-            
-            selectMusicView.view.topAnchor.constraint(equalTo: progressBar.bottomAnchor),
-            selectMusicView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            selectMusicView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            selectMusicView.view.bottomAnchor.constraint(equalTo: submitButton.topAnchor, constant: -20),
-            
-            submissionStatus.topAnchor.constraint(equalTo: submitButton.topAnchor, constant: -16),
-            submissionStatus.trailingAnchor.constraint(equalTo: submitButton.trailingAnchor, constant: 16),
+            progressBar.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            progressBar.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            progressBar.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            progressBar.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 16)),
 
-            submitButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            submitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            submitButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            submitButton.heightAnchor.constraint(equalToConstant: 64),
+            selectMusicView.view.topAnchor.constraint(equalTo: progressBar.bottomAnchor),
+            selectMusicView.view.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            selectMusicView.view.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            selectMusicView.view.bottomAnchor.constraint(equalTo: submitButton.topAnchor, constant: .responsiveHeight(view, -20)),
+
+            submissionStatus.topAnchor.constraint(equalTo: submitButton.topAnchor, constant: .responsiveHeight(view, -16)),
+            submissionStatus.trailingAnchor.constraint(equalTo: submitButton.trailingAnchor, constant: .responsiveWidth(view, 16)),
+
+            submitButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 24)),
+            submitButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -24)),
+            submitButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            submitButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 64)),
         ])
     }
     

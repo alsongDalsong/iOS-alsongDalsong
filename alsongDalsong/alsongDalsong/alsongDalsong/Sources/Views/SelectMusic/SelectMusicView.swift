@@ -4,7 +4,7 @@ struct SelectMusicView: View {
     @ObservedObject var viewModel: SelectMusicViewModel
 
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: .responsiveHeight(0)) {
             HStack {
                 ASMusicItemCell(music: viewModel.selectedMusic, fetchArtwork: { url in
                     await viewModel.downloadArtwork(url: url)
@@ -26,18 +26,18 @@ struct SelectMusicView: View {
                     }
                 }
                 .tint(.primary)
-                .frame(width: 60)
+                .frame(width: .responsiveWidth(60))
             }
-            .padding(16)
+            .padding(.responsiveHeight(60))
 
             ASSearchBar(text: $viewModel.searchTerm, placeHolder: String(localized: "곡 제목을 검색하세요"))
-                .padding(.bottom, 8)
+                .padding(.bottom, .responsiveHeight(8))
 
             if viewModel.searchTerm.isEmpty {
                 VStack(alignment: .center) {
                     Spacer()
                     Text("음악을 검색하세요!")
-                        .font(.doHyeon(size: 36))
+                        .font(.doHyeon(size: .responsiveHeight(36)))
                     Spacer()
                 }
             } else {

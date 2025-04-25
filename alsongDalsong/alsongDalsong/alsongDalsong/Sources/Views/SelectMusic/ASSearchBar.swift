@@ -22,10 +22,10 @@ struct ASSearchBar: View {
                     EmptyView()
                 }
             }
-            .padding(8)
+            .padding(.responsiveWidth(8))
             .foregroundColor(.secondary)
             .background(Color(.secondarySystemBackground))
-            .cornerRadius(8)
+            .cornerRadius(.responsiveWidth(8))
         }
         .padding(.horizontal)
     }

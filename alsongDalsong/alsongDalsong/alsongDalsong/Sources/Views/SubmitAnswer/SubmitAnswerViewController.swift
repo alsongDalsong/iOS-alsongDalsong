@@ -47,13 +47,14 @@ final class SubmitAnswerViewController: UIViewController {
         submitButton.setConfiguration(text: String(localized: "정답 제출"), backgroundColor: .asLightSky, shadowColor: .buttonShadowOfBlue)
         submitButton.setDisabledState()
         buttonStack.axis = .horizontal
-        buttonStack.spacing = 16
+        buttonStack.spacing = .responsiveWidth(view, 16)
         buttonStack.addArrangedSubview(selectAnswerButton)
         buttonStack.addArrangedSubview(submitButton)
         view.backgroundColor = .asBackground
     }
 
     private func setupLayout() {
+        let safeArea = view.safeAreaLayoutGuide
         view.addSubview(progressBar)
         view.addSubview(scrollView)
         view.addSubview(buttonStack)
@@ -69,33 +70,33 @@ final class SubmitAnswerViewController: UIViewController {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            progressBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            progressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            progressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            progressBar.heightAnchor.constraint(equalToConstant: 16),
+            progressBar.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            progressBar.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            progressBar.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            progressBar.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 16)),
 
             scrollView.topAnchor.constraint(equalTo: progressBar.bottomAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: buttonStack.topAnchor),
-            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: selectedMusicPanel.bottomAnchor, constant: 16),
+            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: selectedMusicPanel.bottomAnchor, constant: .responsiveHeight(view, 16)),
 
-            musicPanel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 32),
-            musicPanel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
-            musicPanel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            musicPanel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: .responsiveHeight(view, 32)),
+            musicPanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 32)),
+            musicPanel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -32)),
 
-            selectedMusicPanel.topAnchor.constraint(equalTo: musicPanel.bottomAnchor, constant: 32),
-            selectedMusicPanel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            selectedMusicPanel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            selectedMusicPanel.heightAnchor.constraint(equalToConstant: 100),
+            selectedMusicPanel.topAnchor.constraint(equalTo: musicPanel.bottomAnchor, constant: .responsiveHeight(view, 32)),
+            selectedMusicPanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 20)),
+            selectedMusicPanel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -20)),
+            selectedMusicPanel.heightAnchor.constraint(equalToConstant: .responsiveHeight(view, 100)),
 
-            submissionStatus.topAnchor.constraint(equalTo: buttonStack.topAnchor, constant: -16),
-            submissionStatus.trailingAnchor.constraint(equalTo: buttonStack.trailingAnchor, constant: 16),
+            submissionStatus.topAnchor.constraint(equalTo: buttonStack.topAnchor, constant: .responsiveHeight(view, -16)),
+            submissionStatus.trailingAnchor.constraint(equalTo: buttonStack.trailingAnchor, constant: .responsiveWidth(view, 16)),
 
-            buttonStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            buttonStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            buttonStack.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            buttonStack.heightAnchor.constraint(greaterThanOrEqualToConstant: 64),
+            buttonStack.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(view, 24)),
+            buttonStack.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(view, -24)),
+            buttonStack.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            buttonStack.heightAnchor.constraint(greaterThanOrEqualToConstant: .responsiveHeight(view, 64)),
         ])
     }
 

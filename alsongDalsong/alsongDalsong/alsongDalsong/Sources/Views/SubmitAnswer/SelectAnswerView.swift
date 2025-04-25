@@ -29,9 +29,9 @@ struct SelectAnswerView: View {
                         }
                     }
                     .tint(.primary)
-                    .frame(width: 60)
+                    .frame(width: .responsiveWidth(60))
                 }
-                .padding(16)
+                .padding(.responsiveHeight(16))
                 .onTapGesture {
                     isFocused = false
                 }

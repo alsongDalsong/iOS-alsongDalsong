@@ -48,7 +48,8 @@ final class SamplePlayerViewController: UIViewController {
         ])
         
         if let music = viewModel.music {
-            largePlayerView.configure(title: music.title, artist: music.artist, imageData: viewModel.coverImageData)
+            largePlayerView.configure(title: music.title, artist: music.artist)
+            largePlayerView.configure(imageData: viewModel.coverImageData)
             largePlayerView.controlButtonDidTapped = viewModel.togglePlay
                         
             mediumSubmitPlayerView.configure(title: music.title, artist: music.artist, imageData: viewModel.coverImageData)

@@ -1,3 +1,4 @@
+import Combine
 import UIKit
 
 enum AudioPlayerType {
@@ -12,7 +13,8 @@ final class MediumAudioPlayerView: UIView {
     private let controlButton = UIButton()
     private let frequencyWaveView = FrequencyWaveView()
     private let stackView = UIStackView()
-    
+    private var cancellables = Set<AnyCancellable>()
+
     private var audioPlayerType: AudioPlayerType = .submit
     
     var controlButtonDidTapped: (() -> Void)?
@@ -32,7 +34,16 @@ final class MediumAudioPlayerView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-    
+
+    func bind(to dataSource: Published<AudioControlButtonState>.Publisher) {
+        dataSource
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                self?.configure(with: state)
+            }
+            .store(in: &cancellables)
+    }
+
     private func setupView() {
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(artistLabel)

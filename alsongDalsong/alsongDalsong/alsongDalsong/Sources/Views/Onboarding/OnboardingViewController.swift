@@ -84,8 +84,8 @@ final class OnboardingViewController: UIViewController {
             titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor),
 
             nickNamePanel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(70)),
-            nickNamePanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(50)),
-            nickNamePanel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-50)),
+            nickNamePanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(45)),
+            nickNamePanel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-45)),
             nickNamePanel.heightAnchor.constraint(equalToConstant: .responsiveHeight(300)),
 
             avatarView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),

@@ -6,7 +6,7 @@ class HummingResultViewController: UIViewController {
     deinit {
         Logger.debug("HummingResultViewController deinit")
     }
-    private let answerView = MusicPanelView()
+    private let answerView = MediumAudioPlayerView(type: .result)
     private let resultTableView = UITableView()
     private let nextButton = ASButton()
 
@@ -83,9 +83,9 @@ class HummingResultViewController: UIViewController {
 
         NSLayoutConstraint.activate([
             answerView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(20)),
-            answerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(16)),
-            answerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-16)),
-            answerView.heightAnchor.constraint(equalToConstant: .responsiveHeight(130)),
+            answerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(20)),
+            answerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-20)),
+            answerView.heightAnchor.constraint(equalToConstant: .responsiveHeight(80)),
 
             resultTableView.topAnchor.constraint(equalTo: answerView.bottomAnchor, constant: .responsiveHeight(20)),
             resultTableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),

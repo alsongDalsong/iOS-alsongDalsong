@@ -20,8 +20,8 @@ final class MediumAudioPlayerView: UIView {
     private var cancellables = Set<AnyCancellable>()
     private var viewModel: AudioPlayerViewModel? = nil
 
-    private var audioPlayerType: AudioPlayerType = .submit
-    
+    private var audioPlayerType: AudioPlayerType = .result
+
     var controlButtonDidTapped: (() -> Void)?
     
     init(type: AudioPlayerType) {
@@ -39,6 +39,18 @@ final class MediumAudioPlayerView: UIView {
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+    }
+
+    func bind(to dataSource: Published<Result>.Publisher) {
+        dataSource
+            .receive(on: DispatchQueue.main)
+            .compactMap { $0 }
+            .sink { [weak self] result in
+                let answer = result.answer
+                self?.configure(title: answer?.title, artist: answer?.artist)
+                self?.configure(imageData: answer?.artworkData)
+            }
+            .store(in: &cancellables)
     }
 
     func bind(to dataSource: Published<Music?>.Publisher) {

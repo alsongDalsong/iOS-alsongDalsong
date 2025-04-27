@@ -56,6 +56,21 @@ struct SpeechBubbleCell: View {
                 .padding(.responsiveWidth(12))
                 .frame(height: .responsiveHeight(messageType.bubbleHeight))
                 .frame(maxWidth: .infinity)
+        }
+    }
+
+    @ViewBuilder
+    private var contentView: some View {
+        switch messageType {
+            case let .music(music):
+                MediumAudioPlayerWrapper(mappedAnswer: music)
+            case let .record(record):
+                WaveFormWrapper(
+                    columns: record.recordAmplitudes,
+                    sampleCount: 24,
+                    circleColor: .profileViewCircle,
+                    highlightColor: .asForeground
+                )
                 .background {
                     RoundedRectangle(cornerRadius: .responsiveWidth(12), style: .continuous)
                         .stroke(lineWidth: .responsiveWidth(4))
@@ -66,30 +81,6 @@ struct SpeechBubbleCell: View {
                         .fill(.asSystem)
                         .shadow(color: .asShadow, radius: .responsiveWidth(2), y: .responsiveHeight(4))
                 }
-        }
-    }
-
-    @ViewBuilder
-    private var contentView: some View {
-        switch messageType {
-            case let .music(music):
-            HStack {
-                    artworkView(music)
-                        .frame(width: .responsiveWidth(60), height: .responsiveHeight(60))
-                        .clipShape(RoundedRectangle(cornerRadius: .responsiveWidth(6)))
-
-                    VStack(alignment: .leading) {
-                        Text(music.title)
-                            .foregroundStyle(.asForeground)
-
-                        Text(music.artist)
-                            .foregroundStyle(.gray)
-                    }
-                    .font(.wantedSansBold(size: .responsiveHeight(20)))
-                    .lineLimit(1)
-                }
-            case let .record(record):
-                WaveFormWrapper(columns: record.recordAmplitudes, sampleCount: 24, circleColor: .profileViewCircle, highlightColor: .asForeground)
         }
     }
 

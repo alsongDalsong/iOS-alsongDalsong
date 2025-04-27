@@ -8,7 +8,7 @@ struct LobbyView: View {
     var body: some View {
         VStack {
             ScrollView(.horizontal) {
-                HStack(spacing: .responsiveHeight(16)) {
+                HStack(alignment: .top, spacing: .responsiveHeight(16)) {
                     ForEach(0..<viewModel.playerMaxCount, id: \.self) { index in
                         if index < viewModel.players.count {
                             let player = viewModel.players[index]
@@ -55,6 +55,7 @@ struct LobbyView: View {
                 .padding(.top, .responsiveHeight(20))
                 .padding(.bottom, .responsiveHeight(12))
             }
+            .padding(.top, .responsiveHeight(8))
             .scrollIndicators(.hidden)
             VStack {
                 if viewModel.isHost {
@@ -68,7 +69,7 @@ struct LobbyView: View {
                     }
                 }
             }
-            .padding(.top, .responsiveHeight(12))
+            .padding(.top, .responsiveHeight(10))
         }
         .background(Color.asBackground)
     }

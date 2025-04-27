@@ -1,16 +1,29 @@
+import ASContainer
+import ASEntity
+import ASRepositoryProtocol
+import Combine
 import UIKit
 
 final class SelectAnswerButton: UIButton {
     private let coverImageView = UIImageView()
     private let songTitleLabel = UILabel()
     private let artistLabel = UILabel()
+    private let controlButton = UIButton()
+    private let frequencyWaveView = FrequencyWaveView()
     private let stackView = UIStackView()
-    
+
+    private var cancellables = Set<AnyCancellable>()
+    private var viewModel: AudioPlayerViewModel? = nil
+
+    var controlButtonDidTapped: (() -> Void)?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
         setupStyle()
         setupLayout()
+        bindWithPlayer()
+        setupAction()
     }
     
     required init?(coder: NSCoder) {
@@ -18,20 +31,89 @@ final class SelectAnswerButton: UIButton {
         setupView()
         setupStyle()
         setupLayout()
+        bindWithPlayer()
+        setupAction()
     }
-    
+
+    func bind(to dataSource: Published<Music?>.Publisher) {
+        dataSource
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] music in
+                guard let self else { return }
+
+                if music == nil { return }
+
+                let dataDownloadRepository = DIContainer.shared.resolve(DataDownloadRepositoryProtocol.self)
+                self.viewModel = AudioPlayerViewModel(
+                    music: music,
+                    dataDownloadRepository: dataDownloadRepository
+                )
+                self.bindViewModel()
+                self.configure(title: music?.title, artist: music?.artist)
+            }
+            .store(in: &cancellables)
+    }
+
+    func bind(to dataSource: Published<Bool>.Publisher) {
+        dataSource
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let isPlaying = self?.viewModel?.isPlaying else { return }
+
+                if state, isPlaying {
+                    self?.viewModel?.togglePlay()
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    private func bindWithPlayer() {
+        controlButtonDidTapped = { [weak self] in
+            self?.viewModel?.togglePlay()
+        }
+    }
+
+    private func bindViewModel() {
+        viewModel?.$buttonState
+            .sink { [weak self] state in
+                self?.configure(with: state)
+            }
+            .store(in: &cancellables)
+
+        viewModel?.$artwork
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] artwork in
+                self?.configure(imageData: artwork)
+            }
+            .store(in: &cancellables)
+
+        viewModel?.$normalizedFrequencyAmplitudes
+            .sink { [weak self] normalizedFrequencyAmplitudes in
+                self?.configure(
+                    normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes
+                )
+            }
+            .store(in: &cancellables)
+    }
+
     private func setupView() {
         stackView.addArrangedSubview(songTitleLabel)
         stackView.addArrangedSubview(artistLabel)
 
         addSubview(coverImageView)
         addSubview(stackView)
-        
+        addSubview(controlButton)
+        addSubview(frequencyWaveView)
+
         stackView.isHidden = true
         coverImageView.isHidden = true
-        
+        controlButton.isHidden = true
+        frequencyWaveView.isHidden = true
+
         coverImageView.isUserInteractionEnabled = false
         stackView.isUserInteractionEnabled = false
+        controlButton.isUserInteractionEnabled = false
+        frequencyWaveView.isUserInteractionEnabled = false
     }
     
     private func setupStyle() {
@@ -56,16 +138,25 @@ final class SelectAnswerButton: UIButton {
         artistLabel.textColor = .secondaryLabel
         artistLabel.font = .systemFont(ofSize: .responsiveHeight(12))
 
+        var buttonConfiguration = UIButton.Configuration.borderless()
+        let imageConfiguration = UIImage.SymbolConfiguration(pointSize: .responsiveWidth(18))
+        buttonConfiguration.preferredSymbolConfigurationForImage = imageConfiguration
+        buttonConfiguration.baseForegroundColor = .asForeground
+        buttonConfiguration.image = UIImage(systemName: "play.fill")
+
+        if #available(iOS 17.0, *) { controlButton.isSymbolAnimationEnabled = true }
+        controlButton.configuration = buttonConfiguration
+
         stackView.axis = .vertical
         stackView.alignment = .leading
         stackView.spacing = .responsiveHeight(4)
 
-        configuration = .plain()
+        self.configuration = .plain()
         var titleAttribute = AttributedString("정답을 선택해 주세요")
         titleAttribute.foregroundColor = .label
         titleAttribute.font = .systemFont(ofSize: .responsiveHeight(18), weight: .semibold)
-        configuration?.attributedTitle = titleAttribute
-                
+        self.configuration?.attributedTitle = titleAttribute
+
         configurationUpdateHandler = { [weak self] _ in
             self?.applyHighlightEffect()
         }
@@ -74,7 +165,9 @@ final class SelectAnswerButton: UIButton {
     private func setupLayout() {
         coverImageView.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        
+        controlButton.translatesAutoresizingMaskIntoConstraints = false
+        frequencyWaveView.translatesAutoresizingMaskIntoConstraints = false
+
         NSLayoutConstraint.activate([
             heightAnchor.constraint(equalToConstant: .responsiveHeight(80)),
 
@@ -86,10 +179,26 @@ final class SelectAnswerButton: UIButton {
 
             stackView.leadingAnchor.constraint(equalTo: coverImageView.trailingAnchor, constant: .responsiveWidth(10)),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(-10))
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(-10)),
+
+            controlButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(-20)),
+            controlButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            controlButton.widthAnchor.constraint(equalToConstant: .responsiveWidth(44)),
+            controlButton.heightAnchor.constraint(equalToConstant: .responsiveWidth(44)),
+
+            frequencyWaveView.trailingAnchor.constraint(equalTo: controlButton.leadingAnchor, constant: .responsiveWidth(-20)),
+            frequencyWaveView.widthAnchor.constraint(equalToConstant: .responsiveWidth(20)),
+            frequencyWaveView.heightAnchor.constraint(equalToConstant: .responsiveHeight(16)),
+            frequencyWaveView.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
-    
+
+    private func setupAction() {
+        controlButton.addAction(UIAction { [weak self] _ in
+            self?.controlButtonDidTapped?()
+        }, for: .touchUpInside)
+    }
+
     private func applyHighlightEffect() {
         if isHighlighted {
             transform = CGAffineTransform(translationX: .responsiveWidth(0), y: .responsiveHeight(4))
@@ -100,10 +209,12 @@ final class SelectAnswerButton: UIButton {
         }
     }
     
-    func configure(title: String?, artist: String?, imageData: Data?) {
+    func configure(title: String?, artist: String?) {
         songTitleLabel.text = title
         artistLabel.text = artist
-        
+    }
+
+    func configure(imageData: Data?) {
         if let data = imageData, let image = UIImage(data: data) {
             coverImageView.image = image
             coverImageView.backgroundColor = .clear
@@ -111,11 +222,31 @@ final class SelectAnswerButton: UIButton {
             coverImageView.image = nil
             coverImageView.backgroundColor = .systemGray4
         }
-        
+
         stackView.isHidden = false
         coverImageView.isHidden = false
-        
+        controlButton.isHidden = false
+        frequencyWaveView.isHidden = false
+
+        controlButton.isUserInteractionEnabled = true
+        frequencyWaveView.isUserInteractionEnabled = true
+
         titleLabel?.isHidden = true
+    }
+
+    func configure(normalizedFrequencyAmplitudes: [Float]) {
+        frequencyWaveView.normalizedFrequencyAmplitudes = normalizedFrequencyAmplitudes
+    }
+
+    func configure(with buttonState: AudioControlButtonState) {
+        UIView.animate(withDuration: 0.1, animations: {
+            self.controlButton.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+        }, completion: { _ in
+            UIView.animate(withDuration: 0.2, animations: {
+                self.controlButton.transform = .identity
+                self.controlButton.configuration?.image = buttonState.symbol
+            })
+        })
     }
 }
 
@@ -145,10 +276,12 @@ final class SampleSelectionAnswerButtonViewController: UIViewController {
             button2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
         ])
         
-        button2.configure(title: "Title \(count)", artist: "Artest \(count)", imageData: nil)
+        button2.configure(title: "Title \(count)", artist: "Artest \(count)")
+        button2.configure(imageData: nil)
         button2.addAction(UIAction { [self] _ in
             count += 1
-            button2.configure(title: "Title \(count)", artist: "Artest \(count)", imageData: nil)
+            button2.configure(title: "Title \(count)", artist: "Artest \(count)")
+            button2.configure(imageData: nil)
         }, for: .touchUpInside)
     }
 }

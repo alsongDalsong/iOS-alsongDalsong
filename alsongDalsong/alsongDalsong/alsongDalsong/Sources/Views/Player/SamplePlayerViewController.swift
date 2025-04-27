@@ -52,11 +52,14 @@ final class SamplePlayerViewController: UIViewController {
             largePlayerView.configure(imageData: viewModel.coverImageData)
             largePlayerView.controlButtonDidTapped = viewModel.togglePlay
                         
-            mediumSubmitPlayerView.configure(title: music.title, artist: music.artist, imageData: viewModel.coverImageData)
+            mediumSubmitPlayerView.configure(title: music.title, artist: music.artist)
+            mediumResultPlayerView.configure(imageData: viewModel.coverImageData)
             mediumSubmitPlayerView.controlButtonDidTapped = viewModel.togglePlay
             
-            mediumResultPlayerView.configure(title: music.title, artist: music.artist, imageData: viewModel.coverImageData)
-            mediumResultPlayerView2.configure(title: music.title, artist: music.artist, imageData: viewModel.coverImageData)
+            mediumResultPlayerView.configure(title: music.title, artist: music.artist)
+            mediumResultPlayerView.configure(imageData: viewModel.coverImageData)
+            mediumResultPlayerView2.configure(title: music.title, artist: music.artist)
+            mediumResultPlayerView2.configure(imageData: viewModel.coverImageData)
         }
         
         bind()

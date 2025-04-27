@@ -3,9 +3,8 @@ import SwiftUI
 final class SubmitAnswerViewController: UIViewController {
     private let progressBar = ProgressBar()
     private let scrollView = UIScrollView()
-    private let musicPanel = MusicPanel()
-    private let selectedMusicPanel = MusicPanel(.compact)
-    private let selectAnswerButton = ASButton()
+    private let largeAudioPlayerView = LargeAudioPlayerView()
+    private let selectAnswerButton = SelectAnswerButton()
     private let submitButton = ASButton()
     private let submissionStatus = SubmissionStatusView()
     private let buttonStack = UIStackView()
@@ -37,18 +36,18 @@ final class SubmitAnswerViewController: UIViewController {
     private func bindToComponents() {
         submissionStatus.bind(to: viewModel.$submissionStatus)
         progressBar.bind(to: viewModel.$dueTime)
-        musicPanel.bind(to: viewModel.$music)
-        selectedMusicPanel.bind(to: viewModel.$selectedMusic)
+        largeAudioPlayerView.bind(to: viewModel.$music)
+        selectAnswerButton.bind(to: viewModel.$selectedMusic)
+        selectAnswerButton.bind(to: viewModel.$isSearching)
+        selectAnswerButton.bind(to: viewModel.$isPlaying)
         submitButton.bind(to: viewModel.$musicData)
     }
 
     private func setupUI() {
-        selectAnswerButton.setConfiguration(text: String(localized: "정답 선택"), backgroundColor: .asLightRed, shadowColor: .buttonShadowOfRed)
-        submitButton.setConfiguration(text: String(localized: "정답 제출"), backgroundColor: .asLightSky, shadowColor: .buttonShadowOfBlue)
+        submitButton.setConfiguration(text: String(localized: "제출하기"), backgroundColor: .asLightRed, shadowColor: .buttonShadowOfRed)
         submitButton.setDisabledState()
         buttonStack.axis = .horizontal
         buttonStack.spacing = .responsiveWidth(16)
-        buttonStack.addArrangedSubview(selectAnswerButton)
         buttonStack.addArrangedSubview(submitButton)
         view.backgroundColor = .asBackground
     }
@@ -59,18 +58,18 @@ final class SubmitAnswerViewController: UIViewController {
         view.addSubview(scrollView)
         view.addSubview(buttonStack)
         view.addSubview(submissionStatus)
-        scrollView.addSubview(musicPanel)
-        scrollView.addSubview(selectedMusicPanel)
+        scrollView.addSubview(largeAudioPlayerView)
+        scrollView.addSubview(selectAnswerButton)
 
         progressBar.translatesAutoresizingMaskIntoConstraints = false
-        musicPanel.translatesAutoresizingMaskIntoConstraints = false
-        selectedMusicPanel.translatesAutoresizingMaskIntoConstraints = false
+        largeAudioPlayerView.translatesAutoresizingMaskIntoConstraints = false
+        selectAnswerButton.translatesAutoresizingMaskIntoConstraints = false
         submissionStatus.translatesAutoresizingMaskIntoConstraints = false
         buttonStack.translatesAutoresizingMaskIntoConstraints = false
         scrollView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            progressBar.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            progressBar.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(8)),
             progressBar.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             progressBar.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             progressBar.heightAnchor.constraint(equalToConstant: .responsiveHeight(16)),
@@ -79,16 +78,16 @@ final class SubmitAnswerViewController: UIViewController {
             scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             scrollView.bottomAnchor.constraint(equalTo: buttonStack.topAnchor),
-            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: selectedMusicPanel.bottomAnchor, constant: .responsiveHeight(16)),
+            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: selectAnswerButton.bottomAnchor, constant: .responsiveHeight(20)),
 
-            musicPanel.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: .responsiveHeight(32)),
-            musicPanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(32)),
-            musicPanel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-32)),
+            largeAudioPlayerView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: .responsiveHeight(20)),
+            largeAudioPlayerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(20)),
+            largeAudioPlayerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-20)),
 
-            selectedMusicPanel.topAnchor.constraint(equalTo: musicPanel.bottomAnchor, constant: .responsiveHeight(32)),
-            selectedMusicPanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(20)),
-            selectedMusicPanel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-20)),
-            selectedMusicPanel.heightAnchor.constraint(equalToConstant: .responsiveHeight(100)),
+            selectAnswerButton.topAnchor.constraint(equalTo: largeAudioPlayerView.bottomAnchor),
+            selectAnswerButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(20)),
+            selectAnswerButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-20)),
+            selectAnswerButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(80)),
 
             submissionStatus.topAnchor.constraint(equalTo: buttonStack.topAnchor, constant: .responsiveHeight(-16)),
             submissionStatus.trailingAnchor.constraint(equalTo: buttonStack.trailingAnchor, constant: .responsiveWidth(16)),
@@ -110,7 +109,6 @@ final class SubmitAnswerViewController: UIViewController {
         try await viewModel.submitAnswer()
         submitButton.setConfiguration(.submitted)
         submitButton.setDisabledState()
-        selectAnswerButton.setDisabledState()
     }
 
     private func setAction() {

@@ -13,19 +13,19 @@ struct ASMusicItemCell: View {
                     .resizable()
                     .frame(width: .responsiveWidth(60), height: .responsiveHeight(60))
                     .clipShape(RoundedRectangle(cornerRadius: .responsiveWidth(4)))
-                    .padding(.horizontal, .responsiveWidth(8))
+                    .padding(.horizontal, .responsiveWidth(0))
             } else if let music, let artworkColor = music.artworkBackgroundColor {
                 Rectangle()
                     .foregroundColor(Color(hex: artworkColor))
                     .frame(width: .responsiveWidth(60), height: .responsiveHeight(60))
                     .clipShape(RoundedRectangle(cornerRadius: .responsiveWidth(4)))
-                    .padding(.horizontal, .responsiveWidth(8))
+                    .padding(.horizontal, .responsiveWidth(0))
             } else {
                 Image(systemName: "music.quarternote.3")
                     .frame(width: .responsiveWidth(60), height: .responsiveHeight(60))
                     .background(.asSystem)
                     .clipShape(RoundedRectangle(cornerRadius: .responsiveWidth(4)))
-                    .padding(.horizontal, .responsiveWidth(8))
+                    .padding(.horizontal, .responsiveWidth(0))
             }
             VStack(alignment: .leading) {
                 Text(music?.title ?? String(localized: "선택된 곡 없음"))

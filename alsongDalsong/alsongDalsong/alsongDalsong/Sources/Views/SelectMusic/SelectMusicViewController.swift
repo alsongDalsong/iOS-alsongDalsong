@@ -28,7 +28,7 @@ final class SelectMusicViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         viewModel.cancelSubscriptions()
     }
-                                               
+
     private func bindToComponents() {
         progressBar.bind(to: viewModel.$dueTime)
         submitButton.bind(to: viewModel.$musicData)
@@ -56,7 +56,7 @@ final class SelectMusicViewController: UIViewController {
         selectMusicView.view.translatesAutoresizingMaskIntoConstraints = false
     
         NSLayoutConstraint.activate([
-            progressBar.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            progressBar.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(8)),
             progressBar.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             progressBar.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             progressBar.heightAnchor.constraint(equalToConstant: .responsiveHeight(16)),

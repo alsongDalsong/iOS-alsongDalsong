@@ -9,6 +9,7 @@ struct SelectMusicView: View {
                 ASMusicItemCell(music: viewModel.selectedMusic, fetchArtwork: { url in
                     await viewModel.downloadArtwork(url: url)
                 })
+                .padding(.horizontal, .responsiveWidth(4))
                 .scaleEffect(1.1)
                 Spacer()
                 Button {
@@ -28,7 +29,7 @@ struct SelectMusicView: View {
                 .tint(.primary)
                 .frame(width: .responsiveWidth(60))
             }
-            .padding(.responsiveHeight(60))
+            .padding(.responsiveHeight(20))
 
             ASSearchBar(text: $viewModel.searchTerm, placeHolder: String(localized: "곡 제목을 검색하세요"))
                 .padding(.bottom, .responsiveHeight(8))

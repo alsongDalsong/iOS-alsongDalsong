@@ -2,7 +2,7 @@ import Accelerate
 import AVFoundation
 
 public class ASAudioPlayerEngine: @unchecked Sendable {
-    private enum PlayState {
+    public enum PlayState {
         case play, pause, stop
     }
     
@@ -11,7 +11,6 @@ public class ASAudioPlayerEngine: @unchecked Sendable {
 
     private var sampleCount = 6
     private var audioFile: AVAudioFile?
-    private var playState: PlayState = .stop
     private var _normalizedFrequencyAmplitudes: [Float] = []
     
     private let syncQueue = DispatchQueue(label: "audioVisualizer.syncQueue")
@@ -29,6 +28,7 @@ public class ASAudioPlayerEngine: @unchecked Sendable {
         }
     }
     
+    public private(set) var playState: PlayState = .stop
     public var audioProgress: Double {
         guard let nodetime = audioPlayer.lastRenderTime,
               let playerTime = audioPlayer.playerTime(forNodeTime: nodetime),

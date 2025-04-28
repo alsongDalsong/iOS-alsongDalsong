@@ -68,27 +68,26 @@ final class HummingResultViewModel: @unchecked Sendable {
         guard !canEndGame else { return }
         Task {
             switch resultPhase {
-                case .answer:
-                    Logger.debug("Answer Play")
-                    resultPhase = .record(0)
-                    await startPlaying()
+            case .answer:
+                Logger.debug("Answer Play")
+                resultPhase = .record(0)
+                await startPlaying()
                 
-                case let .record(count):
-                    Logger.debug("Record \(count) Play")
-                    if result.records.count - 1 == count { resultPhase = .submit }
-                    else { resultPhase = .record(count + 1) }
-                    await startPlaying()
+            case let .record(count):
+                Logger.debug("Record \(count) Play")
+                if result.records.count - 1 == count { resultPhase = .submit }
+                else { resultPhase = .record(count + 1) }
+                await startPlaying()
                 
-                case .submit:
-                    Logger.debug("Submit Play")
-                    resultPhase = .none
-                    await startPlaying()
-                    if totalResult.isEmpty { canEndGame = true }
+            case .submit:
+                Logger.debug("Submit Play")
+                resultPhase = .none
+                if totalResult.isEmpty { canEndGame = true }
                 
-                case .none:
-                    Logger.debug("resultPhase == .none")
-                    resultPhase = .answer
-                    await startPlaying()
+            case .none:
+                Logger.debug("resultPhase == .none")
+                resultPhase = .answer
+                await startPlaying()
             }
         }
     }
@@ -200,8 +199,8 @@ extension HummingResultViewModel {
                     guard let self,
                           isValidResult(sortedResult) else { return }
 
-                      totalResult = sortedResult.map { ($0.answer, $0.records, $0.submit) }
-                      updateCurrentResult()
+                    totalResult = sortedResult.map { ($0.answer, $0.records, $0.submit) }
+                    updateCurrentResult()
                   })
             .store(in: &cancellables)
     }

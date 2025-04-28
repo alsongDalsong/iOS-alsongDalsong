@@ -18,6 +18,8 @@ final class OnboardingViewController: UIViewController {
 
     private var avatarViewBottomConstraint: NSLayoutConstraint?
 
+    private var isFirstAvatar: Bool = true
+
     init(viewModel: OnboardingViewModel, inviteCode: String) {
         self.viewModel = viewModel
         self.inviteCode = inviteCode
@@ -164,14 +166,19 @@ final class OnboardingViewController: UIViewController {
 
         bind(viewModel?.$avatarData) { [weak self] data in
             guard let self = self else { return }
+            let screenHeight = view.bounds.height
             self.avatarViewBottomConstraint?.constant = .responsiveHeight(600)
-            UIView.animate(withDuration: 0.7, animations: {
+            UIView.animate(withDuration: 1.0, animations: {
+                if !self.isFirstAvatar { EffectAudioHelper.shared.play(name: "CharacterDown") }
                 self.view.layoutIfNeeded()
             }, completion: { _ in
                 self.avatarView.setImage(imageData: data)
                 self.avatarViewBottomConstraint?.constant = .responsiveHeight(40)
-                UIView.animate(withDuration: 0.7, delay: 0.2, animations: {
+
+                UIView.animate(withDuration: 0.8, delay: 0.2, animations: {
+                    EffectAudioHelper.shared.play(name: "CharacterUp")
                     self.view.layoutIfNeeded()
+                    self.isFirstAvatar = false
                 }, completion: nil)
             })
         }

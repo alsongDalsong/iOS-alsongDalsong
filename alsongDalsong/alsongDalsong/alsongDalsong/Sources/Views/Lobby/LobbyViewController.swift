@@ -58,23 +58,22 @@ final class LobbyViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-        
+
         viewmodel.$roomNumber
             .receive(on: DispatchQueue.main)
             .sink { [weak self] roomNumber in
-                guard let self else { return }
-                self.roomNumberButton.setConfiguration(
-                text: "#" + roomNumber,
-                textStyle: .largeTitle,
-                backgroundColor: .roomNumberButton,
-                baseForegroundColor: .asForeground,
-                shadowColor: .buttonShadowWithLine,
-                shadowHeight: .responsiveHeight(4),
-                strokeColor: .buttonShadowWithLine,
-                strokeWidth: .responsiveWidth(3)
-            )
-        }
-        .store(in: &cancellables)
+                self?.roomNumberButton.setConfiguration(
+                    text: "#" + roomNumber,
+                    textStyle: .largeTitle,
+                    backgroundColor: .roomNumberButton,
+                    baseForegroundColor: .asForeground,
+                    shadowColor: .buttonShadowWithLine,
+                    shadowHeight: 4,
+                    strokeColor: .buttonShadowWithLine,
+                    strokeWidth: 3
+                )
+            }
+            .store(in: &cancellables)
     }
 
     private func setupUI() {

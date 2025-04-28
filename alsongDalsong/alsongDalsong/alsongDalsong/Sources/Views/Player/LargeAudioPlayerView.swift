@@ -151,10 +151,10 @@ final class LargeAudioPlayerView: UIView {
         backgroundView.layer.shadowRadius = .responsiveWidth(2)
 
         titleLabel.textColor = .label
-        titleLabel.font = .systemFont(ofSize: .responsiveHeight(20))
+        titleLabel.font = .boldSystemFont(ofSize: .responsiveHeight(20))
 
         artistLabel.textColor = .secondaryLabel
-        artistLabel.font = .systemFont(ofSize: .responsiveHeight(18))
+        artistLabel.font = .systemFont(ofSize: .responsiveHeight(16))
 
         var buttonConfiguration = UIButton.Configuration.borderless()
         let imageConfiguration = UIImage.SymbolConfiguration(pointSize: .responsiveWidth(32))
@@ -181,8 +181,8 @@ final class LargeAudioPlayerView: UIView {
         
         NSLayoutConstraint.activate([
             coverImageView.topAnchor.constraint(equalTo: topAnchor),
-            coverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .responsiveWidth(20)),
-            coverImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(-20)),
+            coverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .responsiveWidth(26)),
+            coverImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(-26)),
             coverImageView.heightAnchor.constraint(equalTo: coverImageView.widthAnchor),
             
             blurView.topAnchor.constraint(equalTo: coverImageView.topAnchor),
@@ -195,18 +195,20 @@ final class LargeAudioPlayerView: UIView {
             backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
             backgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
 
-            stackView.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: .responsiveHeight(8)),
+            stackView.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: .responsiveHeight(16)),
             stackView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: .responsiveWidth(12)),
             stackView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: .responsiveWidth(-12)),
 
             playProgressView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: .responsiveHeight(8)),
-            playProgressView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-            playProgressView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            playProgressView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: .responsiveWidth(8)),
+            playProgressView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: .responsiveWidth(-8)),
             playProgressView.heightAnchor.constraint(equalToConstant: .responsiveHeight(8)),
 
             controlButton.topAnchor.constraint(equalTo: playProgressView.bottomAnchor, constant: .responsiveHeight(8)),
             controlButton.centerXAnchor.constraint(equalTo: playProgressView.centerXAnchor),
             controlButton.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: .responsiveHeight(-8)),
+            controlButton.widthAnchor.constraint(equalToConstant: .responsiveWidth(44)),
+            controlButton.heightAnchor.constraint(equalToConstant: .responsiveWidth(44)),
 
             frequencyWaveView.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: .responsiveHeight(18)),
             frequencyWaveView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: .responsiveWidth(-18)),

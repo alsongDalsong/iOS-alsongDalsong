@@ -9,9 +9,9 @@ enum MessageType {
     var bubbleHeight: CGFloat {
         switch self {
             case .music:
-                return .responsiveHeight(90)
+                return .responsiveWidth(90)
             case .record:
-                return .responsiveHeight(64)
+                return .responsiveWidth(90)
         }
     }
 }
@@ -36,7 +36,7 @@ struct SpeechBubbleCell: View {
     }
 
     var body: some View {
-        HStack(alignment: .center, spacing: .responsiveWidth(12)) {
+        HStack(alignment: .top, spacing: .responsiveWidth(12)) {
             if alignment == .left {
                 speechBubble
             }
@@ -71,6 +71,9 @@ struct SpeechBubbleCell: View {
                     circleColor: .profileViewCircle,
                     highlightColor: .asForeground
                 )
+                .padding(.leading, .responsiveWidth(12))
+                .padding(.trailing, .responsiveWidth(16))
+                .frame(alignment: .center)
                 .background {
                     RoundedRectangle(cornerRadius: .responsiveWidth(12), style: .continuous)
                         .stroke(lineWidth: .responsiveWidth(4))
@@ -91,14 +94,16 @@ struct SpeechBubbleCell: View {
                 .resizable()
                 .background(Color.profileViewBackground)
                 .aspectRatio(contentMode: .fill)
-                .frame(width: .responsiveWidth(75), height: .responsiveHeight(75))
+                .frame(width: .responsiveWidth(75), height: .responsiveWidth(75))
                 .clipShape(Circle())
+                .shadow(radius: .responsiveWidth(4), y: .responsiveHeight(8))
                 .overlay(
                     Circle().stroke(Color.profileViewCircle, lineWidth: .responsiveWidth(5))
                 )
                 .padding(.bottom, .responsiveHeight(4))
             Text(info.playerName)
                 .font(.doHyeon(size: .responsiveHeight(16)))
+                .padding(.top, .responsiveHeight(4))
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
         }

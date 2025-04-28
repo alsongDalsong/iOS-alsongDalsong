@@ -133,10 +133,10 @@ final class SelectAnswerButton: UIButton {
         coverImageView.backgroundColor = .systemGray4
 
         songTitleLabel.textColor = .label
-        songTitleLabel.font = .systemFont(ofSize: .responsiveHeight(14))
+        songTitleLabel.font = .boldSystemFont(ofSize: .responsiveHeight(18))
 
         artistLabel.textColor = .secondaryLabel
-        artistLabel.font = .systemFont(ofSize: .responsiveHeight(12))
+        artistLabel.font = .systemFont(ofSize: .responsiveHeight(14))
 
         var buttonConfiguration = UIButton.Configuration.borderless()
         let imageConfiguration = UIImage.SymbolConfiguration(pointSize: .responsiveWidth(18))

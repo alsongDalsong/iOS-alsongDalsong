@@ -63,7 +63,7 @@ final class GuideViewController: UIViewController {
         
         let safeArea = view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(272)),
+            titleLabel.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor ,constant: .responsiveHeight(-60)),
             titleLabel.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
             descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: .responsiveHeight(48)),
             descriptionLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(16)),

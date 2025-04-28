@@ -156,10 +156,10 @@ final class MediumAudioPlayerView: UIView {
         coverImageView.clipsToBounds = true
         
         titleLabel.textColor = .label
-        titleLabel.font = .systemFont(ofSize: .responsiveHeight(14))
+        titleLabel.font = .boldSystemFont(ofSize: .responsiveHeight(18))
 
         artistLabel.textColor = .secondaryLabel
-        artistLabel.font = .systemFont(ofSize: .responsiveHeight(12))
+        artistLabel.font = .systemFont(ofSize: .responsiveHeight(14))
 
         if audioPlayerType == .submit {
             var buttonConfiguration = UIButton.Configuration.borderless()
@@ -197,8 +197,7 @@ final class MediumAudioPlayerView: UIView {
             coverImageView.topAnchor.constraint(equalTo: topAnchor, constant: .responsiveHeight(10)),
             coverImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: .responsiveHeight(-10)),
             coverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .responsiveWidth(10)),
-            coverImageView.heightAnchor.constraint(equalToConstant: .responsiveHeight(60)),
-            coverImageView.widthAnchor.constraint(equalToConstant: .responsiveWidth(60)),
+            coverImageView.widthAnchor.constraint(equalTo: coverImageView.heightAnchor),
 
             stackView.leadingAnchor.constraint(equalTo: coverImageView.trailingAnchor, constant: .responsiveWidth(10)),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
@@ -259,5 +258,10 @@ extension MediumAudioPlayerView {
                 self.controlButton.configuration?.image = buttonState.symbol
             })
         })
+    }
+
+    func configure(titleLabelFont: UIFont, artistLabelFont: UIFont) {
+        titleLabel.font = titleLabelFont
+        artistLabel.font = artistLabelFont
     }
 }

@@ -11,11 +11,13 @@ final class ASButton: UIButton {
     init() {
         super.init(frame: .zero)
         setupButton()
+        addTarget(self, action: #selector(playClickSound), for: .touchUpInside)
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupButton()
+        addTarget(self, action: #selector(playClickSound), for: .touchUpInside)
     }
 
     /// 버튼의 UI 관련한 Configuration을 설정하는 메서드
@@ -258,5 +260,13 @@ extension ASButton {
                 }
             )
         }
+    }
+}
+
+// MARK: - Click Sound
+
+extension ASButton {
+    @objc func playClickSound() {
+        EffectAudioHelper.shared.playButtonClick()
     }
 }

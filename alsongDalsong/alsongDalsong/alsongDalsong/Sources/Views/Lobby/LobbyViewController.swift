@@ -123,11 +123,14 @@ final class LobbyViewController: UIViewController {
 
         inviteButton.addAction(UIAction { [weak self] _ in
             guard let roomNumber = self?.viewmodel.roomNumber else { return }
-            if let url = URL(string: "alsongDalsong://invite/?roomnumber=\(roomNumber)") {
-                let activityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-                activityViewController.popoverPresentationController?.sourceView = self?.inviteButton
-                self?.present(activityViewController, animated: true, completion: nil)
+            let shareItem = InviteShareItem(roomNumber: roomNumber)
+            let activityViewController = UIActivityViewController(activityItems: [shareItem], applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = self?.inviteButton
+            
+            if let popover = activityViewController.popoverPresentationController {
+                popover.sourceView = self?.inviteButton
             }
+            self?.present(activityViewController, animated: true, completion: nil)
         }, for: .touchUpInside)
 
         startButton.addAction(

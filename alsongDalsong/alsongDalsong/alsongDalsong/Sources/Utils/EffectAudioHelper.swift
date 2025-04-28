@@ -17,7 +17,7 @@ final class EffectAudioHelper: Sendable {
 
     private let effectPlayer = ASAudioPlayer()
     private let buttonPlayer = ASAudioPlayer()
-
+    
     func play(name: String) {
         guard let url = Bundle.main.url(forResource: name, withExtension: "mp3") else { return }
 

@@ -52,10 +52,10 @@ enum ResultPhase: Equatable {
 
     func audioData(_ result: Result) -> Data? {
         switch self {
-            case .answer: result.answer?.previewData
-            case let .record(count): result.records[count].recordData
-            case .submit: result.submit?.previewData
-            default: nil
+        case .answer: result.answer?.previewData
+        case let .record(count): result.records[count].recordData
+        case .submit: result.submit?.previewData
+        default: nil
         }
     }
 }
@@ -63,4 +63,5 @@ enum ResultPhase: Equatable {
 enum PlayType: Equatable {
     case full
     case partial(time: Int)
+    case loop
 }

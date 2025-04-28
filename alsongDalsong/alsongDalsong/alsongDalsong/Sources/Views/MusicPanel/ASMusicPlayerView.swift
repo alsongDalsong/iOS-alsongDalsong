@@ -59,7 +59,7 @@ final class ASMusicPlayerView: UIView {
     private func setupUI() {
         backgroundImageView.contentMode = .scaleAspectFill
         backgroundImageView.clipsToBounds = true
-        backgroundImageView.layer.cornerRadius = panelType == .large ? 15 : 5
+        backgroundImageView.layer.cornerRadius = panelType == .large ? .responsiveWidth(15) : .responsiveWidth(5)
         setupButton()
         setupBlurView()
         addSubview(backgroundImageView)
@@ -107,7 +107,7 @@ final class ASMusicPlayerView: UIView {
             backgroundImageView.widthAnchor.constraint(equalTo: heightAnchor),
 
             playButton.centerYAnchor.constraint(equalTo: backgroundImageView.centerYAnchor),
-            playButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
+            playButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(-24)),
         ])
     }
 
@@ -145,7 +145,7 @@ final class ASMusicPlayerView: UIView {
 
     private func setupButton() {
         var buttonConfiguration = UIButton.Configuration.borderless()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: panelType == .large ? 60 : 32)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: panelType == .large ? .responsiveWidth(60) : .responsiveWidth(32))
         buttonConfiguration.preferredSymbolConfigurationForImage = imageConfig
         buttonConfiguration.baseForegroundColor = .white
         buttonConfiguration.contentInsets = .zero
@@ -179,7 +179,7 @@ final class ASMusicPlayerView: UIView {
     private func setupBlurView() {
         let blurEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
         blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.layer.cornerRadius = 15
+        blurView.layer.cornerRadius = .responsiveWidth(15)
         blurView.clipsToBounds = true
         blurView.alpha = 0.6
     }

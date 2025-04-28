@@ -1,6 +1,7 @@
 import SwiftUI
 import UIKit
 
+@MainActor
 enum MessageType {
     case music(MappedAnswer)
     case record(MappedRecord)
@@ -8,9 +9,9 @@ enum MessageType {
     var bubbleHeight: CGFloat {
         switch self {
             case .music:
-                return 90
+                return .responsiveWidth(90)
             case .record:
-                return 64
+                return .responsiveWidth(90)
         }
     }
 }
@@ -35,7 +36,7 @@ struct SpeechBubbleCell: View {
     }
 
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .top, spacing: .responsiveWidth(12)) {
             if alignment == .left {
                 speechBubble
             }
@@ -52,19 +53,9 @@ struct SpeechBubbleCell: View {
     private var speechBubble: some View {
         ZStack {
             contentView
-                .padding(12)
-                .frame(height: messageType.bubbleHeight)
+                .padding(.responsiveWidth(12))
+                .frame(height: .responsiveHeight(messageType.bubbleHeight))
                 .frame(maxWidth: .infinity)
-                .background {
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .stroke(lineWidth: 4)
-                        .foregroundStyle(.profileViewCircle)
-                }
-                .background {
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(.asSystem)
-                        .shadow(color: .asShadow, radius: 2, y: 4)
-                }
         }
     }
 
@@ -72,23 +63,27 @@ struct SpeechBubbleCell: View {
     private var contentView: some View {
         switch messageType {
             case let .music(music):
-                HStack {
-                    artworkView(music)
-                        .frame(width: 60, height: 60)
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
-
-                    VStack(alignment: .leading) {
-                        Text(music.title)
-                            .foregroundStyle(.asForeground)
-
-                        Text(music.artist)
-                            .foregroundStyle(.gray)
-                    }
-                    .font(.wantedSansBold(size: 20))
-                    .lineLimit(1)
+                MediumAudioPlayerWrapper(mappedAnswer: music)
+            case let .record(record):
+                WaveFormWrapper(
+                    columns: record.recordAmplitudes,
+                    sampleCount: 24,
+                    circleColor: .profileViewCircle,
+                    highlightColor: .asForeground
+                )
+                .padding(.leading, .responsiveWidth(12))
+                .padding(.trailing, .responsiveWidth(16))
+                .frame(alignment: .center)
+                .background {
+                    RoundedRectangle(cornerRadius: .responsiveWidth(12), style: .continuous)
+                        .stroke(lineWidth: .responsiveWidth(4))
+                        .foregroundStyle(.profileViewCircle)
                 }
-        case let .record(record):
-            WaveFormWrapper(columns: record.recordAmplitudes, sampleCount: 24, circleColor: .profileViewCircle, highlightColor: .asForeground)
+                .background {
+                    RoundedRectangle(cornerRadius: .responsiveWidth(12), style: .continuous)
+                        .fill(.asSystem)
+                        .shadow(color: .asShadow, radius: .responsiveWidth(2), y: .responsiveHeight(4))
+                }
         }
     }
 
@@ -99,18 +94,20 @@ struct SpeechBubbleCell: View {
                 .resizable()
                 .background(Color.profileViewBackground)
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 75, height: 75)
+                .frame(width: .responsiveWidth(75), height: .responsiveWidth(75))
                 .clipShape(Circle())
+                .shadow(radius: .responsiveWidth(4), y: .responsiveHeight(8))
                 .overlay(
-                    Circle().stroke(Color.profileViewCircle, lineWidth: 5)
+                    Circle().stroke(Color.profileViewCircle, lineWidth: .responsiveWidth(5))
                 )
-                .padding(.bottom, 4)
+                .padding(.bottom, .responsiveHeight(4))
             Text(info.playerName)
-                .font(.doHyeon(size: 16))
+                .font(.doHyeon(size: .responsiveHeight(16)))
+                .padding(.top, .responsiveHeight(4))
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
         }
-        .frame(width: 75)
+        .frame(width: .responsiveWidth(75))
     }
 
     @ViewBuilder

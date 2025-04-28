@@ -5,14 +5,19 @@ struct ASButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         HStack {
             configuration.label
-                .font(.doHyeon(size: 32))
+                .font(.doHyeon(size: .responsiveHeight(32)))
         }
         .tint(.black)
-        .frame(maxWidth: 345, maxHeight: 64)
+        .frame(maxWidth: .responsiveWidth(345), maxHeight: .responsiveHeight(64))
         .background(backgroundColor)
-        .cornerRadius(12)
-        .shadow(color: .buttonShadowOfDefault, radius: 0, x: 5, y: 5)
-        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.black, lineWidth: 3))
+        .cornerRadius(.responsiveWidth(12))
+        .shadow(
+            color: .buttonShadowOfDefault,
+            radius: .responsiveWidth(0),
+            x: .responsiveWidth(5),
+            y: .responsiveHeight(5)
+        )
+        .overlay(RoundedRectangle(cornerRadius: .responsiveWidth(12)).stroke(Color.black, lineWidth: .responsiveWidth(3)))
     }
 }
 

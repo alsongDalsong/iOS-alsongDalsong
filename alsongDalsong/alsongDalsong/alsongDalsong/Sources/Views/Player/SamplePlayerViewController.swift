@@ -14,6 +14,7 @@ final class SamplePlayerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let safeArea = view.safeAreaLayoutGuide
         view.backgroundColor = .systemBackground
         
         viewModel.bindVisualizer()
@@ -29,32 +30,36 @@ final class SamplePlayerViewController: UIViewController {
         mediumResultPlayerView2.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            largePlayerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
-            largePlayerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            largePlayerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            
-            mediumSubmitPlayerView.topAnchor.constraint(equalTo: largePlayerView.bottomAnchor, constant: 12),
-            mediumSubmitPlayerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            mediumSubmitPlayerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            
-            mediumResultPlayerView.topAnchor.constraint(equalTo: mediumSubmitPlayerView.bottomAnchor, constant: 12),
-            mediumResultPlayerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            mediumResultPlayerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            
-            mediumResultPlayerView2.topAnchor.constraint(equalTo: mediumResultPlayerView.bottomAnchor, constant: 12),
-            mediumResultPlayerView2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            mediumResultPlayerView2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -120)
+            largePlayerView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(12)),
+            largePlayerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(24)),
+            largePlayerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-24)),
+
+            mediumSubmitPlayerView.topAnchor.constraint(equalTo: largePlayerView.bottomAnchor, constant: .responsiveHeight(12)),
+            mediumSubmitPlayerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(24)),
+            mediumSubmitPlayerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-24)),
+
+            mediumResultPlayerView.topAnchor.constraint(equalTo: mediumSubmitPlayerView.bottomAnchor, constant: .responsiveHeight(12)),
+            mediumResultPlayerView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(24)),
+            mediumResultPlayerView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-24)),
+
+            mediumResultPlayerView2.topAnchor.constraint(equalTo: mediumResultPlayerView.bottomAnchor, constant: .responsiveHeight(12)),
+            mediumResultPlayerView2.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(24)),
+            mediumResultPlayerView2.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-120))
         ])
         
         if let music = viewModel.music {
-            largePlayerView.configure(title: music.title, artist: music.artist, imageData: viewModel.coverImageData)
+            largePlayerView.configure(title: music.title, artist: music.artist)
+            largePlayerView.configure(imageData: viewModel.coverImageData)
             largePlayerView.controlButtonDidTapped = viewModel.togglePlay
                         
-            mediumSubmitPlayerView.configure(title: music.title, artist: music.artist, imageData: viewModel.coverImageData)
+            mediumSubmitPlayerView.configure(title: music.title, artist: music.artist)
+            mediumResultPlayerView.configure(imageData: viewModel.coverImageData)
             mediumSubmitPlayerView.controlButtonDidTapped = viewModel.togglePlay
             
-            mediumResultPlayerView.configure(title: music.title, artist: music.artist, imageData: viewModel.coverImageData)
-            mediumResultPlayerView2.configure(title: music.title, artist: music.artist, imageData: viewModel.coverImageData)
+            mediumResultPlayerView.configure(title: music.title, artist: music.artist)
+            mediumResultPlayerView.configure(imageData: viewModel.coverImageData)
+            mediumResultPlayerView2.configure(title: music.title, artist: music.artist)
+            mediumResultPlayerView2.configure(imageData: viewModel.coverImageData)
         }
         
         bind()

@@ -39,21 +39,21 @@ class ASAlertController: UIViewController {
     private func setAlertView() {
         alertView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
         alertView.backgroundColor = .asBackground
-        alertView.layer.borderWidth = 2.5
+        alertView.layer.borderWidth = .responsiveWidth(2.5)
         alertView.layer.borderColor = UIColor.profileViewCircle.cgColor
         view.addSubview(alertView)
     }
 
     private func setStackView() {
         stackView.axis = .vertical
-        stackView.spacing = 12
+        stackView.spacing = .responsiveHeight(12)
         stackView.distribution = .fillProportionally
         stackView.alignment = .center
         alertView.addSubview(stackView)
     }
 
     func alertViewWidthConstraint() -> NSLayoutConstraint {
-        return alertView.widthAnchor.constraint(equalToConstant: 345)
+        return alertView.widthAnchor.constraint(equalToConstant: .responsiveWidth(345))
     }
 
     private func setLayout() {
@@ -65,10 +65,10 @@ class ASAlertController: UIViewController {
             alertView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             alertViewWidthConstraint(),
 
-            stackView.topAnchor.constraint(equalTo: alertView.topAnchor, constant: 16),
-            stackView.bottomAnchor.constraint(equalTo: alertView.bottomAnchor, constant: -16),
-            stackView.leadingAnchor.constraint(equalTo: alertView.leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: alertView.trailingAnchor, constant: -16),
+            stackView.topAnchor.constraint(equalTo: alertView.topAnchor, constant: .responsiveHeight(16)),
+            stackView.bottomAnchor.constraint(equalTo: alertView.bottomAnchor, constant: .responsiveHeight(-16)),
+            stackView.leadingAnchor.constraint(equalTo: alertView.leadingAnchor, constant: .responsiveWidth(16)),
+            stackView.trailingAnchor.constraint(equalTo: alertView.trailingAnchor, constant: .responsiveWidth(-16)),
         ])
     }
 
@@ -84,7 +84,7 @@ class ASAlertController: UIViewController {
 
     func setButtonStackView() {
         buttonStackView.axis = .horizontal
-        buttonStackView.spacing = 12
+        buttonStackView.spacing = .responsiveWidth(12)
         buttonStackView.distribution = .fillEqually
         buttonStackView.alignment = .center
         stackView.addArrangedSubview(buttonStackView)
@@ -108,7 +108,7 @@ class ASAlertController: UIViewController {
         primaryButton.addAction(UIAction { [weak self] _ in
             self?.dismiss(animated: true)
         }, for: .touchUpInside)
-        primaryButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        primaryButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(40)).isActive = true
     }
 
     func setSecondaryButton() {
@@ -124,7 +124,7 @@ class ASAlertController: UIViewController {
         secondaryButton.addAction(UIAction { [weak self] _ in
             self?.dismiss(animated: true)
         }, for: .touchUpInside)
-        secondaryButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        secondaryButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(40)).isActive = true
     }
 }
 

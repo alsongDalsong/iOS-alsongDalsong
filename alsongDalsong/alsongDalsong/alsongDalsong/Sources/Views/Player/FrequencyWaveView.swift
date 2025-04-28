@@ -4,9 +4,9 @@ final class FrequencyWaveView: UIView {
     private var frequencyLayers: [CALayer] = []
     
     private let shapeLayersCount = 6
-    private let spacing: CGFloat = 1.5
-    private let initialHeight: CGFloat = 3
-    
+    private let spacing: CGFloat = .responsiveWidth(1.5)
+    private let initialHeight: CGFloat = .responsiveHeight(3)
+
     private var initialWidth: CGFloat {
         (bounds.width - spacing * CGFloat(shapeLayersCount - 1)) / CGFloat(shapeLayersCount)
     }
@@ -41,7 +41,7 @@ extension FrequencyWaveView {
                 height: initialHeight
             )
             layer.backgroundColor = UIColor.lightGray.cgColor
-            layer.cornerRadius = 2
+            layer.cornerRadius = .responsiveWidth(2)
             layer.masksToBounds = true
             
             frequencyLayers.append(layer)

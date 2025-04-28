@@ -11,7 +11,7 @@ final class LoadingAlertController: ASAlertController {
     }
 
     override func alertViewWidthConstraint() -> NSLayoutConstraint {
-        return alertView.widthAnchor.constraint(equalToConstant: 232)
+        return alertView.widthAnchor.constraint(equalToConstant: .responsiveWidth(232))
     }
 
     func setupStyle() {
@@ -27,8 +27,8 @@ final class LoadingAlertController: ASAlertController {
         progressView.hidesWhenStopped = true
         
         NSLayoutConstraint.activate([
-            progressView.widthAnchor.constraint(equalToConstant: 48),
-            progressView.heightAnchor.constraint(equalToConstant: 48),
+            progressView.widthAnchor.constraint(equalToConstant: .responsiveWidth(48)),
+            progressView.heightAnchor.constraint(equalToConstant: .responsiveHeight(48)),
         ])
         
         Task {

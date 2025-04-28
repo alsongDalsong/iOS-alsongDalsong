@@ -21,10 +21,10 @@ final class NicknamePanel: UIView {
     func updateTextField(placeholder: String) {
         let paragrapthStyle = NSMutableParagraphStyle()
         paragrapthStyle.alignment = .center
-        paragrapthStyle.lineSpacing = -20
+        paragrapthStyle.lineSpacing = .responsiveHeight(-20)
 
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.font(.tmonMonsori, ofSize: 80),
+            .font: UIFont.font(.tmonMonsori, ofSize: .responsiveHeight(80)),
             .foregroundColor: UIColor.onboardingForeground,
             .paragraphStyle: paragrapthStyle,
         ]
@@ -49,7 +49,7 @@ final class NicknamePanel: UIView {
         textView.returnKeyType = .done
 
         textView.textContainerInset = .zero
-        textView.textContainer.lineFragmentPadding = 0
+        textView.textContainer.lineFragmentPadding = .responsiveHeight(0)
 
         updateTextField(placeholder: "캐릭터와닉네임을설정하라")
         addSubview(textView)
@@ -59,10 +59,10 @@ final class NicknamePanel: UIView {
         textView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            textView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 4),
-            textView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4),
-            textView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
-            textView.topAnchor.constraint(equalTo: topAnchor, constant: 4),
+            textView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .responsiveWidth(4)),
+            textView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(-4)),
+            textView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: .responsiveHeight(-4)),
+            textView.topAnchor.constraint(equalTo: topAnchor, constant: .responsiveHeight(4)),
         ])
     }
 }
@@ -78,7 +78,7 @@ extension NicknamePanel: UITextViewDelegate {
         guard let stringRange = Range(range, in: currentText) else { return false }
         let updatedText = currentText.replacingCharacters(in: stringRange, with: text)
 
-        let font = textView.font ?? UIFont.font(.tmonMonsori, ofSize: 80)
+        let font = textView.font ?? UIFont.font(.tmonMonsori, ofSize: .responsiveHeight(80))
         let textWidth = textView.bounds.width
         let lineCount = numberOfLines(for: updatedText, font: font, maxWidth: textWidth)
 

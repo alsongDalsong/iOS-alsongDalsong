@@ -5,7 +5,7 @@ struct SnapperView: View {
     private let modeInfos = Mode.allCases
     private let padding: CGFloat
     private let cardWidth: CGFloat
-    private let spacing: CGFloat = 15.0
+    private let spacing: CGFloat = .responsiveWidth(15.0)
     private let maxSwipeDistance: CGFloat
     
     @Binding private var currentMode: Mode
@@ -30,7 +30,7 @@ struct SnapperView: View {
             }
         }
         .padding(.horizontal, padding)
-        .offset(x: offset, y: 0)
+        .offset(x: offset, y: .responsiveHeight(0))
         .gesture(
             DragGesture()
                 .onChanged { value in

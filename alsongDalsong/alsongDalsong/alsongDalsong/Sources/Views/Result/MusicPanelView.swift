@@ -44,54 +44,54 @@ final class MusicPanelView: UIView {
         backgroundColor = .asSystem
         
         titleLabel.text = String(localized: "정답은...")
-        titleLabel.font = .font(ofSize: 24)
+        titleLabel.font = .font(ofSize: .responsiveHeight(24))
         titleLabel.textColor = .asForeground
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(titleLabel)
 
         albumImageView.contentMode = .scaleAspectFill
-        albumImageView.layer.cornerRadius = 6
+        albumImageView.layer.cornerRadius = .responsiveWidth(6)
         albumImageView.clipsToBounds = true
         albumImageView.translatesAutoresizingMaskIntoConstraints = false
         albumImageView.backgroundColor = .secondarySystemBackground
         addSubview(albumImageView)
 
-        musicNameLabel.font = .font(.wantedSansBold, ofSize: 24)
+        musicNameLabel.font = .font(.wantedSansBold, ofSize: .responsiveHeight(24))
         musicNameLabel.textColor = .asForeground
         musicNameLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(musicNameLabel)
 
-        singerNameLabel.font = .font(.wantedSansBold, ofSize: 24)
+        singerNameLabel.font = .font(.wantedSansBold, ofSize: .responsiveHeight(24))
         singerNameLabel.textColor = UIColor.gray
         singerNameLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(singerNameLabel)
         
-        layer.cornerRadius = 12
+        layer.cornerRadius = .responsiveWidth(12)
         layer.shadowColor = UIColor.asShadow.cgColor
-        layer.shadowOffset = CGSize(width: 4, height: 4)
-        layer.shadowRadius = 0
+        layer.shadowOffset = CGSize(width: .responsiveWidth(4), height: .responsiveHeight(4))
+        layer.shadowRadius = .responsiveWidth(0)
         layer.shadowOpacity = 1.0
-        layer.borderWidth = 3
+        layer.borderWidth = .responsiveWidth(3)
         layer.borderColor = UIColor.black.cgColor
     }
 
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: .responsiveHeight(16)),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .responsiveWidth(16)),
 
-            albumImageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
-            albumImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            albumImageView.widthAnchor.constraint(equalToConstant: 60),
-            albumImageView.heightAnchor.constraint(equalToConstant: 60),
+            albumImageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: .responsiveHeight(12)),
+            albumImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .responsiveWidth(16)),
+            albumImageView.widthAnchor.constraint(equalToConstant: .responsiveWidth(60)),
+            albumImageView.heightAnchor.constraint(equalToConstant: .responsiveHeight(60)),
 
             musicNameLabel.topAnchor.constraint(equalTo: albumImageView.topAnchor),
-            musicNameLabel.leadingAnchor.constraint(equalTo: albumImageView.trailingAnchor, constant: 15),
-            musicNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            musicNameLabel.leadingAnchor.constraint(equalTo: albumImageView.trailingAnchor, constant: .responsiveWidth(15)),
+            musicNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(-16)),
 
-            singerNameLabel.topAnchor.constraint(equalTo: musicNameLabel.bottomAnchor, constant: 4),
-            singerNameLabel.leadingAnchor.constraint(equalTo: albumImageView.trailingAnchor, constant: 15),
-            singerNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
+            singerNameLabel.topAnchor.constraint(equalTo: musicNameLabel.bottomAnchor, constant: .responsiveHeight(4)),
+            singerNameLabel.leadingAnchor.constraint(equalTo: albumImageView.trailingAnchor, constant: .responsiveWidth(15)),
+            singerNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(-16))
         ])
     }
 }

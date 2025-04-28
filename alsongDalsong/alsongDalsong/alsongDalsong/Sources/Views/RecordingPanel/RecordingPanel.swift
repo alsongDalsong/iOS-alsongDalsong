@@ -82,7 +82,7 @@ final class RecordingPanel: UIView {
 
     private func setupButton() {
         var buttonConfiguration = UIButton.Configuration.borderless()
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: .responsiveWidth(24), weight: .regular)
         buttonConfiguration.image = viewModel.buttonState.symbol
         buttonConfiguration.preferredSymbolConfigurationForImage = imageConfig
         buttonConfiguration.baseForegroundColor = .asForeground
@@ -119,16 +119,16 @@ final class RecordingPanel: UIView {
     }
 
     private func setupUI() {
-        layer.borderWidth = 4
+        layer.borderWidth = .responsiveWidth(4)
         layer.borderColor = UIColor.profileViewCircle.cgColor
         layer.backgroundColor = UIColor.asSystem.cgColor
-        layer.cornerRadius = 15
-        
+        layer.cornerRadius = .responsiveWidth(15)
+
         layer.shadowColor = UIColor.asShadow.cgColor
         layer.shadowOpacity = 0.5
-        layer.shadowOffset = CGSize(width: 0, height: 4)
-        layer.shadowRadius = 2
-        
+        layer.shadowOffset = CGSize(width: .responsiveWidth(0), height: .responsiveHeight(4))
+        layer.shadowRadius = .responsiveWidth(2)
+
         addSubview(playButton)
         addSubview(waveFormView)
     }
@@ -137,15 +137,15 @@ final class RecordingPanel: UIView {
         playButton.translatesAutoresizingMaskIntoConstraints = false
         waveFormView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            playButton.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            playButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
-            playButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 12),
-            playButton.widthAnchor.constraint(equalToConstant: 32),
+            playButton.topAnchor.constraint(equalTo: topAnchor, constant: .responsiveHeight(16)),
+            playButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: .responsiveHeight(-16)),
+            playButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .responsiveWidth(12)),
+            playButton.widthAnchor.constraint(equalToConstant: .responsiveWidth(32)),
 
-            waveFormView.leadingAnchor.constraint(equalTo: playButton.trailingAnchor, constant: 8),
-            waveFormView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            waveFormView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
-            waveFormView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            waveFormView.leadingAnchor.constraint(equalTo: playButton.trailingAnchor, constant: .responsiveWidth(8)),
+            waveFormView.topAnchor.constraint(equalTo: topAnchor, constant: .responsiveHeight(8)),
+            waveFormView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: .responsiveHeight(-8)),
+            waveFormView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(-16)),
         ])
     }
 

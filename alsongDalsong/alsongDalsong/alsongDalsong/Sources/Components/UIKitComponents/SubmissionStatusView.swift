@@ -17,7 +17,7 @@ final class SubmissionStatusView: UIStackView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: 64, height: 30)
+        return CGSize(width: .responsiveWidth(64), height: .responsiveHeight(30))
     }
 
     private func setupUI() {
@@ -25,8 +25,8 @@ final class SubmissionStatusView: UIStackView {
         layer.cornerRadius = intrinsicContentSize.height / 2
         clipsToBounds = true
         layer.borderColor = UIColor.label.cgColor
-        layer.borderWidth = 2.5
-        
+        layer.borderWidth = .responsiveWidth(2.5)
+
         setupStack()
         setupImage()
         setupLabel()
@@ -46,20 +46,25 @@ final class SubmissionStatusView: UIStackView {
     private func setupStack() {
         axis = .horizontal
         alignment = .center
-        spacing = 2
+        spacing = .responsiveWidth(2)
         isLayoutMarginsRelativeArrangement = true
-        layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 8)
+        layoutMargins = UIEdgeInsets(
+            top: .responsiveHeight(0),
+            left: .responsiveWidth(10),
+            bottom: .responsiveHeight(0),
+            right: .responsiveWidth(8)
+        )
     }
 
     private func setupImage() {
-        let configuration = UIImage.SymbolConfiguration(pointSize: 20, weight: .bold)
+        let configuration = UIImage.SymbolConfiguration(pointSize: .responsiveWidth(20), weight: .bold)
         let image = UIImage(systemName: "checkmark", withConfiguration: configuration)
 
         let imageView = UIImageView(image: image)
         imageView.tintColor = .label
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.widthAnchor.constraint(equalToConstant: 16).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: .responsiveWidth(16)).isActive = true
         addArrangedSubview(imageView)
     }
     

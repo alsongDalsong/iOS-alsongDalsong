@@ -38,33 +38,35 @@ struct ProfileView: View {
         VStack {
             AsyncImageView(imagePublisher: imagePublisher, url: imageUrl)
                 .background(Color.profileViewBackground)
-                .frame(width: 72, height: 72)
+                .frame(width: .responsiveWidth(72), height: .responsiveHeight(72))
                 .clipShape(Circle())
-                .shadow(radius: 4, y: 8)
+                .shadow(radius: .responsiveWidth(4), y: .responsiveHeight(8))
                 .overlay(
-                    Circle().stroke(Color.profileViewCircle, lineWidth: 5)
+                    Circle().stroke(Color.profileViewCircle, lineWidth: .responsiveWidth(5))
                 )
                 .overlay(alignment: .top) {
                     isHost ? Image(systemName: "crown.fill")
                         .foregroundStyle(.asYellow)
-                        .font(.system(size: 20))
-                        .offset(y: -20)
+                        .font(.system(size: .responsiveHeight(20)))
+                        .offset(y: .responsiveHeight(-20))
                         : nil
                 }
                 .padding(.bottom, 8)
             if let name {
                 Text(name)
                     .foregroundStyle(isMyId ? .asBlue : .asForeground)
-                    .font(.doHyeon(size: 16))
+                    .font(.doHyeon(size: .responsiveHeight(16)))
                     .multilineTextAlignment(.center)
-                    .lineLimit(2)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
             } else {
                 Text("비어 있음")
-                    .font(.doHyeon(size: 16))
+                    .font(.doHyeon(size: .responsiveHeight(16)))
                     .multilineTextAlignment(.center)
-                    .lineLimit(2)
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
-        .frame(width: 75)
+        .frame(width: .responsiveWidth(75))
     }
 }

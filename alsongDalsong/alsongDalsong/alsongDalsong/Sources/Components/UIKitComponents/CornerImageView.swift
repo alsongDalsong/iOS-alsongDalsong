@@ -8,7 +8,7 @@ final class GuideIconView: UIView {
         super.init(frame: .zero)
         self.backgroundColor = backgroundColor
         setupImageView(image: image)
-        applyCornerRadius(cornerRadius: 16)
+        applyCornerRadius(cornerRadius: .responsiveWidth(16))
     }
     
     @available(*, unavailable)
@@ -23,8 +23,8 @@ final class GuideIconView: UIView {
         addSubview(imageView)
         
         NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalToConstant: 18),
-            imageView.heightAnchor.constraint(equalToConstant: 18),
+            imageView.widthAnchor.constraint(equalToConstant: .responsiveWidth(18)),
+            imageView.heightAnchor.constraint(equalToConstant: .responsiveHeight(18)),
             imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])

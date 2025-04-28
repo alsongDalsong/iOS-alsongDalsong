@@ -1,3 +1,7 @@
+import ASContainer
+import ASEntity
+import ASRepositoryProtocol
+import Combine
 import UIKit
 
 enum AudioControlButtonState {
@@ -21,7 +25,10 @@ final class LargeAudioPlayerView: UIView {
     private let playProgressView = PlayProgressView()
     private let frequencyWaveView = FrequencyWaveView()
     private let stackView = UIStackView()
-        
+
+    private var cancellables = Set<AnyCancellable>()
+    private var viewModel: AudioPlayerViewModel? = nil
+
     var controlButtonDidTapped: (() -> Void)?
     
     init() {
@@ -30,8 +37,85 @@ final class LargeAudioPlayerView: UIView {
         setupStyle()
         setupLayout()
         setupAction()
+        bindWithPlayer()
     }
-    
+
+    func bind(to dataSource: Published<Music?>.Publisher) {
+        dataSource
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] music in
+                guard let self else { return }
+
+                if music == nil {
+                    self.configure(with: .stop)
+                    self.configure(title: nil, artist: nil)
+                    self.configure(imageData: nil)
+                    return
+                }
+
+                let dataDownloadRepository = DIContainer.shared.resolve(DataDownloadRepositoryProtocol.self)
+                self.viewModel = AudioPlayerViewModel(
+                    music: music,
+                    dataDownloadRepository: dataDownloadRepository
+                )
+                self.bindViewModel()
+                self.configure(title: music?.title, artist: music?.artist)
+            }
+            .store(in: &cancellables)
+    }
+
+    func bind(to dataSource: Published<Bool>.Publisher) {
+        dataSource
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                guard let isPlaying = self?.viewModel?.isPlaying else { return }
+
+                if state, isPlaying {
+                    self?.viewModel?.togglePlay()
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    private func bindWithPlayer() {
+        controlButtonDidTapped = { [weak self] in
+            self?.viewModel?.togglePlay()
+        }
+    }
+
+    private func bindViewModel() {
+        viewModel?.$buttonState
+            .sink { [weak self] state in
+                self?.configure(with: state)
+            }
+            .store(in: &cancellables)
+
+        viewModel?.$artwork
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] artwork in
+                self?.configure(imageData: artwork)
+            }
+            .store(in: &cancellables)
+
+        viewModel?.$audioProgress
+            .sink { [weak self] progress in
+                self?.configure(
+                    progress: progress,
+                    normalizedFrequencyAmplitudes: self?.viewModel?.normalizedFrequencyAmplitudes ?? []
+                )
+            }
+            .store(in: &cancellables)
+
+        viewModel?.$normalizedFrequencyAmplitudes
+            .sink { [weak self] normalizedFrequencyAmplitudes in
+                self?.configure(
+                    progress: self?.viewModel?.audioProgress ?? 0,
+                    normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes
+                )
+            }
+            .store(in: &cancellables)
+    }
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
@@ -51,29 +135,29 @@ final class LargeAudioPlayerView: UIView {
     
     func setupStyle() {
         coverImageView.contentMode = .scaleAspectFill
-        coverImageView.layer.cornerRadius = 12
+        coverImageView.layer.cornerRadius = .responsiveWidth(12)
         coverImageView.clipsToBounds = true
         
         blurView.effect = UIBlurEffect(style: .systemMaterial)
-        blurView.layer.cornerRadius = 12
+        blurView.layer.cornerRadius = .responsiveWidth(12)
         blurView.clipsToBounds = true
         
-        backgroundView.layer.cornerRadius = 20
+        backgroundView.layer.cornerRadius = .responsiveWidth(20)
         backgroundView.layer.cornerCurve = .continuous
         backgroundView.backgroundColor = .systemGroupedBackground
         backgroundView.layer.shadowColor = UIColor.gray.cgColor
         backgroundView.layer.shadowOpacity = 0.5
-        backgroundView.layer.shadowOffset = CGSize(width: 0, height: 4)
-        backgroundView.layer.shadowRadius = 2
-        
+        backgroundView.layer.shadowOffset = CGSize(width: .responsiveWidth(0), height: .responsiveHeight(4))
+        backgroundView.layer.shadowRadius = .responsiveWidth(2)
+
         titleLabel.textColor = .label
-        titleLabel.font = .systemFont(ofSize: 20)
-        
+        titleLabel.font = .boldSystemFont(ofSize: .responsiveHeight(20))
+
         artistLabel.textColor = .secondaryLabel
-        artistLabel.font = .systemFont(ofSize: 18)
-        
+        artistLabel.font = .systemFont(ofSize: .responsiveHeight(16))
+
         var buttonConfiguration = UIButton.Configuration.borderless()
-        let imageConfiguration = UIImage.SymbolConfiguration(pointSize: 32)
+        let imageConfiguration = UIImage.SymbolConfiguration(pointSize: .responsiveWidth(32))
         buttonConfiguration.preferredSymbolConfigurationForImage = imageConfiguration
         buttonConfiguration.baseForegroundColor = .asForeground
         buttonConfiguration.image = UIImage(systemName: "play.fill")
@@ -83,7 +167,7 @@ final class LargeAudioPlayerView: UIView {
         
         stackView.axis = .vertical
         stackView.alignment = .center
-        stackView.spacing = 4
+        stackView.spacing = .responsiveHeight(4)
     }
     
     func setupLayout() {
@@ -97,8 +181,8 @@ final class LargeAudioPlayerView: UIView {
         
         NSLayoutConstraint.activate([
             coverImageView.topAnchor.constraint(equalTo: topAnchor),
-            coverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            coverImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            coverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .responsiveWidth(26)),
+            coverImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(-26)),
             coverImageView.heightAnchor.constraint(equalTo: coverImageView.widthAnchor),
             
             blurView.topAnchor.constraint(equalTo: coverImageView.topAnchor),
@@ -106,28 +190,30 @@ final class LargeAudioPlayerView: UIView {
             blurView.trailingAnchor.constraint(equalTo: coverImageView.trailingAnchor),
             blurView.bottomAnchor.constraint(equalTo: coverImageView.bottomAnchor),
             
-            backgroundView.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: 32),
-            backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            backgroundView.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: .responsiveHeight(20)),
+            backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: .responsiveHeight(-20)),
             backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
             backgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            
-            stackView.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 12),
-            stackView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: 12),
-            stackView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -12),
-            
-            playProgressView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 12),
-            playProgressView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-            playProgressView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-            playProgressView.heightAnchor.constraint(equalToConstant: 8),
-            
-            controlButton.topAnchor.constraint(equalTo: playProgressView.bottomAnchor, constant: 12),
+
+            stackView.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: .responsiveHeight(16)),
+            stackView.leadingAnchor.constraint(equalTo: backgroundView.leadingAnchor, constant: .responsiveWidth(12)),
+            stackView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: .responsiveWidth(-12)),
+
+            playProgressView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: .responsiveHeight(8)),
+            playProgressView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: .responsiveWidth(8)),
+            playProgressView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: .responsiveWidth(-8)),
+            playProgressView.heightAnchor.constraint(equalToConstant: .responsiveHeight(8)),
+
+            controlButton.topAnchor.constraint(equalTo: playProgressView.bottomAnchor, constant: .responsiveHeight(8)),
             controlButton.centerXAnchor.constraint(equalTo: playProgressView.centerXAnchor),
-            controlButton.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: -12),
-            
-            frequencyWaveView.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: 18),
-            frequencyWaveView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: -18),
-            frequencyWaveView.widthAnchor.constraint(equalToConstant: 24),
-            frequencyWaveView.heightAnchor.constraint(equalToConstant: 18)
+            controlButton.bottomAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: .responsiveHeight(-8)),
+            controlButton.widthAnchor.constraint(equalToConstant: .responsiveWidth(44)),
+            controlButton.heightAnchor.constraint(equalToConstant: .responsiveWidth(44)),
+
+            frequencyWaveView.topAnchor.constraint(equalTo: backgroundView.topAnchor, constant: .responsiveHeight(18)),
+            frequencyWaveView.trailingAnchor.constraint(equalTo: backgroundView.trailingAnchor, constant: .responsiveWidth(-18)),
+            frequencyWaveView.widthAnchor.constraint(equalToConstant: .responsiveWidth(20)),
+            frequencyWaveView.heightAnchor.constraint(equalToConstant: .responsiveHeight(14))
         ])
     }
     
@@ -141,12 +227,14 @@ final class LargeAudioPlayerView: UIView {
 // MARK: - Configure Methods
 
 extension LargeAudioPlayerView {
-    func configure(title: String?, artist: String?, imageData: Data?) {
+    func configure(title: String?, artist: String?) {
         titleLabel.text = title ?? "???"
         artistLabel.text = artist ?? "???"
         
         blurView.alpha = title == nil ? 1 : 0
-        
+    }
+
+    func configure(imageData: Data?) {
         if let data = imageData, let image = UIImage(data: data) {
             coverImageView.image = image
             coverImageView.backgroundColor = .clear
@@ -155,7 +243,7 @@ extension LargeAudioPlayerView {
             coverImageView.backgroundColor = .systemGray4
         }
     }
-    
+
     func configure(progress: Double, normalizedFrequencyAmplitudes: [Float]) {
         let progress = CGFloat(progress)
         

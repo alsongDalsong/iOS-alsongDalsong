@@ -2,6 +2,7 @@ import UIKit
 
 extension ASButton {
     /// ASButton의 스타일 및 설정 정보를 관리하는 구조체
+    @MainActor
     struct ASButtonConfiguration {
         let systemImageName: String?
         let imageSize: CGFloat
@@ -18,7 +19,7 @@ extension ASButton {
       
         init(
             systemImageName: String? = nil,
-            imageSize: CGFloat = 20,
+            imageSize: CGFloat = .responsiveWidth(20),
             imageColor: UIColor? = nil,
             text: String? = nil,
             textStyle: UIFont.TextStyle = .largeTitle,
@@ -26,9 +27,9 @@ extension ASButton {
             cornerStyle: UIButton.Configuration.CornerStyle = .medium,
             baseForegroundColor: UIColor = .white,
             strokeColor: UIColor? = nil,
-            strokeWidth: CGFloat = 0,
+            strokeWidth: CGFloat = .responsiveWidth(0),
             shadowColor: UIColor? = nil,
-            shadowHeight: CGFloat = 8
+            shadowHeight: CGFloat = .responsiveHeight(8)
         ) {
             self.systemImageName = systemImageName
             self.imageSize = imageSize
@@ -45,18 +46,19 @@ extension ASButton {
         }
         
         /// 버튼의 스타일을 만드는 메소드
+        @MainActor
         func createConfiguration() -> UIButton.Configuration {
             var config = UIButton.Configuration.gray()
             config.baseForegroundColor = baseForegroundColor
             config.background.strokeColor = strokeColor
             config.background.strokeWidth = strokeWidth
-            
+
             if let systemImageName {
                 config.imagePlacement = .leading
                 config.image = UIImage(systemName: systemImageName)?
                     .withRenderingMode(.alwaysOriginal)
                     .withTintColor(imageColor ?? baseForegroundColor)
-                config.imagePadding = 8
+                config.imagePadding = .responsiveWidth(8)
                 let imageConfig = UIImage.SymbolConfiguration(pointSize: imageSize, weight: .heavy)
                 config.preferredSymbolConfigurationForImage = imageConfig
             }
@@ -71,7 +73,12 @@ extension ASButton {
                 config.attributedTitle = titleAttr
             }
             
-            config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
+            config.contentInsets = NSDirectionalEdgeInsets(
+                top: .responsiveHeight(0),
+                leading: .responsiveWidth(12),
+                bottom: .responsiveHeight(0),
+                trailing: .responsiveWidth(12)
+            )
             config.cornerStyle = cornerStyle
             
             config.background.backgroundColorTransformer = UIConfigurationColorTransformer { color in

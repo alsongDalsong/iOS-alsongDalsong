@@ -58,22 +58,22 @@ final class LobbyViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-        
+
         viewmodel.$roomNumber
             .receive(on: DispatchQueue.main)
             .sink { [weak self] roomNumber in
                 self?.roomNumberButton.setConfiguration(
-                text: "#" + roomNumber,
-                textStyle: .largeTitle,
-                backgroundColor: .roomNumberButton,
-                baseForegroundColor: .asForeground,
-                shadowColor: .buttonShadowWithLine,
-                shadowHeight: 4,
-                strokeColor: .buttonShadowWithLine,
-                strokeWidth: 3
-            )
-        }
-        .store(in: &cancellables)
+                    text: "#" + roomNumber,
+                    textStyle: .largeTitle,
+                    backgroundColor: .roomNumberButton,
+                    baseForegroundColor: .asForeground,
+                    shadowColor: .buttonShadowWithLine,
+                    shadowHeight: 4,
+                    strokeColor: .buttonShadowWithLine,
+                    strokeWidth: 3
+                )
+            }
+            .store(in: &cancellables)
     }
 
     private func setupUI() {
@@ -124,11 +124,14 @@ final class LobbyViewController: UIViewController {
 
         inviteButton.addAction(UIAction { [weak self] _ in
             guard let roomNumber = self?.viewmodel.roomNumber else { return }
-            if let url = URL(string: "alsongDalsong://invite/?roomnumber=\(roomNumber)") {
-                let activityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
-                activityViewController.popoverPresentationController?.sourceView = self?.inviteButton
-                self?.present(activityViewController, animated: true, completion: nil)
+            let shareItem = InviteShareItem(roomNumber: roomNumber)
+            let activityViewController = UIActivityViewController(activityItems: [shareItem], applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = self?.inviteButton
+            
+            if let popover = activityViewController.popoverPresentationController {
+                popover.sourceView = self?.inviteButton
             }
+            self?.present(activityViewController, animated: true, completion: nil)
         }, for: .touchUpInside)
 
         startButton.addAction(
@@ -187,7 +190,6 @@ private extension LobbyViewController {
         static let lobbyUIHostingControllerBottom: CGFloat = 20 / standardLogicalHeight
 
         static let buttonImageSize: CGFloat = 24 / standardLogicalWidth
-
     }
 }
 

@@ -210,6 +210,7 @@ extension HummingResultViewModel {
         AudioHelper.shared.playerStatePublisher
             .filter { _, isPlaying in !isPlaying }
             .receive(on: DispatchQueue.main)
+            .dropFirst()
             .sink { [weak self] _, _ in
                 self?.updateResultPhase()
             }

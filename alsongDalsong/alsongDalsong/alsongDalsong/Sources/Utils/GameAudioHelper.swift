@@ -121,9 +121,11 @@ extension GameAudioHelper {
         needsProgressUpdate: Bool = false
     ) {
         Task {
+            guard await player?.isPlaying() == true else { return }
             await stopPlaying()
             await BgmAudioHelper.shared.stopPlaying()
         }
+
         guard let data else { return }
 
         Logger.debug(#function)
@@ -179,7 +181,9 @@ extension GameAudioHelper {
                       volume: Float = 1.0,
                       needsWaveUpdate: Bool = false) async
     {
-        stopEngine()
+        if playerEngine.playState == .play {
+            stopEngine()
+        }
         await BgmAudioHelper.shared.stopPlaying()
 
         guard await checkRecorderState(), await checkPlayerState() else { return }

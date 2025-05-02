@@ -32,6 +32,7 @@ final class AudioHelper: @unchecked Sendable {
 
     private let amplitudeSubject = PassthroughSubject<Float, Never>()
     private let playerStateSubject = PassthroughSubject<(FileSource, Bool), Never>()
+    private let engineStateSubject = PassthroughSubject<Bool, Never>()
     private let waveformUpdateSubject = PassthroughSubject<Int, Never>()
     private let recorderStateSubject = PassthroughSubject<Bool, Never>()
     private let recorderDataSubject = PassthroughSubject<Data, Never>()
@@ -43,6 +44,10 @@ final class AudioHelper: @unchecked Sendable {
 
     var playerStatePublisher: AnyPublisher<(FileSource, Bool), Never> {
         playerStateSubject.eraseToAnyPublisher()
+    }
+    
+    var engineStatePublisher: AnyPublisher<Bool, Never> {
+        engineStateSubject.eraseToAnyPublisher()
     }
 
     var waveformUpdatePublisher: AnyPublisher<Int, Never> {
@@ -70,6 +75,10 @@ final class AudioHelper: @unchecked Sendable {
             guard let recorder else { return false }
             return await recorder.isRecording()
         }
+    }
+    
+    var isEnginePlaying: Bool {
+        playerEngine.playState == .play
     }
 
     var isPlaying: Bool {
@@ -137,9 +146,7 @@ extension AudioHelper {
     ///   - needsProgressUpdate: 음악 플레이 바 업데이트
     func playEngine(
         _ data: Data?,
-        playType: PlayType = .full,
-        needsFrequencyUpdate: Bool = false,
-        needsProgressUpdate: Bool = false
+        playType: PlayType = .full
     ) {
         Task {
             guard (await player?.isPlaying() == true) else { return }
@@ -168,26 +175,25 @@ extension AudioHelper {
             playerEngine.play()
         }
 
-        playerStateSubject.send((source, true))
+        engineStateSubject.send(true)
 
-        updateFrequencyAndProgress(
-            needsFrequencyUpdate: needsFrequencyUpdate,
-            needsProgressUpdate: needsProgressUpdate
-        )
+        updateFrequencyAndProgress()
     }
 
     func stopEngine() {
         Logger.debug(#function)
 
-        normalizedFrequencyAmplitudes.send([0, 0, 0, 0, 0, 0])
-        playerEnginePrgress.send(0)
+        DispatchQueue.main.async {
+            self.normalizedFrequencyAmplitudes.send([0, 0, 0, 0, 0, 0])
+            self.playerEnginePrgress.send(0)
+        }
 
         playerEngine.stop()
-
+        playerStateSubject.send((source, false))
+        engineStateSubject.send(false)
+        
         cancellable?.cancel()
         cancellable = nil
-
-        playerStateSubject.send((source, false))
     }
 
     /// 여러 조건을 적용해 오디오를 재생하는 함수
@@ -390,29 +396,17 @@ extension AudioHelper {
 // MARK: - Audio Visualize
 
 extension AudioHelper {
-    private func updateFrequencyAndProgress(
-        needsFrequencyUpdate: Bool,
-        needsProgressUpdate: Bool
-    ) {
-        guard needsFrequencyUpdate, needsProgressUpdate else { return }
-
-        cancellable = Timer.publish(every: 0.2, on: .main, in: .common)
+    private func updateFrequencyAndProgress() {
+        cancellable = Timer.publish(every: 0.1, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
-                if self?.playerEngine.audioProgress == 1 {
-                    self?.normalizedFrequencyAmplitudes.send([0, 0, 0, 0, 0, 0])
-                    self?.playerEnginePrgress.send(0)
-
-                    self?.cancellable?.cancel()
-                    self?.cancellable = nil
-                }
-
-                if needsFrequencyUpdate {
-                    self?.normalizedFrequencyAmplitudes.send(self?.playerEngine.normalizedFrequencyAmplitudes ?? [0, 0, 0, 0, 0, 0])
-                }
-
-                if needsProgressUpdate {
+                DispatchQueue.main.async { [weak self] in
+                    if self?.playerEngine.audioProgress ?? 0 >= 0.99 {
+                        self?.stopEngine()
+                    }
+                    
                     self?.playerEnginePrgress.send(self?.playerEngine.audioProgress ?? 0)
+                    self?.normalizedFrequencyAmplitudes.send(self?.playerEngine.normalizedFrequencyAmplitudes ?? [0, 0, 0, 0, 0, 0])
                 }
             }
     }

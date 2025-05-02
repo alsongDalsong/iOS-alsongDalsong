@@ -18,7 +18,7 @@ final class MediumAudioPlayerView: UIView {
     private let stackView = UIStackView()
 
     private var cancellables = Set<AnyCancellable>()
-    private var viewModel: AudioPlayerViewModel? = nil
+    private var viewModel: AudioPlayerViewModel?
 
     private var audioPlayerType: AudioPlayerType = .result
 
@@ -41,7 +41,7 @@ final class MediumAudioPlayerView: UIView {
         super.init(coder: coder)
     }
     
-    func bind(to datasource: MappedAnswer) {        
+    func bind(to datasource: MappedAnswer) {
         viewModel = AudioPlayerViewModel(previewData: datasource.previewData, artworkData: datasource.artworkData)
         
         configure(
@@ -57,9 +57,9 @@ final class MediumAudioPlayerView: UIView {
         dataSource
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
-                guard let isPlaying = self?.viewModel?.isPlaying else { return }
+                guard AudioHelper.shared.isEnginePlaying else { return }
 
-                if state, isPlaying {
+                if state {
                     self?.viewModel?.togglePlay()
                 }
             }
@@ -73,24 +73,24 @@ final class MediumAudioPlayerView: UIView {
     }
 
     private func bindViewModel() {
-        viewModel?.$buttonState
-            .sink { [weak self] state in
-                self?.configure(with: state)
-            }
-            .store(in: &cancellables)
-
-        viewModel?.$artwork
+        viewModel?.$artworkData
             .receive(on: DispatchQueue.main)
             .sink { [weak self] artwork in
                 self?.configure(imageData: artwork)
             }
             .store(in: &cancellables)
+        
+        AudioHelper.shared.engineStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isPlaying in
+                self?.configure(with: isPlaying)
+            }
+            .store(in: &cancellables)
 
-        viewModel?.$normalizedFrequencyAmplitudes
+        AudioHelper.shared.normalizedFrequencyAmplitudesPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] normalizedFrequencyAmplitudes in
-                self?.configure(
-                    normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes
-                )
+                self?.configure(normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes)
             }
             .store(in: &cancellables)
     }
@@ -225,7 +225,9 @@ extension MediumAudioPlayerView {
         frequencyWaveView.normalizedFrequencyAmplitudes = normalizedFrequencyAmplitudes
     }
     
-    func configure(with buttonState: AudioControlButtonState) {
+    func configure(with isPlaying: Bool) {
+        let buttonState: AudioControlButtonState = isPlaying ? .stop : .play
+        
         UIView.animate(withDuration: 0.1, animations: {
             self.controlButton.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         }, completion: { _ in

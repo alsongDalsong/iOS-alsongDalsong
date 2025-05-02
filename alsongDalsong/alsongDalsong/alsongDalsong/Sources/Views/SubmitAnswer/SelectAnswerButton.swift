@@ -58,9 +58,9 @@ final class SelectAnswerButton: UIButton {
         dataSource
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
-                guard let isPlaying = self?.viewModel?.isPlaying else { return }
+                guard AudioHelper.shared.isEnginePlaying else { return }
 
-                if state, isPlaying {
+                if state {
                     self?.viewModel?.togglePlay()
                 }
             }
@@ -74,24 +74,23 @@ final class SelectAnswerButton: UIButton {
     }
 
     private func bindViewModel() {
-        viewModel?.$buttonState
-            .sink { [weak self] state in
-                self?.configure(with: state)
+        AudioHelper.shared.engineStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isPlaying in
+                self?.configure(with: isPlaying)
             }
             .store(in: &cancellables)
 
-        viewModel?.$artwork
+        viewModel?.$artworkData
             .receive(on: DispatchQueue.main)
             .sink { [weak self] artwork in
                 self?.configure(imageData: artwork)
             }
             .store(in: &cancellables)
-
-        viewModel?.$normalizedFrequencyAmplitudes
+        
+        AudioHelper.shared.normalizedFrequencyAmplitudesPublisher
             .sink { [weak self] normalizedFrequencyAmplitudes in
-                self?.configure(
-                    normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes
-                )
+                self?.configure(normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes)
             }
             .store(in: &cancellables)
     }
@@ -238,7 +237,9 @@ final class SelectAnswerButton: UIButton {
         frequencyWaveView.normalizedFrequencyAmplitudes = normalizedFrequencyAmplitudes
     }
 
-    func configure(with buttonState: AudioControlButtonState) {
+    func configure(with isPlaying: Bool) {
+        let buttonState: AudioControlButtonState = isPlaying ? .play : .stop
+        
         UIView.animate(withDuration: 0.1, animations: {
             self.controlButton.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
         }, completion: { _ in

@@ -65,6 +65,18 @@ final class MediumAudioPlayerView: UIView {
             }
             .store(in: &cancellables)
     }
+    
+    func unbind() {
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
+        
+        viewModel?.$artworkData
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] artwork in
+                self?.configure(imageData: artwork)
+            }
+            .store(in: &cancellables)
+    }
 
     private func bindWithPlayer() {
         controlButtonDidTapped = { [weak self] in

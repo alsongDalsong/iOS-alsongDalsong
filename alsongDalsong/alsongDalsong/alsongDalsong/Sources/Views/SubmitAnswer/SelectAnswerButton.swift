@@ -74,24 +74,18 @@ final class SelectAnswerButton: UIButton {
     }
 
     private func bindViewModel() {
-        AudioHelper.shared.engineStatePublisher
+        viewModel?.$isPlaying
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isPlaying in
-                self?.configure(with: isPlaying)
-            }
+            .sink { self.configure(with: $0) }
             .store(in: &cancellables)
 
         viewModel?.$artworkData
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] artwork in
-                self?.configure(imageData: artwork)
-            }
+            .sink { self.configure(imageData: $0) }
             .store(in: &cancellables)
         
-        AudioHelper.shared.normalizedFrequencyAmplitudesPublisher
-            .sink { [weak self] normalizedFrequencyAmplitudes in
-                self?.configure(normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes)
-            }
+        viewModel?.$normalizedFrequencyAmplitudes
+            .sink { self.configure(normalizedFrequencyAmplitudes: $0) }
             .store(in: &cancellables)
     }
 

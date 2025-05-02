@@ -76,36 +76,25 @@ final class LargeAudioPlayerView: UIView {
         }
     }
 
-    private func bindViewModel() {
-        cancellables.forEach { $0.cancel() }
-        cancellables.removeAll()
-        
+    private func bindViewModel() {        
         viewModel?.$artworkData
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] artwork in
-                self?.configure(imageData: artwork)
-            }
+            .sink { self.configure(imageData: $0) }
             .store(in: &cancellables)
         
-        AudioHelper.shared.engineStatePublisher
+        viewModel?.$progress
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isPlaying in
-                self?.configure(with: isPlaying)
-            }
+            .sink { self.configure(progress: $0) }
             .store(in: &cancellables)
-
-        AudioHelper.shared.playerEnginePrgressPublisher
+        
+        viewModel?.$normalizedFrequencyAmplitudes
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] progress in
-                self?.configure(progress: progress)
-            }
+            .sink { self.configure(normalizedFrequencyAmplitudes: $0) }
             .store(in: &cancellables)
-
-        AudioHelper.shared.normalizedFrequencyAmplitudesPublisher
+        
+        viewModel?.$isPlaying
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] normalizedFrequencyAmplitudes in
-                self?.configure(normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes)
-            }
+            .sink { self.configure(with: $0) }
             .store(in: &cancellables)
     }
 

@@ -72,9 +72,7 @@ final class MediumAudioPlayerView: UIView {
         
         viewModel?.$artworkData
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] artwork in
-                self?.configure(imageData: artwork)
-            }
+            .sink { self.configure(imageData: $0) }
             .store(in: &cancellables)
     }
 
@@ -87,23 +85,17 @@ final class MediumAudioPlayerView: UIView {
     private func bindViewModel() {
         viewModel?.$artworkData
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] artwork in
-                self?.configure(imageData: artwork)
-            }
+            .sink { [weak self] in self?.configure(imageData: $0) }
             .store(in: &cancellables)
         
-        AudioHelper.shared.engineStatePublisher
+        viewModel?.$normalizedFrequencyAmplitudes
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] isPlaying in
-                self?.configure(with: isPlaying)
-            }
+            .sink { [weak self] in self?.configure(normalizedFrequencyAmplitudes: $0) }
             .store(in: &cancellables)
-
-        AudioHelper.shared.normalizedFrequencyAmplitudesPublisher
+        
+        viewModel?.$isPlaying
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] normalizedFrequencyAmplitudes in
-                self?.configure(normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes)
-            }
+            .sink { [weak self] in self?.configure(with: $0) }
             .store(in: &cancellables)
     }
 

@@ -6,10 +6,14 @@ import Foundation
 
 final class AudioPlayerViewModel: @unchecked Sendable {
     @Published var artworkData: Data?
+    @Published var progress: Double = 0
+    @Published var normalizedFrequencyAmplitudes: [Float] = [0, 0, 0, 0, 0, 0]
+    @Published var isPlaying = false
 
     private var music: Music?
     private var previewData: Data?
     private var dataDownloadRepository: DataDownloadRepositoryProtocol?
+    private var isBinded = true
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -21,6 +25,8 @@ final class AudioPlayerViewModel: @unchecked Sendable {
         self.dataDownloadRepository = dataDownloadRepository
         getPreviewData()
         getArtworkData()
+        
+        bindAudioHelper()
     }
     
     init(
@@ -29,6 +35,8 @@ final class AudioPlayerViewModel: @unchecked Sendable {
     ) {
         self.previewData = previewData
         self.artworkData = artworkData
+        
+        bindAudioHelper()
     }
 
     deinit {
@@ -57,5 +65,22 @@ final class AudioPlayerViewModel: @unchecked Sendable {
         Task {
             artworkData = await dataDownloadRepository?.downloadData(url: artworkUrl)
         }
+    }
+    
+    private func bindAudioHelper() {
+        AudioHelper.shared.playerEnginePrgressPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { self.progress = $0 }
+            .store(in: &cancellables)
+        
+        AudioHelper.shared.normalizedFrequencyAmplitudesPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { self.normalizedFrequencyAmplitudes = $0 }
+            .store(in: &cancellables)
+        
+        AudioHelper.shared.engineStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { self.isPlaying = $0 }
+            .store(in: &cancellables)
     }
 }

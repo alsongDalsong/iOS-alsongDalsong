@@ -107,12 +107,37 @@ final class GameNavigationController: @unchecked Sendable {
         backButton.translatesAutoresizingMaskIntoConstraints = false
         backButton.addAction(backButtonAction, for: .touchUpInside)
 
+        let settingButtonAction = UIAction { [weak self] _ in
+            let settingViewController = SettingViewController()
+            settingViewController.modalTransitionStyle = .crossDissolve
+            settingViewController.modalPresentationStyle = .overFullScreen
+            self?.navigationController.present(settingViewController, animated: true, completion: nil)
+        }
+
+        let settingButton = ASButton()
+        settingButton.setConfiguration(
+            systemImageName: "gear",
+            imageSize: .responsiveWidth(16),
+            backgroundColor: .inviteButton,
+            cornerStyle: .large,
+            baseForegroundColor: .white,
+            shadowColor: .buttonShadowWithLine,
+            shadowHeight: .responsiveHeight(4)
+        )
+        settingButton.translatesAutoresizingMaskIntoConstraints = false
+        settingButton.addAction(settingButtonAction, for: .touchUpInside)
+
         NSLayoutConstraint.activate([
             backButton.widthAnchor.constraint(equalToConstant: .responsiveWidth(32)),
-            backButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(32))
+            backButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(32)),
+
+            settingButton.widthAnchor.constraint(equalToConstant: .responsiveWidth(32)),
+            settingButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(32)),
+
         ])
 
         viewController.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+        viewController.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: settingButton)
         viewController.title = setTitle()
     }
 

@@ -90,7 +90,7 @@ final class OnboardingViewController: UIViewController {
             settingButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-10)),
             settingButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(40)),
             settingButton.widthAnchor.constraint(equalToConstant: .responsiveHeight(40)),
-            
+
             nickNamePanel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(70)),
             nickNamePanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(50)),
             nickNamePanel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-50)),
@@ -114,6 +114,12 @@ final class OnboardingViewController: UIViewController {
     }
 
     private func setAction() {
+        settingButton.addAction(
+            UIAction { [weak self] _ in
+                self?.showSettingView()
+            }, for: .touchUpInside
+        )
+
         createRoomButton.addAction(
             UIAction { [weak self] _ in
                 guard self?.isMicrophoneAuthorized() ?? false else {
@@ -336,6 +342,18 @@ extension OnboardingViewController {
             }
         )
         presentAlert(alert)
+    }
+}
+
+// MARK: - Setting
+
+extension OnboardingViewController {
+    private func showSettingView() {
+        let settingViewController = SettingViewController()
+
+        settingViewController.modalTransitionStyle = .crossDissolve
+        settingViewController.modalPresentationStyle = .overFullScreen
+        present(settingViewController, animated: true, completion: nil)
     }
 }
 

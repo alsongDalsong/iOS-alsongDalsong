@@ -121,7 +121,7 @@ final class GameNavigationController: @unchecked Sendable {
             backgroundColor: .inviteButton,
             cornerStyle: .large,
             baseForegroundColor: .white,
-            shadowColor: .buttonShadowWithLine,
+            shadowColor: .buttonShadowOfDefault,
             shadowHeight: .responsiveHeight(4)
         )
         settingButton.translatesAutoresizingMaskIntoConstraints = false

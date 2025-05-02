@@ -86,10 +86,10 @@ final class OnboardingViewController: UIViewController {
             titleLabel.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
             titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor),
 
-            settingButton.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            settingButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(4)),
             settingButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-10)),
-            settingButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(40)),
-            settingButton.widthAnchor.constraint(equalToConstant: .responsiveHeight(40)),
+            settingButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(32)),
+            settingButton.widthAnchor.constraint(equalToConstant: .responsiveWidth(32)),
 
             nickNamePanel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(70)),
             nickNamePanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(50)),
@@ -153,7 +153,8 @@ final class OnboardingViewController: UIViewController {
     private func setupButton() {
         settingButton.setConfiguration(
             systemImageName: "gear",
-            backgroundColor: .asBlue,
+            imageSize: 16,
+            backgroundColor: .inviteButton,
             cornerStyle: .large,
             shadowColor: .buttonShadowOfDefault,
             shadowHeight: .responsiveHeight(4)

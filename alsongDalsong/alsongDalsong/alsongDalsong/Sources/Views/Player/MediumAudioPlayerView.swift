@@ -40,41 +40,17 @@ final class MediumAudioPlayerView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-
-    func bind(to dataSource: Published<Result>.Publisher) {
-        dataSource
-            .receive(on: DispatchQueue.main)
-            .compactMap { $0 }
-            .sink { [weak self] result in
-                let answer = result.answer
-                self?.configure(title: answer?.title, artist: answer?.artist)
-                self?.configure(imageData: answer?.artworkData)
-            }
-            .store(in: &cancellables)
-    }
-
-    func bind(to dataSource: Published<Music?>.Publisher) {
-        dataSource
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] music in
-                guard let self else { return }
-
-                if music == nil {
-                    self.configure(with: .stop)
-                    self.configure(title: nil, artist: nil)
-                    self.configure(imageData: nil)
-                    return
-                }
-
-                let dataDownloadRepository = DIContainer.shared.resolve(DataDownloadRepositoryProtocol.self)
-                self.viewModel = AudioPlayerViewModel(
-                    music: music,
-                    dataDownloadRepository: dataDownloadRepository
-                )
-                self.bindViewModel()
-                self.configure(title: music?.title, artist: music?.artist)
-            }
-            .store(in: &cancellables)
+    
+    func bind(to datasource: MappedAnswer) {        
+        viewModel = AudioPlayerViewModel(previewData: datasource.previewData, artworkData: datasource.artworkData)
+        
+        configure(
+            titleLabelFont: .boldSystemFont(ofSize: .responsiveHeight(16)),
+            artistLabelFont: .systemFont(ofSize: .responsiveHeight(12))
+        )
+        
+        bindViewModel()
+        configure(title: datasource.title, artist: datasource.artist)
     }
 
     func bind(to dataSource: Published<Bool>.Publisher) {

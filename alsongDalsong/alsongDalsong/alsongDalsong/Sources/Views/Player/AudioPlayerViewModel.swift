@@ -11,7 +11,7 @@ final class AudioPlayerViewModel: @unchecked Sendable {
     @Published var audioProgress: Double = 0.0
     @Published var normalizedFrequencyAmplitudes: [Float] = [0, 0, 0, 0, 0, 0]
 
-    private let dataDownloadRepository: DataDownloadRepositoryProtocol
+    private var dataDownloadRepository: DataDownloadRepositoryProtocol?
     private let playerEngine = ASAudioPlayerEngine()
     private(set) var isPlaying: Bool = false
     private var timer: Timer?
@@ -26,6 +26,16 @@ final class AudioPlayerViewModel: @unchecked Sendable {
         self.dataDownloadRepository = dataDownloadRepository
         getPreviewData()
         getArtworkData()
+    }
+    
+    init(
+        previewData: Data?,
+        artworkData: Data?
+    ) {
+        artwork = artworkData
+        
+        guard let previewData else { return }
+        self.playerEngine.bind(data: previewData)
     }
 
     deinit {
@@ -58,7 +68,7 @@ final class AudioPlayerViewModel: @unchecked Sendable {
     private func getPreviewData() {
         guard let previewUrl = music?.previewUrl else { return }
         Task { @MainActor in
-            guard let preview = await dataDownloadRepository.downloadData(url: previewUrl) else { return }
+            guard let preview = await dataDownloadRepository?.downloadData(url: previewUrl) else { return }
             playerEngine.bind(data: preview)
         }
     }
@@ -66,7 +76,7 @@ final class AudioPlayerViewModel: @unchecked Sendable {
     private func getArtworkData() {
         guard let artworkUrl = music?.artworkUrl else { return }
         Task { @MainActor in
-            artwork = await dataDownloadRepository.downloadData(url: artworkUrl)
+            artwork = await dataDownloadRepository?.downloadData(url: artworkUrl)
         }
     }
 

@@ -13,7 +13,6 @@ final class AudioPlayerViewModel: @unchecked Sendable {
     private var music: Music?
     private var previewData: Data?
     private var dataDownloadRepository: DataDownloadRepositoryProtocol?
-    private var isBinded = true
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -45,10 +44,14 @@ final class AudioPlayerViewModel: @unchecked Sendable {
 
     @MainActor
     func togglePlay() {
-        if AudioHelper.shared.isEnginePlaying {
+        if isPlaying {
+            isPlaying = false
             AudioHelper.shared.stopEngine()
+            unbindAudioHelper()
         } else {
             guard let previewData else { return }
+
+            bindAudioHelper()
             AudioHelper.shared.playEngine(previewData)
         }
     }
@@ -80,7 +83,21 @@ final class AudioPlayerViewModel: @unchecked Sendable {
         
         AudioHelper.shared.engineStatePublisher
             .receive(on: DispatchQueue.main)
-            .sink { self.isPlaying = $0 }
+            .sink { state in
+                if self.isPlaying && !state {
+                    self.unbindAudioHelper()
+                }
+
+                self.isPlaying = state
+            }
             .store(in: &cancellables)
+    }
+    
+    private func unbindAudioHelper() {
+        progress = 0
+        normalizedFrequencyAmplitudes = [0, 0, 0, 0, 0, 0]
+        
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
     }
 }

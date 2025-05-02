@@ -232,16 +232,8 @@ final class SelectAnswerButton: UIButton {
     }
 
     func configure(with isPlaying: Bool) {
-        let buttonState: AudioControlButtonState = isPlaying ? .play : .stop
-        
-        UIView.animate(withDuration: 0.1, animations: {
-            self.controlButton.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }, completion: { _ in
-            UIView.animate(withDuration: 0.2, animations: {
-                self.controlButton.transform = .identity
-                self.controlButton.configuration?.image = buttonState.symbol
-            })
-        })
+        let buttonState: AudioControlButtonState = isPlaying ? .stop : .play
+        controlButton.configuration?.image = buttonState.symbol
     }
 }
 

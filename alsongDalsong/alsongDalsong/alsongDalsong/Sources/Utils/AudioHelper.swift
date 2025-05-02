@@ -148,6 +148,8 @@ extension AudioHelper {
         _ data: Data?,
         playType: PlayType = .full
     ) {
+        engineStateSubject.send(false)
+        
         Task {
             guard (await player?.isPlaying() == true) else { return }
             await stopPlaying()

@@ -231,15 +231,7 @@ extension MediumAudioPlayerView {
     
     func configure(with isPlaying: Bool) {
         let buttonState: AudioControlButtonState = isPlaying ? .stop : .play
-        
-        UIView.animate(withDuration: 0.1, animations: {
-            self.controlButton.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }, completion: { _ in
-            UIView.animate(withDuration: 0.2, animations: {
-                self.controlButton.transform = .identity
-                self.controlButton.configuration?.image = buttonState.symbol
-            })
-        })
+        controlButton.configuration?.image = buttonState.symbol
     }
 
     func configure(titleLabelFont: UIFont, artistLabelFont: UIFont) {

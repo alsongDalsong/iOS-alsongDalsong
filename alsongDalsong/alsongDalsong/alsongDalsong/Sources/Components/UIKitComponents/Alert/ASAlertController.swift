@@ -143,6 +143,7 @@ enum ASAlertText {
         case receiveKick
         case notPlayable
         case networkConnectionLost
+        case downloadFailed
 
         var description: String {
             switch self {
@@ -157,6 +158,7 @@ enum ASAlertText {
                 case .receiveKick: "강퇴 되었습니다."
                 case .notPlayable: "다른 플레이어가 모두 방에서 나가 더이상 진행할 수 없습니다\n게임을 종료합니다"
                 case .networkConnectionLost: "네트워크 연결이 끊어졌습니다\n앱을 중단하면 방에서 나가지니 조심하세요!"
+                case .downloadFailed: "게임에 필요한 데이터를 다운받는데 실패했습니다\n네트워크 상태를 확인 후 다시 시도해주세요"
             }
         }
     }
@@ -170,6 +172,7 @@ enum ASAlertText {
         case back
         case setting
         case kick
+        case retry
 
         var description: String {
             switch self {
@@ -181,6 +184,7 @@ enum ASAlertText {
                 case .back: "뒤로가기"
                 case .setting: "설정 가기"
                 case .kick: "강퇴 하기"
+                case . retry: "재시도"
             }
         }
     }

@@ -23,10 +23,12 @@ final class LoadingViewModel: @unchecked Sendable {
     }
 
     @Published var avatarData: Data?
+    @Published var failedToDataDownload: Bool = false
 
     func fetchAvatars() {
         Task {
             do {
+                failedToDataDownload = false
                 avatars = try await avatarRepository.getAvatarUrls()
                 guard let randomAvatarUrl = avatars.randomElement() else { return }
                 selectedAvatar = randomAvatarUrl
@@ -44,6 +46,7 @@ final class LoadingViewModel: @unchecked Sendable {
 
                 avatarData = await dataDownloadRepository.downloadData(url: randomAvatarUrl.onboarding)
             } catch {
+                failedToDataDownload = true
                 ErrorHandler.handle(error)
             }
         }
@@ -58,11 +61,13 @@ final class LoadingViewModel: @unchecked Sendable {
     private func addBgm(name: Bgm) {
         Task {
             do {
+                failedToDataDownload = false
                 let bgm = try await bgmRepository.getBgmUrl(for: name.rawValue)
                 guard let bgmUrl = bgm else { return }
                 guard let bgmData = await dataDownloadRepository.downloadData(url: bgmUrl) else { return }
                 AudioHelper.shared.addBgmData(name: name, data: bgmData)
             } catch {
+                failedToDataDownload = true
                 ErrorHandler.handle(error)
             }
         }

@@ -79,6 +79,13 @@ final class LoadingViewController: UIViewController {
                 self?.navigateToOnboarding(avatars: avatars, selectedAvatar: selectedAvatar, avatarData: avatarData)
             }
         }
+        
+        bind(viewModel?.$failedToDataDownload) { [weak self] isFailed in
+            guard let self else { return }
+            if isFailed {
+                self.showRetryAlert()
+            }
+        }
     }
     
     private func bind<T>(
@@ -149,5 +156,20 @@ final class LoadingViewController: UIViewController {
         Task {
             await AVCaptureDevice.requestAccess(for: .audio)
         }
+    }
+}
+
+// MARK: - Alert
+
+extension LoadingViewController {
+    func showRetryAlert() {
+        let alert = SingleButtonAlertController(
+            titleText: .downloadFailed,
+            primaryButtonText: .retry
+        ) { [weak self] _ in
+                self?.viewModel?.fetchAvatars()
+                self?.viewModel?.fetchBgms()
+        }
+        presentAlert(alert)
     }
 }

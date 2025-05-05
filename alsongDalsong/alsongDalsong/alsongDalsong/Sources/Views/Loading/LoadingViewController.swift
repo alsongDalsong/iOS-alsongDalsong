@@ -70,8 +70,8 @@ final class LoadingViewController: UIViewController {
     }
     
     private func bindViewModel() {
-        bind(viewModel?.$avatarData) { [weak self] avatarData in
-            guard let avatarData,
+        bind(viewModel?.$resource) { [weak self] (avatarData, bgmData) in
+            guard let avatarData, bgmData != nil,
                   let avatars = self?.viewModel?.avatars,
                   let selectedAvatar = self?.viewModel?.selectedAvatar else { return }
             

@@ -10,6 +10,9 @@ final class LoadingViewModel: @unchecked Sendable {
     private(set) var avatars: [AvatarPair] = []
     private(set) var selectedAvatar: AvatarPair?
 
+    @Published var resource: (avatar: Data?, bgm: Data?)
+    @Published var failedToDataDownload: Bool = false
+
     init(
         avatarRepository: AvatarRepositoryProtocol,
         bgmRepository: BgmRepositoryProtocol,
@@ -21,9 +24,6 @@ final class LoadingViewModel: @unchecked Sendable {
         fetchAvatars()
         fetchBgms()
     }
-
-    @Published var avatarData: Data?
-    @Published var failedToDataDownload: Bool = false
 
     func fetchAvatars() {
         Task {
@@ -43,8 +43,7 @@ final class LoadingViewModel: @unchecked Sendable {
                         }
                     }
                 }
-
-                avatarData = await dataDownloadRepository.downloadData(url: randomAvatarUrl.onboarding)
+                resource.avatar = await dataDownloadRepository.downloadData(url: randomAvatarUrl.onboarding)
             } catch {
                 failedToDataDownload = true
                 ErrorHandler.handle(error)
@@ -62,9 +61,9 @@ final class LoadingViewModel: @unchecked Sendable {
         Task {
             do {
                 failedToDataDownload = false
-                let bgm = try await bgmRepository.getBgmUrl(for: name.rawValue)
-                guard let bgmUrl = bgm else { return }
-                guard let bgmData = await dataDownloadRepository.downloadData(url: bgmUrl) else { return }
+                let bgmUrl = try await bgmRepository.getBgmUrl(for: name.rawValue)
+                guard let bgmUrl, let bgmData = await dataDownloadRepository.downloadData(url: bgmUrl) else { return }
+                resource.bgm = bgmData
                 AudioHelper.shared.addBgmData(name: name, data: bgmData)
             } catch {
                 failedToDataDownload = true

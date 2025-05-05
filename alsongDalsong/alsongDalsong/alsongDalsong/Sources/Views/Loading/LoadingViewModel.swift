@@ -9,6 +9,7 @@ final class LoadingViewModel: @unchecked Sendable {
     private let dataDownloadRepository: DataDownloadRepositoryProtocol
     private(set) var avatars: [AvatarPair] = []
     private(set) var selectedAvatar: AvatarPair?
+    private let timeoutInterval: TimeInterval = 20.0
 
     @Published var resource: (avatar: Data?, bgm: Data?)
     @Published var failedToDataDownload: Bool = false
@@ -21,29 +22,40 @@ final class LoadingViewModel: @unchecked Sendable {
         self.avatarRepository = avatarRepository
         self.bgmRepository = bgmRepository
         self.dataDownloadRepository = dataDownloadRepository
+        if NetworkMonitor.shared.isConnected {
+            failedToDataDownload = true
+        }
         fetchAvatars()
         fetchBgms()
+    }
+
+    deinit {
+        NetworkMonitor.shared.stopMonitoring()
     }
 
     func fetchAvatars() {
         Task {
             do {
                 failedToDataDownload = false
-                avatars = try await avatarRepository.getAvatarUrls()
+
+                avatars = try await withThrowingTimeout(seconds: timeoutInterval) {
+                    try await self.avatarRepository.getAvatarUrls()
+                }
                 guard let randomAvatarUrl = avatars.randomElement() else { return }
                 selectedAvatar = randomAvatarUrl
 
-                await withTaskGroup(of: (Data?, Data?).self) { group in
-                    for avatar in avatars {
-                        group.addTask { [weak self] in
-                            guard let self else { return (nil, nil) }
-                            async let onboardingData = dataDownloadRepository.downloadData(url: avatar.onboarding)
-                            async let lobbyData = dataDownloadRepository.downloadData(url: avatar.lobby)
-                            return await (onboardingData, lobbyData)
+                try await withThrowingTimeout(seconds: timeoutInterval) {
+                    await withTaskGroup(of: (Data?, Data?).self) { group in
+                        for avatar in self.avatars {
+                            group.addTask {
+                                async let onboardingData = self.dataDownloadRepository.downloadData(url: avatar.onboarding)
+                                async let lobbyData = self.dataDownloadRepository.downloadData(url: avatar.lobby)
+                                return await (onboardingData, lobbyData)
+                            }
                         }
                     }
                 }
-                resource.avatar = await dataDownloadRepository.downloadData(url: randomAvatarUrl.onboarding)
+                resource.avatar = await self.dataDownloadRepository.downloadData(url: randomAvatarUrl.onboarding)
             } catch {
                 failedToDataDownload = true
                 ErrorHandler.handle(error)
@@ -61,10 +73,20 @@ final class LoadingViewModel: @unchecked Sendable {
         Task {
             do {
                 failedToDataDownload = false
-                let bgmUrl = try await bgmRepository.getBgmUrl(for: name.rawValue)
-                guard let bgmUrl, let bgmData = await dataDownloadRepository.downloadData(url: bgmUrl) else { return }
+
+                let bgmUrl = try await withThrowingTimeout(seconds: timeoutInterval) {
+                    try await self.bgmRepository.getBgmUrl(for: name.rawValue)
+                }
+                guard let url = bgmUrl else { return }
+
+                let bgmData = try await withThrowingTimeout(seconds: timeoutInterval) {
+                    await self.dataDownloadRepository.downloadData(url: url)
+                }
+
                 resource.bgm = bgmData
+                guard let bgmData else { failedToDataDownload = true; return }
                 AudioHelper.shared.addBgmData(name: name, data: bgmData)
+
             } catch {
                 failedToDataDownload = true
                 ErrorHandler.handle(error)

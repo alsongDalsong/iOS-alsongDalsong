@@ -16,6 +16,7 @@ class SettingViewController: UIViewController {
         setupUI()
         setLayout()
         setAction()
+        setSliderValue()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -26,6 +27,11 @@ class SettingViewController: UIViewController {
         }
     }
 
+    private func setSliderValue() {
+        gameSlider.value = GameAudioHelper.shared.volume
+        bgmSlider.value = BgmAudioHelper.shared.volume
+    }
+
     private func setAction() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissAlert))
         view.addGestureRecognizer(tapGesture)
@@ -33,6 +39,9 @@ class SettingViewController: UIViewController {
         confirmButton.addAction(UIAction { [weak self] _ in
             self?.dismiss(animated: true, completion: nil)
         }, for: .touchUpInside)
+
+        gameSlider.addTarget(self, action: #selector(changeGameSlider), for: .valueChanged)
+        bgmSlider.addTarget(self, action: #selector(changeBgmSlider), for: .valueChanged)
     }
 
     private func setupUI() {
@@ -40,7 +49,6 @@ class SettingViewController: UIViewController {
         setSettingView()
         setStackView()
         setTitleLabel()
-//        setSlider()
     }
 
     private func setSettingView() {
@@ -139,5 +147,17 @@ class SettingViewController: UIViewController {
         if !settingView.frame.contains(touchLocation) {
             dismiss(animated: true, completion: nil)
         }
+    }
+
+    @objc func changeGameSlider() {
+        GameAudioHelper.shared.volume = gameSlider.value
+    }
+
+    @objc func changeBgmSlider() {
+        BgmAudioHelper.shared.volume = bgmSlider.value
+    }
+
+    @objc func changeEffectSlider() {
+        EffectAudioHelper.shared.volume = effectSlider.value
     }
 }

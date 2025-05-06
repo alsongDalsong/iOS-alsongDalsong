@@ -87,7 +87,7 @@ final class GameNavigationController: @unchecked Sendable {
                 self?.navigationController.popToRootViewController(animated: true)
                 self?.navigationController.navigationBar.isHidden = true
                 print("나가기")
-                AudioHelper.shared.changeState(to: .onboarding)
+                BgmAudioHelper.shared.changeState(to: .onboarding)
             }
             self?.navigationController.presentAlert(alert)
         }
@@ -177,19 +177,19 @@ final class GameNavigationController: @unchecked Sendable {
         switch viewType {
             case .submitMusic:
                 navigateToSelectMusic()
-                AudioHelper.shared.changeState(to: .ingame)
+            BgmAudioHelper.shared.changeState(to: .ingame)
             case .humming:
                 navigateToHumming()
-                AudioHelper.shared.changeState(to: .ingame)
+            BgmAudioHelper.shared.changeState(to: .ingame)
             case .rehumming:
                 navigateToRehumming()
-                AudioHelper.shared.changeState(to: .ingame)
+            BgmAudioHelper.shared.changeState(to: .ingame)
             case .submitAnswer:
                 navigateToSubmitAnswer()
-                AudioHelper.shared.changeState(to: .ingame)
+            BgmAudioHelper.shared.changeState(to: .ingame)
             case .result:
                 navigateToResult()
-                AudioHelper.shared.changeState(to: .ingame)
+            BgmAudioHelper.shared.changeState(to: .ingame)
             case .lobby:
                 navigateToLobby()
             default:
@@ -221,7 +221,7 @@ final class GameNavigationController: @unchecked Sendable {
         let vc = LobbyViewController(lobbyViewModel: vm)
         setupNavigationBar(for: vc)
         navigationController.pushViewController(vc, animated: true)
-        AudioHelper.shared.changeState(to: .lobby)
+        BgmAudioHelper.shared.changeState(to: .lobby)
     }
 
     private func navigateToSelectMusic() {

@@ -43,7 +43,10 @@ final class AudioPlayerViewModel: @unchecked Sendable {
             timer?.invalidate()
             buttonState = .play
         } else {
-            playerEngine.play()
+            Task {
+                await BgmAudioHelper.shared.stopPlaying()
+            }
+            playerEngine.play(volume: GameAudioHelper.shared.volume)
             updateAudioProgressAndNormalizedFrequencyAmplitudes()
             buttonState = .stop
         }

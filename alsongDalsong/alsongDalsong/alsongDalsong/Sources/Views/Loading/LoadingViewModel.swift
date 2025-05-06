@@ -61,7 +61,7 @@ final class LoadingViewModel: @unchecked Sendable {
                 let bgm = try await bgmRepository.getBgmUrl(for: name.rawValue)
                 guard let bgmUrl = bgm else { return }
                 guard let bgmData = await dataDownloadRepository.downloadData(url: bgmUrl) else { return }
-                AudioHelper.shared.addBgmData(name: name, data: bgmData)
+                BgmAudioHelper.shared.addBgmData(name: name, data: bgmData)
             } catch {
                 ErrorHandler.handle(error)
             }

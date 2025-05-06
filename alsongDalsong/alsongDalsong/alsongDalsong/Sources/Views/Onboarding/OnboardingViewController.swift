@@ -43,7 +43,7 @@ final class OnboardingViewController: UIViewController {
         bindViewModel()
         bindNicknamePanel()
         viewModel?.authorizeAppleMusic()
-        AudioHelper.shared.changeState(to: .onboarding)
+        BgmAudioHelper.shared.changeState(to: .onboarding)
     }
 
     override func viewWillAppear(_ animated: Bool) {

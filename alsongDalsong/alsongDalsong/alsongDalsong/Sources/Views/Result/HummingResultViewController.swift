@@ -133,12 +133,23 @@ class HummingResultViewController: UIViewController {
     
     private func bindViewModel() {
         guard let viewModel else { return }
-        answerView.bind(to: viewModel.$result)
-
+        
+        viewModel.$result
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                guard let answer = result.answer else { return }
+                self?.answerView.bind(to: answer)
+            }
+            .store(in: &cancellables)
+        
         viewModel.$resultPhase
             .combineLatest(viewModel.$result, viewModel.$isHost)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] phase, result, isHost in
+                if phase != .answer {
+                    self?.answerView.unbind()
+                }
+                
                 self?.addDataSource(phase, result: result)
                 if result.answer != nil, isHost {
                     self?.changeButton(phase)

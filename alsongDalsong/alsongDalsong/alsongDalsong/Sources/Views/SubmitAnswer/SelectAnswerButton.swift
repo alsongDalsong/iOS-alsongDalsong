@@ -58,9 +58,9 @@ final class SelectAnswerButton: UIButton {
         dataSource
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
-                guard let isPlaying = self?.viewModel?.isPlaying else { return }
+                guard GameAudioHelper.shared.isEnginePlaying else { return }
 
-                if state, isPlaying {
+                if state {
                     self?.viewModel?.togglePlay()
                 }
             }
@@ -74,25 +74,18 @@ final class SelectAnswerButton: UIButton {
     }
 
     private func bindViewModel() {
-        viewModel?.$buttonState
-            .sink { [weak self] state in
-                self?.configure(with: state)
-            }
-            .store(in: &cancellables)
-
-        viewModel?.$artwork
+        viewModel?.$isPlaying
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] artwork in
-                self?.configure(imageData: artwork)
-            }
+            .sink { self.configure(with: $0) }
             .store(in: &cancellables)
 
+        viewModel?.$artworkData
+            .receive(on: DispatchQueue.main)
+            .sink { self.configure(imageData: $0) }
+            .store(in: &cancellables)
+        
         viewModel?.$normalizedFrequencyAmplitudes
-            .sink { [weak self] normalizedFrequencyAmplitudes in
-                self?.configure(
-                    normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes
-                )
-            }
+            .sink { self.configure(normalizedFrequencyAmplitudes: $0) }
             .store(in: &cancellables)
     }
 
@@ -238,15 +231,9 @@ final class SelectAnswerButton: UIButton {
         frequencyWaveView.normalizedFrequencyAmplitudes = normalizedFrequencyAmplitudes
     }
 
-    func configure(with buttonState: AudioControlButtonState) {
-        UIView.animate(withDuration: 0.1, animations: {
-            self.controlButton.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }, completion: { _ in
-            UIView.animate(withDuration: 0.2, animations: {
-                self.controlButton.transform = .identity
-                self.controlButton.configuration?.image = buttonState.symbol
-            })
-        })
+    func configure(with isPlaying: Bool) {
+        let buttonState: AudioControlButtonState = isPlaying ? .stop : .play
+        controlButton.configuration?.image = buttonState.symbol
     }
 }
 

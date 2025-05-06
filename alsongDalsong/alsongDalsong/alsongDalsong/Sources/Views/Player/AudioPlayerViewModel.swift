@@ -5,16 +5,14 @@ import Combine
 import Foundation
 
 final class AudioPlayerViewModel: @unchecked Sendable {
-    @Published var music: Music?
-    @Published var artwork: Data?
-    @Published var buttonState: AudioControlButtonState = .play
-    @Published var audioProgress: Double = 0.0
+    @Published var artworkData: Data?
+    @Published var progress: Double = 0
     @Published var normalizedFrequencyAmplitudes: [Float] = [0, 0, 0, 0, 0, 0]
+    @Published var isPlaying = false
 
-    private let dataDownloadRepository: DataDownloadRepositoryProtocol
-    private let playerEngine = ASAudioPlayerEngine()
-    private(set) var isPlaying: Bool = false
-    private var timer: Timer?
+    private var music: Music?
+    private var previewData: Data?
+    private var dataDownloadRepository: DataDownloadRepositoryProtocol?
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -26,71 +24,83 @@ final class AudioPlayerViewModel: @unchecked Sendable {
         self.dataDownloadRepository = dataDownloadRepository
         getPreviewData()
         getArtworkData()
+
+        bindAudioHelper()
+    }
+
+    init(
+        previewData: Data?,
+        artworkData: Data?
+    ) {
+        self.previewData = previewData
+        self.artworkData = artworkData
+
+        bindAudioHelper()
     }
 
     deinit {
-        playerEngine.stop()
-        timer?.invalidate()
+        GameAudioHelper.shared.stopEngine()
     }
 
     @MainActor
     func togglePlay() {
         if isPlaying {
-            audioProgress = 0.0
-            normalizedFrequencyAmplitudes = [0, 0, 0, 0, 0, 0]
-
-            playerEngine.stop()
-            timer?.invalidate()
-            buttonState = .play
+            isPlaying = false
+            GameAudioHelper.shared.stopEngine()
+            unbindAudioHelper()
         } else {
             Task {
                 await BgmAudioHelper.shared.stopPlaying()
             }
-            playerEngine.changeVolume(GameAudioHelper.shared.volume)
-            playerEngine.play()
-            updateAudioProgressAndNormalizedFrequencyAmplitudes()
-            buttonState = .stop
+            guard let previewData else { return }
+
+            bindAudioHelper()
+            GameAudioHelper.shared.playEngine(previewData)
         }
-
-        isPlaying.toggle()
-    }
-
-    private func updateButtonState(_ state: AudioControlButtonState) {
-        buttonState = state
     }
 
     private func getPreviewData() {
         guard let previewUrl = music?.previewUrl else { return }
-        Task { @MainActor in
-            guard let preview = await dataDownloadRepository.downloadData(url: previewUrl) else { return }
-            playerEngine.bind(data: preview)
+        Task {
+            previewData = await dataDownloadRepository?.downloadData(url: previewUrl)
         }
     }
 
     private func getArtworkData() {
         guard let artworkUrl = music?.artworkUrl else { return }
-        Task { @MainActor in
-            artwork = await dataDownloadRepository.downloadData(url: artworkUrl)
+        Task {
+            artworkData = await dataDownloadRepository?.downloadData(url: artworkUrl)
         }
     }
 
-    @MainActor
-    private func updateAudioProgressAndNormalizedFrequencyAmplitudes() {
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
-            DispatchQueue.main.async {
-                self?.audioProgress = self?.playerEngine.audioProgress ?? 0.0
-                self?.normalizedFrequencyAmplitudes = self?.playerEngine.normalizedFrequencyAmplitudes ?? []
+    private func bindAudioHelper() {
+        GameAudioHelper.shared.playerEnginePrgressPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { self.progress = $0 }
+            .store(in: &cancellables)
 
-                if self?.audioProgress == 1 {
-                    self?.audioProgress = 0.0
-                    self?.normalizedFrequencyAmplitudes = [0, 0, 0, 0, 0, 0]
+        GameAudioHelper.shared.normalizedFrequencyAmplitudesPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { self.normalizedFrequencyAmplitudes = $0 }
+            .store(in: &cancellables)
 
-                    self?.buttonState = .play
-                    self?.isPlaying = false
-                    self?.timer?.invalidate()
+        GameAudioHelper.shared.engineStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { state in
+                if self.isPlaying, !state {
+                    self.unbindAudioHelper()
                 }
+
+                self.isPlaying = state
             }
-        }
+            .store(in: &cancellables)
+    }
+
+    private func unbindAudioHelper() {
+        progress = 0
+        normalizedFrequencyAmplitudes = [0, 0, 0, 0, 0, 0]
+
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
     }
 }

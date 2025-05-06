@@ -18,7 +18,7 @@ final class MediumAudioPlayerView: UIView {
     private let stackView = UIStackView()
 
     private var cancellables = Set<AnyCancellable>()
-    private var viewModel: AudioPlayerViewModel? = nil
+    private var viewModel: AudioPlayerViewModel?
 
     private var audioPlayerType: AudioPlayerType = .result
 
@@ -40,53 +40,39 @@ final class MediumAudioPlayerView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-
-    func bind(to dataSource: Published<Result>.Publisher) {
-        dataSource
-            .receive(on: DispatchQueue.main)
-            .compactMap { $0 }
-            .sink { [weak self] result in
-                let answer = result.answer
-                self?.configure(title: answer?.title, artist: answer?.artist)
-                self?.configure(imageData: answer?.artworkData)
-            }
-            .store(in: &cancellables)
-    }
-
-    func bind(to dataSource: Published<Music?>.Publisher) {
-        dataSource
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] music in
-                guard let self else { return }
-
-                if music == nil {
-                    self.configure(with: .stop)
-                    self.configure(title: nil, artist: nil)
-                    self.configure(imageData: nil)
-                    return
-                }
-
-                let dataDownloadRepository = DIContainer.shared.resolve(DataDownloadRepositoryProtocol.self)
-                self.viewModel = AudioPlayerViewModel(
-                    music: music,
-                    dataDownloadRepository: dataDownloadRepository
-                )
-                self.bindViewModel()
-                self.configure(title: music?.title, artist: music?.artist)
-            }
-            .store(in: &cancellables)
+    
+    func bind(to datasource: MappedAnswer) {
+        viewModel = AudioPlayerViewModel(previewData: datasource.previewData, artworkData: datasource.artworkData)
+        
+        configure(
+            titleLabelFont: .boldSystemFont(ofSize: .responsiveHeight(16)),
+            artistLabelFont: .systemFont(ofSize: .responsiveHeight(12))
+        )
+        
+        bindViewModel()
+        configure(title: datasource.title, artist: datasource.artist)
     }
 
     func bind(to dataSource: Published<Bool>.Publisher) {
         dataSource
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
-                guard let isPlaying = self?.viewModel?.isPlaying else { return }
+                guard AudioHelper.shared.isEnginePlaying else { return }
 
-                if state, isPlaying {
+                if state {
                     self?.viewModel?.togglePlay()
                 }
             }
+            .store(in: &cancellables)
+    }
+    
+    func unbind() {
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
+        
+        viewModel?.$artworkData
+            .receive(on: DispatchQueue.main)
+            .sink { self.configure(imageData: $0) }
             .store(in: &cancellables)
     }
 
@@ -97,25 +83,19 @@ final class MediumAudioPlayerView: UIView {
     }
 
     private func bindViewModel() {
-        viewModel?.$buttonState
-            .sink { [weak self] state in
-                self?.configure(with: state)
-            }
-            .store(in: &cancellables)
-
-        viewModel?.$artwork
+        viewModel?.$artworkData
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] artwork in
-                self?.configure(imageData: artwork)
-            }
+            .sink { [weak self] in self?.configure(imageData: $0) }
             .store(in: &cancellables)
-
+        
         viewModel?.$normalizedFrequencyAmplitudes
-            .sink { [weak self] normalizedFrequencyAmplitudes in
-                self?.configure(
-                    normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes
-                )
-            }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.configure(normalizedFrequencyAmplitudes: $0) }
+            .store(in: &cancellables)
+        
+        viewModel?.$isPlaying
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in self?.configure(with: $0) }
             .store(in: &cancellables)
     }
 
@@ -249,15 +229,9 @@ extension MediumAudioPlayerView {
         frequencyWaveView.normalizedFrequencyAmplitudes = normalizedFrequencyAmplitudes
     }
     
-    func configure(with buttonState: AudioControlButtonState) {
-        UIView.animate(withDuration: 0.1, animations: {
-            self.controlButton.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }, completion: { _ in
-            UIView.animate(withDuration: 0.2, animations: {
-                self.controlButton.transform = .identity
-                self.controlButton.configuration?.image = buttonState.symbol
-            })
-        })
+    func configure(with isPlaying: Bool) {
+        let buttonState: AudioControlButtonState = isPlaying ? .stop : .play
+        controlButton.configuration?.image = buttonState.symbol
     }
 
     func configure(titleLabelFont: UIFont, artistLabelFont: UIFont) {

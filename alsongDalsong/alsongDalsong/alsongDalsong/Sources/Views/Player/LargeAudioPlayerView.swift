@@ -27,7 +27,7 @@ final class LargeAudioPlayerView: UIView {
     private let stackView = UIStackView()
 
     private var cancellables = Set<AnyCancellable>()
-    private var viewModel: AudioPlayerViewModel? = nil
+    private var viewModel: AudioPlayerViewModel?
 
     var controlButtonDidTapped: (() -> Void)?
     
@@ -46,13 +46,6 @@ final class LargeAudioPlayerView: UIView {
             .sink { [weak self] music in
                 guard let self else { return }
 
-                if music == nil {
-                    self.configure(with: .stop)
-                    self.configure(title: nil, artist: nil)
-                    self.configure(imageData: nil)
-                    return
-                }
-
                 let dataDownloadRepository = DIContainer.shared.resolve(DataDownloadRepositoryProtocol.self)
                 self.viewModel = AudioPlayerViewModel(
                     music: music,
@@ -68,9 +61,9 @@ final class LargeAudioPlayerView: UIView {
         dataSource
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
-                guard let isPlaying = self?.viewModel?.isPlaying else { return }
+                guard AudioHelper.shared.isEnginePlaying else { return }
 
-                if state, isPlaying {
+                if state {
                     self?.viewModel?.togglePlay()
                 }
             }
@@ -83,36 +76,25 @@ final class LargeAudioPlayerView: UIView {
         }
     }
 
-    private func bindViewModel() {
-        viewModel?.$buttonState
-            .sink { [weak self] state in
-                self?.configure(with: state)
-            }
-            .store(in: &cancellables)
-
-        viewModel?.$artwork
+    private func bindViewModel() {        
+        viewModel?.$artworkData
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] artwork in
-                self?.configure(imageData: artwork)
-            }
+            .sink { self.configure(imageData: $0) }
             .store(in: &cancellables)
-
-        viewModel?.$audioProgress
-            .sink { [weak self] progress in
-                self?.configure(
-                    progress: progress,
-                    normalizedFrequencyAmplitudes: self?.viewModel?.normalizedFrequencyAmplitudes ?? []
-                )
-            }
+        
+        viewModel?.$progress
+            .receive(on: DispatchQueue.main)
+            .sink { self.configure(progress: $0) }
             .store(in: &cancellables)
-
+        
         viewModel?.$normalizedFrequencyAmplitudes
-            .sink { [weak self] normalizedFrequencyAmplitudes in
-                self?.configure(
-                    progress: self?.viewModel?.audioProgress ?? 0,
-                    normalizedFrequencyAmplitudes: normalizedFrequencyAmplitudes
-                )
-            }
+            .receive(on: DispatchQueue.main)
+            .sink { self.configure(normalizedFrequencyAmplitudes: $0) }
+            .store(in: &cancellables)
+        
+        viewModel?.$isPlaying
+            .receive(on: DispatchQueue.main)
+            .sink { self.configure(with: $0) }
             .store(in: &cancellables)
     }
 
@@ -244,24 +226,20 @@ extension LargeAudioPlayerView {
         }
     }
 
-    func configure(progress: Double, normalizedFrequencyAmplitudes: [Float]) {
+    func configure(progress: Double) {
         let progress = CGFloat(progress)
         
         UIView.animate(withDuration: 0.3) {
             self.playProgressView.progress = progress
         }
-        
+    }
+    
+    func configure(normalizedFrequencyAmplitudes: [Float]) {
         frequencyWaveView.normalizedFrequencyAmplitudes = normalizedFrequencyAmplitudes
     }
     
-    func configure(with buttonState: AudioControlButtonState) {
-        UIView.animate(withDuration: 0.1, animations: {
-            self.controlButton.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
-        }, completion: { _ in
-            UIView.animate(withDuration: 0.2, animations: {
-                self.controlButton.transform = .identity
-                self.controlButton.configuration?.image = buttonState.symbol
-            })
-        })
+    func configure(with isPlaying: Bool) {
+        let buttonState: AudioControlButtonState = isPlaying ? .stop : .play
+        controlButton.configuration?.image = buttonState.symbol
     }
 }

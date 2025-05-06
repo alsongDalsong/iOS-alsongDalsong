@@ -46,7 +46,8 @@ final class AudioPlayerViewModel: @unchecked Sendable {
             Task {
                 await BgmAudioHelper.shared.stopPlaying()
             }
-            playerEngine.play(volume: GameAudioHelper.shared.volume)
+            playerEngine.changeVolume(GameAudioHelper.shared.volume)
+            playerEngine.play()
             updateAudioProgressAndNormalizedFrequencyAmplitudes()
             buttonState = .stop
         }

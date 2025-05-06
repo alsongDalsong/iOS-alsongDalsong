@@ -156,8 +156,4 @@ class SettingViewController: UIViewController {
     @objc func changeBgmSlider() {
         BgmAudioHelper.shared.volume = bgmSlider.value
     }
-
-    @objc func changeEffectSlider() {
-        EffectAudioHelper.shared.volume = effectSlider.value
-    }
 }

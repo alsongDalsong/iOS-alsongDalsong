@@ -27,7 +27,7 @@ final class MusicPanelViewModel: @unchecked Sendable {
     }
     
     private func bindAudioHelper() {
-        AudioHelper.shared.playerStatePublisher
+        GameAudioHelper.shared.playerStatePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] source, isPlaying in
                 switch source {
@@ -41,7 +41,7 @@ final class MusicPanelViewModel: @unchecked Sendable {
             }
             .store(in: &cancellables)
         
-        AudioHelper.shared.recorderStatePublisher
+        GameAudioHelper.shared.recorderStatePublisher
             .filter { $0 }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isRecording in
@@ -52,7 +52,7 @@ final class MusicPanelViewModel: @unchecked Sendable {
     }
     
     func configureAudioHelper() {
-        AudioHelper.shared
+        GameAudioHelper.shared
             .isConcurrent(false)
     }
     
@@ -65,10 +65,10 @@ final class MusicPanelViewModel: @unchecked Sendable {
             
             switch buttonState {
             case .playing:
-                AudioHelper.shared.stopEngine()
+                GameAudioHelper.shared.stopEngine()
                 
             case .idle:
-                AudioHelper.shared.playEngine(preview)
+                GameAudioHelper.shared.playEngine(preview)
                 
             default: break
             }

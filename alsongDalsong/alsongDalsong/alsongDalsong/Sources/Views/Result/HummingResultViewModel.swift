@@ -133,7 +133,7 @@ final class HummingResultViewModel: @unchecked Sendable {
 
         for record in records {
             let recordData = await getRecordData(url: record.fileUrl)
-            let recordAmplitudes = await AudioHelper.shared.analyze(with: recordData ?? Data())
+            let recordAmplitudes = await GameAudioHelper.shared.analyze(with: recordData ?? Data())
             Logger.debug(recordAmplitudes)
             let playerName = record.player?.nickname
             let playerAvatarData = await getAvatarData(url: record.player?.avatarUrl)
@@ -152,9 +152,9 @@ extension HummingResultViewModel {
         let playOption = resultPhase.playOption
         
         if playOption == .full {
-            await AudioHelper.shared.startPlaying(audioData, option: playOption)
+            await GameAudioHelper.shared.startPlaying(audioData, option: playOption)
         } else {
-            AudioHelper.shared.playEngine(audioData, playType: playOption)
+            GameAudioHelper.shared.playEngine(audioData, playType: playOption)
         }
     }
 }
@@ -207,7 +207,7 @@ extension HummingResultViewModel {
     }
 
     private func bindAudio() {
-        AudioHelper.shared.playerStatePublisher
+        GameAudioHelper.shared.playerStatePublisher
             .filter { _, isPlaying in !isPlaying }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _, _ in

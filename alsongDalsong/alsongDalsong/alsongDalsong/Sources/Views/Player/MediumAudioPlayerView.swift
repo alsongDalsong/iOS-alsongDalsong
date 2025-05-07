@@ -43,12 +43,10 @@ final class MediumAudioPlayerView: UIView {
 
     func bind(to datasource: MappedAnswer) {
         viewModel = AudioPlayerViewModel(previewData: datasource.previewData, artworkData: datasource.artworkData)
-
         configure(
             titleLabelFont: .boldSystemFont(ofSize: .responsiveHeight(16)),
             artistLabelFont: .systemFont(ofSize: .responsiveHeight(12))
         )
-
         bindViewModel()
         configure(title: datasource.title, artist: datasource.artist)
     }
@@ -63,6 +61,16 @@ final class MediumAudioPlayerView: UIView {
                     self?.viewModel?.togglePlay()
                 }
             }
+            .store(in: &cancellables)
+    }
+
+    func unbind() {
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
+
+        viewModel?.$artworkData
+            .receive(on: DispatchQueue.main)
+            .sink { self.configure(imageData: $0) }
             .store(in: &cancellables)
     }
 

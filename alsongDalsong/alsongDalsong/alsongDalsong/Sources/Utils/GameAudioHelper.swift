@@ -50,6 +50,10 @@ final class GameAudioHelper: @unchecked Sendable {
         engineStateSubject.eraseToAnyPublisher()
     }
 
+    var engineStatePublisher: AnyPublisher<Bool, Never> {
+        engineStateSubject.eraseToAnyPublisher()
+    }
+
     var waveformUpdatePublisher: AnyPublisher<Int, Never> {
         waveformUpdateSubject.eraseToAnyPublisher()
     }
@@ -128,9 +132,9 @@ extension GameAudioHelper {
         playType: PlayType = .full
     ) {
         engineStateSubject.send(false)
-
         Task {
             guard await player?.isPlaying() == true else { return }
+
             await stopPlaying()
             await BgmAudioHelper.shared.stopPlaying()
         }
@@ -173,7 +177,6 @@ extension GameAudioHelper {
         playerEngine.stop()
         playerStateSubject.send((source, false))
         engineStateSubject.send(false)
-
         cancellable?.cancel()
         cancellable = nil
     }
@@ -390,7 +393,6 @@ extension GameAudioHelper {
                     if self?.playerEngine.audioProgress ?? 0 >= 0.99 {
                         self?.stopEngine()
                     }
-
                     self?.playerEnginePrgress.send(self?.playerEngine.audioProgress ?? 0)
                     self?.normalizedFrequencyAmplitudes.send(self?.playerEngine.normalizedFrequencyAmplitudes ?? [0, 0, 0, 0, 0, 0])
                 }

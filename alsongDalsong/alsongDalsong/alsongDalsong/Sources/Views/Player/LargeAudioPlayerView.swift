@@ -6,7 +6,7 @@ import UIKit
 
 enum AudioControlButtonState {
     case play, stop
-    
+
     var symbol: UIImage? {
         switch self {
         case .play: UIImage(systemName: "play.fill")
@@ -30,7 +30,7 @@ final class LargeAudioPlayerView: UIView {
     private var viewModel: AudioPlayerViewModel?
 
     var controlButtonDidTapped: (() -> Void)?
-    
+
     init() {
         super.init(frame: .zero)
         setupView()
@@ -76,22 +76,22 @@ final class LargeAudioPlayerView: UIView {
         }
     }
 
-    private func bindViewModel() {        
+    private func bindViewModel() {
         viewModel?.$artworkData
             .receive(on: DispatchQueue.main)
             .sink { self.configure(imageData: $0) }
             .store(in: &cancellables)
-        
+
         viewModel?.$progress
             .receive(on: DispatchQueue.main)
             .sink { self.configure(progress: $0) }
             .store(in: &cancellables)
-        
+
         viewModel?.$normalizedFrequencyAmplitudes
             .receive(on: DispatchQueue.main)
             .sink { self.configure(normalizedFrequencyAmplitudes: $0) }
             .store(in: &cancellables)
-        
+
         viewModel?.$isPlaying
             .receive(on: DispatchQueue.main)
             .sink { self.configure(with: $0) }
@@ -101,11 +101,11 @@ final class LargeAudioPlayerView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-    
+
     func setupView() {
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(artistLabel)
-        
+
         addSubview(coverImageView)
         addSubview(blurView)
         addSubview(backgroundView)
@@ -114,16 +114,16 @@ final class LargeAudioPlayerView: UIView {
         addSubview(frequencyWaveView)
         addSubview(playProgressView)
     }
-    
+
     func setupStyle() {
         coverImageView.contentMode = .scaleAspectFill
         coverImageView.layer.cornerRadius = .responsiveWidth(12)
         coverImageView.clipsToBounds = true
-        
+
         blurView.effect = UIBlurEffect(style: .systemMaterial)
         blurView.layer.cornerRadius = .responsiveWidth(12)
         blurView.clipsToBounds = true
-        
+
         backgroundView.layer.cornerRadius = .responsiveWidth(20)
         backgroundView.layer.cornerCurve = .continuous
         backgroundView.backgroundColor = .systemGroupedBackground
@@ -143,15 +143,15 @@ final class LargeAudioPlayerView: UIView {
         buttonConfiguration.preferredSymbolConfigurationForImage = imageConfiguration
         buttonConfiguration.baseForegroundColor = .asForeground
         buttonConfiguration.image = UIImage(systemName: "play.fill")
-        
+
         if #available(iOS 17.0, *) { controlButton.isSymbolAnimationEnabled = true }
         controlButton.configuration = buttonConfiguration
-        
+
         stackView.axis = .vertical
         stackView.alignment = .center
         stackView.spacing = .responsiveHeight(4)
     }
-    
+
     func setupLayout() {
         coverImageView.translatesAutoresizingMaskIntoConstraints = false
         blurView.translatesAutoresizingMaskIntoConstraints = false
@@ -160,18 +160,18 @@ final class LargeAudioPlayerView: UIView {
         playProgressView.translatesAutoresizingMaskIntoConstraints = false
         controlButton.translatesAutoresizingMaskIntoConstraints = false
         frequencyWaveView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
             coverImageView.topAnchor.constraint(equalTo: topAnchor),
             coverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .responsiveWidth(26)),
             coverImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: .responsiveWidth(-26)),
             coverImageView.heightAnchor.constraint(equalTo: coverImageView.widthAnchor),
-            
+
             blurView.topAnchor.constraint(equalTo: coverImageView.topAnchor),
             blurView.leadingAnchor.constraint(equalTo: coverImageView.leadingAnchor),
             blurView.trailingAnchor.constraint(equalTo: coverImageView.trailingAnchor),
             blurView.bottomAnchor.constraint(equalTo: coverImageView.bottomAnchor),
-            
+
             backgroundView.topAnchor.constraint(equalTo: coverImageView.bottomAnchor, constant: .responsiveHeight(20)),
             backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: .responsiveHeight(-20)),
             backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -198,7 +198,7 @@ final class LargeAudioPlayerView: UIView {
             frequencyWaveView.heightAnchor.constraint(equalToConstant: .responsiveHeight(14))
         ])
     }
-    
+
     func setupAction() {
         controlButton.addAction(UIAction { [weak self] _ in
             self?.controlButtonDidTapped?()
@@ -212,7 +212,7 @@ extension LargeAudioPlayerView {
     func configure(title: String?, artist: String?) {
         titleLabel.text = title ?? "???"
         artistLabel.text = artist ?? "???"
-        
+
         blurView.alpha = title == nil ? 1 : 0
     }
 
@@ -228,16 +228,16 @@ extension LargeAudioPlayerView {
 
     func configure(progress: Double) {
         let progress = CGFloat(progress)
-        
+
         UIView.animate(withDuration: 0.3) {
             self.playProgressView.progress = progress
         }
     }
-    
+
     func configure(normalizedFrequencyAmplitudes: [Float]) {
         frequencyWaveView.normalizedFrequencyAmplitudes = normalizedFrequencyAmplitudes
     }
-    
+
     func configure(with isPlaying: Bool) {
         let buttonState: AudioControlButtonState = isPlaying ? .stop : .play
         controlButton.configuration?.image = buttonState.symbol

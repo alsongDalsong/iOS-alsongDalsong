@@ -24,7 +24,6 @@ final class AudioPlayerViewModel: @unchecked Sendable {
         self.dataDownloadRepository = dataDownloadRepository
         getPreviewData()
         getArtworkData()
-
         bindAudioHelper()
     }
 
@@ -34,7 +33,6 @@ final class AudioPlayerViewModel: @unchecked Sendable {
     ) {
         self.previewData = previewData
         self.artworkData = artworkData
-
         bindAudioHelper()
     }
 
@@ -99,7 +97,6 @@ final class AudioPlayerViewModel: @unchecked Sendable {
     private func unbindAudioHelper() {
         progress = 0
         normalizedFrequencyAmplitudes = [0, 0, 0, 0, 0, 0]
-
         cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
     }

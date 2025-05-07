@@ -50,10 +50,6 @@ final class GameAudioHelper: @unchecked Sendable {
         engineStateSubject.eraseToAnyPublisher()
     }
 
-    var engineStatePublisher: AnyPublisher<Bool, Never> {
-        engineStateSubject.eraseToAnyPublisher()
-    }
-
     var waveformUpdatePublisher: AnyPublisher<Int, Never> {
         waveformUpdateSubject.eraseToAnyPublisher()
     }

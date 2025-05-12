@@ -40,7 +40,7 @@ final class OnboardingViewModel: @unchecked Sendable {
     }
 
     func playBgm() {
-        AudioHelper.shared.playBgm()
+        BgmAudioHelper.shared.playBgm()
     }
 
     @MainActor

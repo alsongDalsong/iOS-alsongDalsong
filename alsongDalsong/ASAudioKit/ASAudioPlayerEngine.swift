@@ -9,12 +9,14 @@ public class ASAudioPlayerEngine: @unchecked Sendable {
     private let audioEngine = AVAudioEngine()
     private let audioPlayer = AVAudioPlayerNode()
 
+    private var volume: Float = 1.0
+    
     private var sampleCount = 6
     private var audioFile: AVAudioFile?
     private var _normalizedFrequencyAmplitudes: [Float] = []
     
     private let syncQueue = DispatchQueue(label: "audioVisualizer.syncQueue")
-
+    
     public var normalizedFrequencyAmplitudes: [Float] {
         get {
             syncQueue.sync {
@@ -28,7 +30,13 @@ public class ASAudioPlayerEngine: @unchecked Sendable {
         }
     }
     
+    public func changeVolume(_ volume: Float) {
+        self.volume = volume
+        audioPlayer.volume = volume
+    }
+    
     public private(set) var playState: PlayState = .stop
+
     public var audioProgress: Double {
         guard let nodetime = audioPlayer.lastRenderTime,
               let playerTime = audioPlayer.playerTime(forNodeTime: nodetime),
@@ -39,7 +47,7 @@ public class ASAudioPlayerEngine: @unchecked Sendable {
         return min(1.0, Double(playerTime.sampleTime) / playerTime.sampleRate / duration)
     }
     
-    public init() { }
+    public init() {}
     
     public func bind(data: Data, sampleCount: Int = 6) {
         self.sampleCount = sampleCount
@@ -65,7 +73,7 @@ public class ASAudioPlayerEngine: @unchecked Sendable {
 
     public func play() {
         guard let file = audioFile else { return }
-                
+        audioPlayer.volume = volume
         if !audioEngine.isRunning {
             try? audioEngine.start()
         }
@@ -119,7 +127,7 @@ extension ASAudioPlayerEngine {
         var realOut = [Float](repeating: 0, count: 1024)
         var imagOut = [Float](repeating: 0, count: 1024)
             
-        for i in 0..<1024 {
+        for i in 0 ..< 1024 {
             realIn[i] = data[i]
         }
         

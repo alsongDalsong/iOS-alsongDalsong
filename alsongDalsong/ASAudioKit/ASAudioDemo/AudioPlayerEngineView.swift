@@ -1,5 +1,5 @@
-import SwiftUI
 import Charts
+import SwiftUI
 
 struct AudioPlayerEngineView: View {
     private let playerEngine = ASAudioPlayerEngine()
@@ -55,7 +55,7 @@ struct AudioPlayerEngineView: View {
                     }
                 }
             }
-            .chartYScale(domain: 0...40)
+            .chartYScale(domain: 0 ... 40)
             .chartXAxis(.hidden)
             .chartYAxis(.hidden)
             .frame(height: 100)

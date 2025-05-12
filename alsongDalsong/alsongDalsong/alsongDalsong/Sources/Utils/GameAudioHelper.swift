@@ -3,10 +3,10 @@ import ASLogKit
 import Combine
 import Foundation
 
-final class AudioHelper: @unchecked Sendable {
+final class GameAudioHelper: @unchecked Sendable {
     // MARK: - Singleton
 
-    static let shared = AudioHelper()
+    static let shared = GameAudioHelper()
     private init() {}
 
     // MARK: - Private properties
@@ -19,14 +19,14 @@ final class AudioHelper: @unchecked Sendable {
     private var isConcurrent: Bool = false
     private var cancellable: AnyCancellable?
 
-    private var bgmDatas: [Bgm: Data] = [:]
-    private var bgmState: Bgm = .onboarding {
+    var volume: Float = 1.0 {
         didSet {
-            playBgm()
+            playerEngine.changeVolume(volume)
+            Task {
+                await player?.setVolume(volume)
+            }
         }
     }
-
-    private let queue = DispatchQueue(label: "alsongDalsong.AudioHelper")
 
     // MARK: - Publishers
 
@@ -45,7 +45,7 @@ final class AudioHelper: @unchecked Sendable {
     var playerStatePublisher: AnyPublisher<(FileSource, Bool), Never> {
         playerStateSubject.eraseToAnyPublisher()
     }
-    
+
     var engineStatePublisher: AnyPublisher<Bool, Never> {
         engineStateSubject.eraseToAnyPublisher()
     }
@@ -76,7 +76,7 @@ final class AudioHelper: @unchecked Sendable {
             return await recorder.isRecording()
         }
     }
-    
+
     var isEnginePlaying: Bool {
         playerEngine.playState == .play
     }
@@ -114,30 +114,9 @@ final class AudioHelper: @unchecked Sendable {
     }
 }
 
-// MARK: - BGM
-
-extension AudioHelper {
-    func playBgm() {
-        Task {
-            print(#function)
-            await startPlaying(bgmDatas[bgmState], option: .loop)
-        }
-    }
-
-    func addBgmData(name: Bgm, data: Data) {
-        queue.async(flags: .barrier) {
-            self.bgmDatas[name] = data
-        }
-    }
-
-    func changeState(to newState: Bgm) {
-        bgmState = newState
-    }
-}
-
 // MARK: - Play Audio
 
-extension AudioHelper {
+extension GameAudioHelper {
     /// 오디오 엔진을 재생하는 함수
     /// - Parameters:
     ///   - data: 재생할 오디오 데이터
@@ -149,12 +128,13 @@ extension AudioHelper {
         playType: PlayType = .full
     ) {
         engineStateSubject.send(false)
-        
         Task {
-            guard (await player?.isPlaying() == true) else { return }
+            guard await player?.isPlaying() == true else { return }
+
             await stopPlaying()
+            await BgmAudioHelper.shared.stopPlaying()
         }
-        
+
         guard let data else { return }
 
         Logger.debug(#function)
@@ -193,7 +173,6 @@ extension AudioHelper {
         playerEngine.stop()
         playerStateSubject.send((source, false))
         engineStateSubject.send(false)
-        
         cancellable?.cancel()
         cancellable = nil
     }
@@ -206,12 +185,14 @@ extension AudioHelper {
     func startPlaying(_ file: Data?,
                       sourceType type: FileSource = .imported(.large),
                       option: PlayType = .full,
+                      volume: Float = 1.0,
                       needsWaveUpdate: Bool = false) async
     {
         if playerEngine.playState == .play {
             stopEngine()
         }
-        
+        await BgmAudioHelper.shared.stopPlaying()
+
         guard await checkRecorderState(), await checkPlayerState() else { return }
         guard let file else { return }
 
@@ -228,14 +209,14 @@ extension AudioHelper {
             updatePlayIndex()
         }
 
-        await play(file: file, option: option)
+        await play(file: file, option: option, volume: volume)
     }
 
-    private func play(file: Data, option: PlayType) async {
+    private func play(file: Data, option: PlayType, volume: Float) async {
         switch option {
         case .full:
             do {
-                try await player?.startPlaying(data: file, fade: true)
+                try await player?.startPlaying(data: file, volume: volume)
             } catch {
                 ErrorHandler.handle(error)
             }
@@ -307,9 +288,11 @@ extension AudioHelper {
 
 // MARK: - Record Audio
 
-extension AudioHelper {
+extension GameAudioHelper {
     func startRecording() async {
         stopEngine()
+        await BgmAudioHelper.shared.stopPlaying()
+
         guard await checkRecorderState(), await checkPlayerState() else { return }
 
         makeRecorder()
@@ -374,14 +357,14 @@ extension AudioHelper {
     }
 }
 
-extension AudioHelper {
+extension GameAudioHelper {
     enum FileSource: Equatable {
         case imported(MusicPanelType)
         case recorded
     }
 }
 
-extension AudioHelper {
+extension GameAudioHelper {
     @discardableResult
     private func sourceType(_ type: FileSource) -> Self {
         source = type
@@ -397,7 +380,7 @@ extension AudioHelper {
 
 // MARK: - Audio Visualize
 
-extension AudioHelper {
+extension GameAudioHelper {
     private func updateFrequencyAndProgress() {
         cancellable = Timer.publish(every: 0.1, on: .main, in: .common)
             .autoconnect()
@@ -406,7 +389,6 @@ extension AudioHelper {
                     if self?.playerEngine.audioProgress ?? 0 >= 0.99 {
                         self?.stopEngine()
                     }
-                    
                     self?.playerEnginePrgress.send(self?.playerEngine.audioProgress ?? 0)
                     self?.normalizedFrequencyAmplitudes.send(self?.playerEngine.normalizedFrequencyAmplitudes ?? [0, 0, 0, 0, 0, 0])
                 }
@@ -438,10 +420,4 @@ extension AudioHelper {
         let clampedAmplitude = min(max(newAmplitude, 0), 1)
         amplitudeSubject.send(clampedAmplitude)
     }
-}
-
-enum Bgm: String, CaseIterable {
-    case onboarding
-    case lobby
-    case ingame
 }

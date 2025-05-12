@@ -15,7 +15,7 @@ final class RecordingPanelViewModel: @unchecked Sendable {
     }
     
     func configureAudioHelper() {
-        AudioHelper.shared
+        GameAudioHelper.shared
             .isConcurrent(false)
     }
     
@@ -24,7 +24,7 @@ final class RecordingPanelViewModel: @unchecked Sendable {
         Task {
             if buttonState == .recording { return }
             if buttonState == .playing { stopPlaying() }
-            await AudioHelper.shared.startRecording()
+            await GameAudioHelper.shared.startRecording()
         }
     }
     
@@ -40,11 +40,11 @@ final class RecordingPanelViewModel: @unchecked Sendable {
             self?.configureAudioHelper()
             
             if self?.buttonState == .playing {
-                await AudioHelper.shared.stopPlaying()
+                await GameAudioHelper.shared.stopPlaying()
                 return
             }
             if self?.buttonState == .idle {
-                await AudioHelper.shared.startPlaying(self?.recordedData, sourceType: .recorded, option: .full, needsWaveUpdate: true)
+                await GameAudioHelper.shared.startPlaying(self?.recordedData, sourceType: .recorded, option: .full, needsWaveUpdate: true)
                 return
             }
         }
@@ -53,16 +53,16 @@ final class RecordingPanelViewModel: @unchecked Sendable {
     @MainActor
     private func stopPlaying() {
         Task {
-            await AudioHelper.shared.stopPlaying()
+            await GameAudioHelper.shared.stopPlaying()
         }
     }
     
     private func bindAudioHelper() {
-        AudioHelper.shared.amplitudePublisher
+        GameAudioHelper.shared.amplitudePublisher
             .receive(on: DispatchQueue.main)
             .assign(to: &$recorderAmplitude)
         
-        AudioHelper.shared.playerStatePublisher
+        GameAudioHelper.shared.playerStatePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] source, isPlaying in
                 if source == .recorded {
@@ -76,7 +76,7 @@ final class RecordingPanelViewModel: @unchecked Sendable {
             }
             .store(in: &self.cancellables)
         
-        AudioHelper.shared.waveformUpdatePublisher
+        GameAudioHelper.shared.waveformUpdatePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] index in
                 guard let self else { return }
@@ -85,14 +85,14 @@ final class RecordingPanelViewModel: @unchecked Sendable {
             }
             .store(in: &self.cancellables)
         
-        AudioHelper.shared.recorderStatePublisher
+        GameAudioHelper.shared.recorderStatePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isRecording in
                 self?.updateButtonState(isRecording ? .recording : .idle)
             }
             .store(in: &self.cancellables)
         
-        AudioHelper.shared.recorderDataPublisher
+        GameAudioHelper.shared.recorderDataPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] data in
                 self?.recordedData = data

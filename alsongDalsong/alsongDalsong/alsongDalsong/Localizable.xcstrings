@@ -95,6 +95,9 @@
         }
       }
     },
+    "게임" : {
+      "extractionState" : "manual"
+    },
     "게임 데이터 불러오는 중" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -497,6 +500,17 @@
         }
       }
     },
+    "배경음악" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Background Music"
+          }
+        }
+      }
+    },
     "복사 됨!" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -540,13 +554,13 @@
         }
       }
     },
-    "사냥꾼" : {
+    "사부님" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hunter"
+            "value" : "Master"
           }
         }
       }
@@ -562,13 +576,13 @@
         }
       }
     },
-    "사부님" : {
+    "사냥꾼" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Master"
+            "value" : "Hunter"
           }
         }
       }
@@ -589,6 +603,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Song Selected"
+          }
+        }
+      }
+    },
+    "설정" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setting"
           }
         }
       }
@@ -734,6 +759,7 @@
       }
     },
     "정답 선택" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -744,6 +770,7 @@
       }
     },
     "정답 제출" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -963,6 +990,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Confirm"
+          }
+        }
+      }
+    },
+    "효과음" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effect Sound"
           }
         }
       }

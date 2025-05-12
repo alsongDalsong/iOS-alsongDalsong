@@ -24,35 +24,36 @@ final class AudioPlayerViewModel: @unchecked Sendable {
         self.dataDownloadRepository = dataDownloadRepository
         getPreviewData()
         getArtworkData()
-        
         bindAudioHelper()
     }
-    
+
     init(
         previewData: Data?,
         artworkData: Data?
     ) {
         self.previewData = previewData
         self.artworkData = artworkData
-        
         bindAudioHelper()
     }
 
     deinit {
-        AudioHelper.shared.stopEngine()
+        GameAudioHelper.shared.stopEngine()
     }
 
     @MainActor
     func togglePlay() {
         if isPlaying {
             isPlaying = false
-            AudioHelper.shared.stopEngine()
+            GameAudioHelper.shared.stopEngine()
             unbindAudioHelper()
         } else {
+            Task {
+                await BgmAudioHelper.shared.stopPlaying()
+            }
             guard let previewData else { return }
 
             bindAudioHelper()
-            AudioHelper.shared.playEngine(previewData)
+            GameAudioHelper.shared.playEngine(previewData)
         }
     }
 
@@ -69,22 +70,22 @@ final class AudioPlayerViewModel: @unchecked Sendable {
             artworkData = await dataDownloadRepository?.downloadData(url: artworkUrl)
         }
     }
-    
+
     private func bindAudioHelper() {
-        AudioHelper.shared.playerEnginePrgressPublisher
+        GameAudioHelper.shared.playerEnginePrgressPublisher
             .receive(on: DispatchQueue.main)
             .sink { self.progress = $0 }
             .store(in: &cancellables)
-        
-        AudioHelper.shared.normalizedFrequencyAmplitudesPublisher
+
+        GameAudioHelper.shared.normalizedFrequencyAmplitudesPublisher
             .receive(on: DispatchQueue.main)
             .sink { self.normalizedFrequencyAmplitudes = $0 }
             .store(in: &cancellables)
-        
-        AudioHelper.shared.engineStatePublisher
+
+        GameAudioHelper.shared.engineStatePublisher
             .receive(on: DispatchQueue.main)
             .sink { state in
-                if self.isPlaying && !state {
+                if self.isPlaying, !state {
                     self.unbindAudioHelper()
                 }
 
@@ -92,11 +93,10 @@ final class AudioPlayerViewModel: @unchecked Sendable {
             }
             .store(in: &cancellables)
     }
-    
+
     private func unbindAudioHelper() {
         progress = 0
         normalizedFrequencyAmplitudes = [0, 0, 0, 0, 0, 0]
-        
         cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
     }

@@ -85,7 +85,7 @@ final class LoadingViewModel: @unchecked Sendable {
 
                 resource.bgm = bgmData
                 guard let bgmData else { failedToDataDownload = true; return }
-                AudioHelper.shared.addBgmData(name: name, data: bgmData)
+                BgmAudioHelper.shared.addBgmData(name: name, data: bgmData)
 
             } catch {
                 failedToDataDownload = true

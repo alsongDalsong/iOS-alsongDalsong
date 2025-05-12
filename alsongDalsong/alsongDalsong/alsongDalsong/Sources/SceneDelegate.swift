@@ -48,7 +48,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         else { return }
 
         Task {
-            await AudioHelper.shared.resume()
+            await GameAudioHelper.shared.resume()
 
             let isConnected = await firebaseManager.checkConnection()
             if !isConnected {
@@ -63,7 +63,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneDidEnterBackground(_: UIScene) {
         Task {
-            await AudioHelper.shared.pause()
+            await GameAudioHelper.shared.pause()
         }
     }
 

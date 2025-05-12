@@ -110,13 +110,13 @@ final class SubmitAnswerViewModel: ObservableObject, @unchecked Sendable {
     func playingMusic() {
         guard let data = musicData else { return }
         Task {
-            await AudioHelper.shared.startPlaying(data, option: .full)
+            await GameAudioHelper.shared.startPlaying(data, option: .full)
         }
     }
 
     func stopMusic() {
         Task {
-            await AudioHelper.shared.stopPlaying()
+            await GameAudioHelper.shared.stopPlaying()
         }
     }
 

@@ -23,7 +23,7 @@ final class MediumAudioPlayerView: UIView {
     private var audioPlayerType: AudioPlayerType = .result
 
     var controlButtonDidTapped: (() -> Void)?
-    
+
     init(type: AudioPlayerType) {
         super.init(frame: .zero)
         self.audioPlayerType = type
@@ -36,19 +36,17 @@ final class MediumAudioPlayerView: UIView {
             setupAction()
         }
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-    
+
     func bind(to datasource: MappedAnswer) {
         viewModel = AudioPlayerViewModel(previewData: datasource.previewData, artworkData: datasource.artworkData)
-        
         configure(
             titleLabelFont: .boldSystemFont(ofSize: .responsiveHeight(16)),
             artistLabelFont: .systemFont(ofSize: .responsiveHeight(12))
         )
-        
         bindViewModel()
         configure(title: datasource.title, artist: datasource.artist)
     }
@@ -57,7 +55,7 @@ final class MediumAudioPlayerView: UIView {
         dataSource
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
-                guard AudioHelper.shared.isEnginePlaying else { return }
+                guard GameAudioHelper.shared.isEnginePlaying else { return }
 
                 if state {
                     self?.viewModel?.togglePlay()
@@ -65,11 +63,11 @@ final class MediumAudioPlayerView: UIView {
             }
             .store(in: &cancellables)
     }
-    
+
     func unbind() {
         cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
-        
+
         viewModel?.$artworkData
             .receive(on: DispatchQueue.main)
             .sink { self.configure(imageData: $0) }
@@ -87,12 +85,12 @@ final class MediumAudioPlayerView: UIView {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.configure(imageData: $0) }
             .store(in: &cancellables)
-        
+
         viewModel?.$normalizedFrequencyAmplitudes
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.configure(normalizedFrequencyAmplitudes: $0) }
             .store(in: &cancellables)
-        
+
         viewModel?.$isPlaying
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in self?.configure(with: $0) }
@@ -102,20 +100,20 @@ final class MediumAudioPlayerView: UIView {
     private func setupView() {
         stackView.addArrangedSubview(titleLabel)
         stackView.addArrangedSubview(artistLabel)
-        
+
         addSubview(backgroundView)
         addSubview(coverImageView)
         addSubview(stackView)
-        
+
         if audioPlayerType == .submit {
             addSubview(controlButton)
         }
-        
+
         if audioPlayerType == .result {
             addSubview(frequencyWaveView)
         }
     }
-    
+
     private func setupStyle() {
         backgroundView.layer.cornerRadius = .responsiveWidth(12)
         backgroundView.layer.cornerCurve = .continuous
@@ -130,11 +128,11 @@ final class MediumAudioPlayerView: UIView {
             backgroundView.layer.borderColor = UIColor.systemGroupedBackground.cgColor
             backgroundView.layer.borderWidth = .responsiveWidth(3)
         }
-        
+
         coverImageView.contentMode = .scaleAspectFill
         coverImageView.layer.cornerRadius = .responsiveWidth(12)
         coverImageView.clipsToBounds = true
-        
+
         titleLabel.textColor = .label
         titleLabel.font = .boldSystemFont(ofSize: .responsiveHeight(18))
 
@@ -147,33 +145,33 @@ final class MediumAudioPlayerView: UIView {
             buttonConfiguration.preferredSymbolConfigurationForImage = imageConfiguration
             buttonConfiguration.baseForegroundColor = .asForeground
             buttonConfiguration.image = UIImage(systemName: "play.fill")
-            
+
             if #available(iOS 17.0, *) { controlButton.isSymbolAnimationEnabled = true }
             controlButton.configuration = buttonConfiguration
         }
-        
+
         stackView.axis = .vertical
         stackView.alignment = .leading
         stackView.spacing = .responsiveHeight(4)
     }
-    
+
     private func setupAction() {
         controlButton.addAction(UIAction { [weak self] _ in
             self?.controlButtonDidTapped?()
         }, for: .touchUpInside)
     }
-    
+
     private func setupLayout() {
         backgroundView.translatesAutoresizingMaskIntoConstraints = false
         coverImageView.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
             backgroundView.topAnchor.constraint(equalTo: topAnchor),
             backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
             backgroundView.leadingAnchor.constraint(equalTo: leadingAnchor),
             backgroundView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            
+
             coverImageView.topAnchor.constraint(equalTo: topAnchor, constant: .responsiveHeight(10)),
             coverImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: .responsiveHeight(-10)),
             coverImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: .responsiveWidth(10)),
@@ -182,7 +180,7 @@ final class MediumAudioPlayerView: UIView {
             stackView.leadingAnchor.constraint(equalTo: coverImageView.trailingAnchor, constant: .responsiveWidth(10)),
             stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
-        
+
         if audioPlayerType == .submit {
             controlButton.translatesAutoresizingMaskIntoConstraints = false
 
@@ -191,7 +189,7 @@ final class MediumAudioPlayerView: UIView {
                 controlButton.centerYAnchor.constraint(equalTo: centerYAnchor)
             ])
         }
-        
+
         if audioPlayerType == .result {
             frequencyWaveView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -228,7 +226,7 @@ extension MediumAudioPlayerView {
     func configure(normalizedFrequencyAmplitudes: [Float]) {
         frequencyWaveView.normalizedFrequencyAmplitudes = normalizedFrequencyAmplitudes
     }
-    
+
     func configure(with isPlaying: Bool) {
         let buttonState: AudioControlButtonState = isPlaying ? .stop : .play
         controlButton.configuration?.image = buttonState.symbol

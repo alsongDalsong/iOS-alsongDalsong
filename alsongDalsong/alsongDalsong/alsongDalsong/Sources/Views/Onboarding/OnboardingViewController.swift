@@ -6,6 +6,7 @@ import UIKit
 
 final class OnboardingViewController: UIViewController {
     private let titleLabel = UILabel()
+    private let settingButton = ASButton()
     private let createRoomButton = ASButton()
     private let joinRoomButton = ASButton()
     private let avatarView = ASAvatarView()
@@ -42,7 +43,7 @@ final class OnboardingViewController: UIViewController {
         bindViewModel()
         bindNicknamePanel()
         viewModel?.authorizeAppleMusic()
-        AudioHelper.shared.changeState(to: .onboarding)
+        BgmAudioHelper.shared.changeState(to: .onboarding)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -63,7 +64,7 @@ final class OnboardingViewController: UIViewController {
         titleLabel.font = UIFont.font(.riaSans, ofSize: .responsiveHeight(32))
         titleLabel.textColor = .onboardingForeground
 
-        for item in [titleLabel, nickNamePanel, avatarView, createRoomButton, joinRoomButton] {
+        for item in [titleLabel, settingButton, nickNamePanel, avatarView, createRoomButton, joinRoomButton] {
             view.addSubview(item)
             item.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -84,6 +85,11 @@ final class OnboardingViewController: UIViewController {
         NSLayoutConstraint.activate([
             titleLabel.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
             titleLabel.topAnchor.constraint(equalTo: safeArea.topAnchor),
+
+            settingButton.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(4)),
+            settingButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: .responsiveWidth(-10)),
+            settingButton.heightAnchor.constraint(equalToConstant: .responsiveHeight(32)),
+            settingButton.widthAnchor.constraint(equalToConstant: .responsiveWidth(32)),
 
             nickNamePanel.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: .responsiveHeight(70)),
             nickNamePanel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: .responsiveWidth(50)),
@@ -108,6 +114,12 @@ final class OnboardingViewController: UIViewController {
     }
 
     private func setAction() {
+        settingButton.addAction(
+            UIAction { [weak self] _ in
+                self?.showSettingView()
+            }, for: .touchUpInside
+        )
+
         createRoomButton.addAction(
             UIAction { [weak self] _ in
                 guard self?.isMicrophoneAuthorized() ?? false else {
@@ -139,6 +151,15 @@ final class OnboardingViewController: UIViewController {
     }
 
     private func setupButton() {
+        settingButton.setConfiguration(
+            systemImageName: "gear",
+            imageSize: 16,
+            backgroundColor: .inviteButton,
+            cornerStyle: .large,
+            shadowColor: .buttonShadowOfDefault,
+            shadowHeight: .responsiveHeight(4)
+        )
+
         createRoomButton.setConfiguration(
             systemImageName: "",
             text: Constants.craeteButtonTitle,
@@ -322,6 +343,18 @@ extension OnboardingViewController {
             }
         )
         presentAlert(alert)
+    }
+}
+
+// MARK: - Setting
+
+extension OnboardingViewController {
+    private func showSettingView() {
+        let settingViewController = SettingViewController()
+
+        settingViewController.modalTransitionStyle = .crossDissolve
+        settingViewController.modalPresentationStyle = .overFullScreen
+        present(settingViewController, animated: true, completion: nil)
     }
 }
 

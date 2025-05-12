@@ -25,7 +25,7 @@ final class SelectAnswerButton: UIButton {
         bindWithPlayer()
         setupAction()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
@@ -58,7 +58,8 @@ final class SelectAnswerButton: UIButton {
         dataSource
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
-                guard AudioHelper.shared.isEnginePlaying else { return }
+
+                guard GameAudioHelper.shared.isEnginePlaying else { return }
 
                 if state {
                     self?.viewModel?.togglePlay()
@@ -83,7 +84,7 @@ final class SelectAnswerButton: UIButton {
             .receive(on: DispatchQueue.main)
             .sink { self.configure(imageData: $0) }
             .store(in: &cancellables)
-        
+
         viewModel?.$normalizedFrequencyAmplitudes
             .sink { self.configure(normalizedFrequencyAmplitudes: $0) }
             .store(in: &cancellables)
@@ -108,7 +109,7 @@ final class SelectAnswerButton: UIButton {
         controlButton.isUserInteractionEnabled = false
         frequencyWaveView.isUserInteractionEnabled = false
     }
-    
+
     private func setupStyle() {
         layer.cornerRadius = .responsiveWidth(12)
         layer.cornerCurve = .continuous
@@ -144,17 +145,17 @@ final class SelectAnswerButton: UIButton {
         stackView.alignment = .leading
         stackView.spacing = .responsiveHeight(4)
 
-        self.configuration = .plain()
+        configuration = .plain()
         var titleAttribute = AttributedString("정답을 선택해 주세요")
         titleAttribute.foregroundColor = .label
         titleAttribute.font = .systemFont(ofSize: .responsiveHeight(18), weight: .semibold)
-        self.configuration?.attributedTitle = titleAttribute
+        configuration?.attributedTitle = titleAttribute
 
         configurationUpdateHandler = { [weak self] _ in
             self?.applyHighlightEffect()
         }
     }
-    
+
     private func setupLayout() {
         coverImageView.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -182,7 +183,7 @@ final class SelectAnswerButton: UIButton {
             frequencyWaveView.trailingAnchor.constraint(equalTo: controlButton.leadingAnchor, constant: .responsiveWidth(-20)),
             frequencyWaveView.widthAnchor.constraint(equalToConstant: .responsiveWidth(20)),
             frequencyWaveView.heightAnchor.constraint(equalToConstant: .responsiveHeight(16)),
-            frequencyWaveView.centerYAnchor.constraint(equalTo: centerYAnchor)
+            frequencyWaveView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
     }
 
@@ -201,7 +202,7 @@ final class SelectAnswerButton: UIButton {
             layer.shadowColor = UIColor.gray.cgColor
         }
     }
-    
+
     func configure(title: String?, artist: String?) {
         songTitleLabel.text = title
         artistLabel.text = artist
@@ -240,29 +241,29 @@ final class SelectAnswerButton: UIButton {
 final class SampleSelectionAnswerButtonViewController: UIViewController {
     private let button1 = SelectAnswerButton()
     private let button2 = SelectAnswerButton()
-    
+
     private var count = 1
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        
+
         view.addSubview(button1)
         view.addSubview(button2)
-        
+
         button1.translatesAutoresizingMaskIntoConstraints = false
         button2.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
             button1.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             button1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             button1.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
-            
+
             button2.topAnchor.constraint(equalTo: button1.bottomAnchor, constant: 40),
             button2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             button2.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
         ])
-        
+
         button2.configure(title: "Title \(count)", artist: "Artest \(count)")
         button2.configure(imageData: nil)
         button2.addAction(UIAction { [self] _ in

@@ -175,25 +175,24 @@ final class GameNavigationController: @unchecked Sendable {
     private func updateViewControllers(state: GameState) {
         let viewType = state.resolveViewType()
         switch viewType {
-            case .submitMusic:
-                navigateToSelectMusic()
+        case .submitMusic: navigateToSelectMusic()
+        case .humming: navigateToHumming()
+        case .rehumming: navigateToRehumming()
+        case .submitAnswer: navigateToSubmitAnswer()
+        case .result: navigateToResult()
+        case .lobby: navigateToLobby()
+        default: break
+        }
+        
+        if viewType == .result {
+            Task {
+                GameAudioHelper.shared.stopEngine()
+                await GameAudioHelper.shared.stopPlaying()
+            }
+        }
+        
+        if viewType != .lobby {
             BgmAudioHelper.shared.changeState(to: .ingame)
-            case .humming:
-                navigateToHumming()
-            BgmAudioHelper.shared.changeState(to: .ingame)
-            case .rehumming:
-                navigateToRehumming()
-            BgmAudioHelper.shared.changeState(to: .ingame)
-            case .submitAnswer:
-                navigateToSubmitAnswer()
-            BgmAudioHelper.shared.changeState(to: .ingame)
-            case .result:
-                navigateToResult()
-            BgmAudioHelper.shared.changeState(to: .ingame)
-            case .lobby:
-                navigateToLobby()
-            default:
-                break
         }
     }
 

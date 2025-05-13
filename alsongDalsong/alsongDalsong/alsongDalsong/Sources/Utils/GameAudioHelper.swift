@@ -127,39 +127,40 @@ extension GameAudioHelper {
         _ data: Data?,
         playType: PlayType = .full
     ) {
-        engineStateSubject.send(false)
         Task {
+            engineStateSubject.send(false)
+            
             guard await player?.isPlaying() == true else { return }
-
+            
             await stopPlaying()
             await BgmAudioHelper.shared.stopPlaying()
-        }
-
-        guard let data else { return }
-
-        Logger.debug(#function)
-
-        playerEngine.bind(data: data)
-
-        switch playType {
-        /// playType에 따라 전체 혹은 부분 재생
-        case .full:
-            playerEngine.play()
-
-        case let .partial(time: time):
-            playerEngine.play()
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(time)) { [weak self] in
-                self?.stopEngine()
+            
+            guard let data else { return }
+            
+            Logger.debug(#function)
+            
+            playerEngine.bind(data: data)
+            
+            switch playType {
+                /// playType에 따라 전체 혹은 부분 재생
+            case .full:
+                playerEngine.play()
+                
+            case let .partial(time: time):
+                playerEngine.play()
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(time)) { [weak self] in
+                    self?.stopEngine()
+                }
+                
+            case .loop:
+                playerEngine.play()
             }
-
-        case .loop:
-            playerEngine.play()
+            
+            engineStateSubject.send(true)
+            
+            updateFrequencyAndProgress()
         }
-
-        engineStateSubject.send(true)
-
-        updateFrequencyAndProgress()
     }
 
     func stopEngine() {

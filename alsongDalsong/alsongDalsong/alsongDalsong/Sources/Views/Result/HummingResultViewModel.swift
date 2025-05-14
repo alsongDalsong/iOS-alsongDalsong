@@ -208,7 +208,6 @@ extension HummingResultViewModel {
         GameAudioHelper.shared.playerStatePublisher
             .filter { _, isPlaying in !isPlaying }
             .receive(on: DispatchQueue.main)
-            .dropFirst()
             .sink { [weak self] _, _ in
                 Logger.debug("Player state changed")
                 self?.updateResultPhase()

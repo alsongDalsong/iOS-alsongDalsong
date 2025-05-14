@@ -130,35 +130,45 @@ extension GameAudioHelper {
         Task {
             engineStateSubject.send(false)
             
-            guard await player?.isPlaying() == true else { return }
+            if playerEngine.playState == .play {
+                Logger.debug("await playerEngine.playState == .play 의 stopEngine")
+                stopEngine()
+            }
+
+            if await player?.isPlaying() ?? false {
+                Logger.debug("await player?.isPlaying() 의 stopPlaying")
+                await stopPlaying()
+            }
             
-            await stopPlaying()
-            await BgmAudioHelper.shared.stopPlaying()
-            
+            if await BgmAudioHelper.shared.isPlaying {
+                Logger.debug("await BgmAudioHelper.shared.stopPlaying() 의 stopPlaying")
+                await BgmAudioHelper.shared.stopPlaying()
+            }
+
             guard let data else { return }
-            
             Logger.debug(#function)
-            
+
             playerEngine.bind(data: data)
-            
+
             switch playType {
-                /// playType에 따라 전체 혹은 부분 재생
+            /// playType에 따라 전체 혹은 부분 재생
             case .full:
                 playerEngine.play()
-                
+
             case let .partial(time: time):
                 playerEngine.play()
-                
+
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(time)) { [weak self] in
+                    Logger.debug("\(time)후 stopEngine 발동")
                     self?.stopEngine()
                 }
-                
+
             case .loop:
                 playerEngine.play()
             }
-            
+
             engineStateSubject.send(true)
-            
+
             updateFrequencyAndProgress()
         }
     }
@@ -192,7 +202,9 @@ extension GameAudioHelper {
         if playerEngine.playState == .play {
             stopEngine()
         }
-        await BgmAudioHelper.shared.stopPlaying()
+        if await BgmAudioHelper.shared.isPlaying {
+            await BgmAudioHelper.shared.stopPlaying()
+        }
 
         guard await checkRecorderState(), await checkPlayerState() else { return }
         guard let file else { return }
@@ -203,7 +215,7 @@ extension GameAudioHelper {
         await player?.setOnPlaybackFinished { [weak self] in
             await self?.stopPlaying()
         }
-
+        Logger.debug(#function)
         playerStateSubject.send((source, true))
 
         if needsWaveUpdate {

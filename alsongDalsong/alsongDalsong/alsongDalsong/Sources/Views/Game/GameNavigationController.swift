@@ -184,14 +184,14 @@ final class GameNavigationController: @unchecked Sendable {
         default: break
         }
         
-        if viewType == .result {
+        if viewType != .result {
             Task {
                 GameAudioHelper.shared.stopEngine()
                 await GameAudioHelper.shared.stopPlaying()
             }
         }
         
-        if viewType != .lobby {
+        if viewType != .lobby{
             BgmAudioHelper.shared.changeState(to: .ingame)
         }
     }

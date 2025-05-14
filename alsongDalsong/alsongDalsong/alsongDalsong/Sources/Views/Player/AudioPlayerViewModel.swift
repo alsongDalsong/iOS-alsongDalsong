@@ -36,10 +36,6 @@ final class AudioPlayerViewModel: @unchecked Sendable {
         bindAudioHelper()
     }
 
-    deinit {
-        GameAudioHelper.shared.stopEngine()
-    }
-
     @MainActor
     func togglePlay() {
         if isPlaying {

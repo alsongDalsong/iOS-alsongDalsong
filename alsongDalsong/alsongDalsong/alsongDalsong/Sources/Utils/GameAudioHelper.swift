@@ -131,17 +131,14 @@ extension GameAudioHelper {
             engineStateSubject.send(false)
             
             if playerEngine.playState == .play {
-                Logger.debug("await playerEngine.playState == .play 의 stopEngine")
                 stopEngine()
             }
 
             if await player?.isPlaying() ?? false {
-                Logger.debug("await player?.isPlaying() 의 stopPlaying")
                 await stopPlaying()
             }
             
             if await BgmAudioHelper.shared.isPlaying {
-                Logger.debug("await BgmAudioHelper.shared.stopPlaying() 의 stopPlaying")
                 await BgmAudioHelper.shared.stopPlaying()
             }
 

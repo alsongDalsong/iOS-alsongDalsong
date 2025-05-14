@@ -41,8 +41,23 @@ final class HummingViewModel: @unchecked Sendable {
 
     func submitHumming() async throws {
         do {
-            let result = try await recordsRepository.uploadRecording(recordedData ?? Data())
-            if !result { Logger.error("Humming Did not sent") }
+            let dataToUpload: Data
+            if let recorded = recordedData {
+                dataToUpload = recorded
+            } else {
+                if let emptyURL = Bundle.main.url(forResource: "EmptyData", withExtension: nil) {
+                    dataToUpload = try Data(contentsOf: emptyURL)
+                } else {
+                    Logger.error("EmptyData 파일을 찾을 수 없습니다. 빈 Data() 사용")
+                    dataToUpload = Data()
+                }
+            }
+            
+            let result = try await recordsRepository.uploadRecording(dataToUpload)
+            if !result {
+                Logger.error("Humming did not send")
+            }
+            
         } catch {
             ErrorHandler.handle(error)
             throw ASError.submitHumming

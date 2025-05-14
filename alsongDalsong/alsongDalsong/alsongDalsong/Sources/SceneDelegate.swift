@@ -49,6 +49,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         Task {
             await GameAudioHelper.shared.resume()
+            await BgmAudioHelper.shared.resume()
 
             let isConnected = await firebaseManager.checkConnection()
             if !isConnected {
@@ -61,9 +62,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
-    func sceneDidEnterBackground(_: UIScene) {
+    func sceneWillResignActive(_: UIScene) {
         Task {
             await GameAudioHelper.shared.pause()
+            await BgmAudioHelper.shared.pause()
         }
     }
 
@@ -71,6 +73,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let firebaseManager = DIContainer.shared.resolve(ASFirebaseAuthProtocol.self)
         Task {
             do {
+                await BgmAudioHelper.shared.pause()
                 try await firebaseManager.signOut()
             } catch {
                 Logger.error(error.localizedDescription)

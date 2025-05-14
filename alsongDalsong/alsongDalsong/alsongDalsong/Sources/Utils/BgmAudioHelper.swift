@@ -158,7 +158,7 @@ extension BgmAudioHelper {
         switch option {
         case .full:
             do {
-                try await player?.startPlaying(data: file, volume: volume)
+                try await player?.startPlaying(data: file)
             } catch {
                 ErrorHandler.handle(error)
             }
@@ -172,7 +172,7 @@ extension BgmAudioHelper {
             }
         case .loop:
             do {
-                try await player?.startPlaying(data: file, volume: volume, fade: true, isLoop: true)
+                try await player?.startPlaying(data: file, fade: true, isLoop: true)
             } catch {
                 ErrorHandler.handle(error)
             }

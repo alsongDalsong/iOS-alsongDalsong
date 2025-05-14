@@ -216,7 +216,7 @@ extension GameAudioHelper {
         switch option {
         case .full:
             do {
-                try await player?.startPlaying(data: file, volume: volume)
+                try await player?.startPlaying(data: file)
             } catch {
                 ErrorHandler.handle(error)
             }

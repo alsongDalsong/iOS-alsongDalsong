@@ -196,9 +196,8 @@ extension HummingResultViewModel {
                 receiveCompletion: {
                     Logger.debug($0)
                 }, receiveValue: { [weak self] sortedResult in
-                    guard let self,
-                          isValidResult(sortedResult) else { return }
-
+                    guard let self, isValidResult(sortedResult) else { return }
+                    Logger.debug("totalResult fetched")
                     totalResult = sortedResult.map { ($0.answer, $0.records, $0.submit) }
                     updateCurrentResult()
                   })
@@ -209,8 +208,8 @@ extension HummingResultViewModel {
         GameAudioHelper.shared.playerStatePublisher
             .filter { _, isPlaying in !isPlaying }
             .receive(on: DispatchQueue.main)
-            .dropFirst()
             .sink { [weak self] _, _ in
+                Logger.debug("Player state changed")
                 self?.updateResultPhase()
             }
             .store(in: &cancellables)

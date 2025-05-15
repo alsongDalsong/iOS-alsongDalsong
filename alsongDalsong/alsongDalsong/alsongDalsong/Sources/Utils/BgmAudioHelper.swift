@@ -104,8 +104,6 @@ extension BgmAudioHelper {
     func playBgm() {
         Task {
             print(#function)
-            await GameAudioHelper.shared.stopPlaying()
-            GameAudioHelper.shared.stopEngine()
             await startPlaying(bgmDatas[bgmState], option: .loop, volume: volume)
         }
     }

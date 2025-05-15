@@ -17,7 +17,19 @@ final class EffectAudioHelper: Sendable {
 
     private let effectPlayer = ASAudioPlayer()
     private let buttonPlayer = ASAudioPlayer()
-    
+
+    func changeVolume(_ volume: Float) {
+        Task {
+            await effectPlayer.setVolume(volume)
+            await buttonPlayer.setVolume(volume)
+        }
+    }
+
+    func getVolume() async -> Float {
+        let volume = await effectPlayer.getVolume()
+        return volume
+    }
+
     func play(name: String) {
         guard let url = Bundle.main.url(forResource: name, withExtension: "mp3") else { return }
 

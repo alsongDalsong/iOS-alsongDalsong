@@ -8,20 +8,27 @@ public enum PlayType: Sendable {
 
 public actor ASAudioPlayer: NSObject {
     private var audioPlayer: AVAudioPlayer?
+    private var volume: Float = 1.0
 
     override public init() {}
 
     public var onPlaybackFinished: (@Sendable () async -> Void)?
 
     /// 볼륨 크기를 지정합니다.
-    public func setVolume(_ volume: Float) {
+    public func setVolume(_ changedVolume: Float) {
+        volume = changedVolume
         audioPlayer?.volume = volume
+    }
+
+    public func getVolume() -> Float {
+        return audioPlayer?.volume ?? volume
     }
 
     /// 녹음파일을 재생하고 옵션에 따라 재생시간을 설정합니다.
     public func startPlaying(data: Data, option: PlayType = .full, fade _: Bool = false, isLoop: Bool = false) throws {
         do {
             audioPlayer = try AVAudioPlayer(data: data)
+            audioPlayer?.volume = volume
             audioPlayer?.delegate = self
             audioPlayer?.prepareToPlay()
             audioPlayer?.isMeteringEnabled = true

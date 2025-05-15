@@ -5,6 +5,7 @@ struct AsyncImageView: View {
     let imagePublisher: (URL?) async -> Data?
     let url: URL?
     @State private var imageData: Data?
+    @State private var imageID = UUID()
 
     var body: some View {
         Group {
@@ -12,16 +13,24 @@ struct AsyncImageView: View {
                 Image(uiImage: uiImage)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .transition(.move(edge: .bottom))
+                    .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .identity))
+                    .id(imageID)
             } else {
                 Circle()
                     .fill(.clear)
             }
         }
-        .animation(.linear(duration: 0.5), value: imageData)
+        .animation(.linear(duration: 0.5), value: imageID)
         .onAppear {
             Task {
                 imageData = await imagePublisher(url)
+                imageID = UUID()
+            }
+        }
+        .onChange(of: url) { newURL in
+            Task {
+                imageData = await imagePublisher(newURL)
+                imageID = UUID()
             }
         }
     }

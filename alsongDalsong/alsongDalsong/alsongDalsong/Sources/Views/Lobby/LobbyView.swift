@@ -9,7 +9,7 @@ struct LobbyView: View {
         VStack {
             ScrollView(.horizontal) {
                 HStack(alignment: .top, spacing: .responsiveHeight(16)) {
-                    ForEach(0..<viewModel.playerMaxCount, id: \.self) { index in
+                    ForEach((0..<viewModel.playerMaxCount), id: \.self) { index in
                         if index < viewModel.players.count {
                             let player = viewModel.players[index]
                             if viewModel.isHost, player.id != viewModel.host?.id {

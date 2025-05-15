@@ -5,7 +5,6 @@ class SettingViewController: UIViewController {
     var stackView = UIStackView()
     var titleLabel = UILabel()
 
-    var gameSlider = ASSlider()
     var bgmSlider = ASSlider()
     var effectSlider = ASSlider()
 
@@ -28,8 +27,10 @@ class SettingViewController: UIViewController {
     }
 
     private func setSliderValue() {
-        gameSlider.value = GameAudioHelper.shared.volume
         bgmSlider.value = BgmAudioHelper.shared.volume
+        Task {
+            effectSlider.value = await EffectAudioHelper.shared.getVolume()
+        }
     }
 
     private func setAction() {
@@ -40,8 +41,8 @@ class SettingViewController: UIViewController {
             self?.dismiss(animated: true, completion: nil)
         }, for: .touchUpInside)
 
-        gameSlider.addTarget(self, action: #selector(changeGameSlider), for: .valueChanged)
         bgmSlider.addTarget(self, action: #selector(changeBgmSlider), for: .valueChanged)
+        effectSlider.addTarget(self, action: #selector(changeEffectSlider), for: .valueChanged)
     }
 
     private func setupUI() {
@@ -65,8 +66,8 @@ class SettingViewController: UIViewController {
         stackView.spacing = .responsiveHeight(20)
         stackView.alignment = .center
 
-        let sliders = [gameSlider, bgmSlider, effectSlider]
-        let sliderTitles = ["게임".localized(), "배경음악".localized(), "효과음".localized()]
+        let sliders = [bgmSlider, effectSlider]
+        let sliderTitles = ["배경음악".localized(), "효과음".localized()]
 
         let sliderPairs = zip(sliders, sliderTitles)
 
@@ -100,19 +101,14 @@ class SettingViewController: UIViewController {
     }
 
     func settingViewHeightConstraint() -> NSLayoutConstraint {
-        return settingView.heightAnchor.constraint(equalToConstant: .responsiveHeight(450))
+        return settingView.heightAnchor.constraint(equalToConstant: .responsiveHeight(380))
     }
-
-//    func sliderWidthConstraint() -> NSLayoutConstraint {
-//        return slider1.widthAnchor.constraint(equalToConstant: .responsiveWidth(200))
-//    }
 
     private func setLayout() {
         settingView.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        gameSlider.translatesAutoresizingMaskIntoConstraints = false
         bgmSlider.translatesAutoresizingMaskIntoConstraints = false
         effectSlider.translatesAutoresizingMaskIntoConstraints = false
 
@@ -128,7 +124,6 @@ class SettingViewController: UIViewController {
             titleLabel.topAnchor.constraint(equalTo: settingView.topAnchor, constant: .responsiveHeight(20)),
             titleLabel.heightAnchor.constraint(equalToConstant: .responsiveHeight(50)),
 
-            gameSlider.widthAnchor.constraint(equalTo: stackView.widthAnchor, multiplier: 0.8),
             bgmSlider.widthAnchor.constraint(equalTo: stackView.widthAnchor, multiplier: 0.8),
             effectSlider.widthAnchor.constraint(equalTo: stackView.widthAnchor, multiplier: 0.8),
 
@@ -149,11 +144,11 @@ class SettingViewController: UIViewController {
         }
     }
 
-    @objc func changeGameSlider() {
-        GameAudioHelper.shared.volume = gameSlider.value
-    }
-
     @objc func changeBgmSlider() {
         BgmAudioHelper.shared.volume = bgmSlider.value
+    }
+
+    @objc func changeEffectSlider() {
+        EffectAudioHelper.shared.changeVolume(effectSlider.value)
     }
 }

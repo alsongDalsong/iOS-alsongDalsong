@@ -54,6 +54,7 @@ struct ProfileView: View {
                 .padding(.bottom, 8)
             if let name {
                 Text(name)
+                    .frame(height: .responsiveHeight(38), alignment: .top)
                     .foregroundStyle(isMyId ? .asBlue : .asForeground)
                     .font(.doHyeon(size: .responsiveHeight(16)))
                     .multilineTextAlignment(.center)
@@ -61,6 +62,7 @@ struct ProfileView: View {
                     .fixedSize(horizontal: false, vertical: true)
             } else {
                 Text("비어 있음")
+                    .frame(height: .responsiveHeight(38), alignment: .top)
                     .font(.doHyeon(size: .responsiveHeight(16)))
                     .multilineTextAlignment(.center)
                     .lineLimit(nil)

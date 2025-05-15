@@ -53,7 +53,6 @@ struct LobbyView: View {
                 }
                 .padding(.horizontal, .responsiveWidth(24))
                 .padding(.top, .responsiveHeight(20))
-                .padding(.bottom, .responsiveHeight(12))
             }
             .padding(.top, .responsiveHeight(8))
             .scrollIndicators(.hidden)
@@ -69,7 +68,7 @@ struct LobbyView: View {
                     }
                 }
             }
-            .padding(.top, .responsiveHeight(10))
+            .padding(.top, .responsiveHeight(8))
         }
         .background(Color.asBackground)
     }

@@ -11,7 +11,8 @@ final class ModeViewModel: ObservableObject {
         self.selectedCard = ModeCard(mode: mode, isOpened: isOpened)
     }
     
-    @MainActor func flipCard(delay: TimeInterval = 0.4) {
+    @MainActor
+    func flipCard(delay: TimeInterval = 0.4) {
         HapticManager.shared.impact(style: .medium)
         rotation = (rotation == 0) ? -180 : 0
         

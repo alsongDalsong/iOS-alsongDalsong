@@ -5,6 +5,7 @@ struct AsyncImageView: View {
     let imagePublisher: (URL?) async -> Data?
     let url: URL?
     @State private var imageData: Data?
+    @State private var imageID = UUID()
 
     var body: some View {
         Group {
@@ -12,16 +13,24 @@ struct AsyncImageView: View {
                 Image(uiImage: uiImage)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .transition(.move(edge: .bottom))
+                    .transition(.asymmetric(insertion: .move(edge: .bottom), removal: .identity))
+                    .id(imageID)
             } else {
                 Circle()
                     .fill(.clear)
             }
         }
-        .animation(.linear(duration: 0.5), value: imageData)
+        .animation(.linear(duration: 0.5), value: imageID)
         .onAppear {
             Task {
                 imageData = await imagePublisher(url)
+                imageID = UUID()
+            }
+        }
+        .onChange(of: url) { newURL in
+            Task {
+                imageData = await imagePublisher(newURL)
+                imageID = UUID()
             }
         }
     }
@@ -54,6 +63,7 @@ struct ProfileView: View {
                 .padding(.bottom, 8)
             if let name {
                 Text(name)
+                    .frame(height: .responsiveHeight(38), alignment: .top)
                     .foregroundStyle(isMyId ? .asBlue : .asForeground)
                     .font(.doHyeon(size: .responsiveHeight(16)))
                     .multilineTextAlignment(.center)
@@ -61,6 +71,7 @@ struct ProfileView: View {
                     .fixedSize(horizontal: false, vertical: true)
             } else {
                 Text("비어 있음")
+                    .frame(height: .responsiveHeight(38), alignment: .top)
                     .font(.doHyeon(size: .responsiveHeight(16)))
                     .multilineTextAlignment(.center)
                     .lineLimit(nil)

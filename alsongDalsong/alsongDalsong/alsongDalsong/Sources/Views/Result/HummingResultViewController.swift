@@ -146,10 +146,6 @@ class HummingResultViewController: UIViewController {
             .combineLatest(viewModel.$result, viewModel.$isHost)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] phase, result, isHost in
-                if phase != .answer {
-                    self?.answerView.unbind()
-                }
-                
                 self?.addDataSource(phase, result: result)
                 if result.answer != nil, isHost {
                     self?.changeButton(phase)

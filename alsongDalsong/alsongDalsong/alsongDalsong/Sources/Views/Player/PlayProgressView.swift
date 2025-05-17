@@ -1,74 +1,94 @@
 import UIKit
 
 final class PlayProgressView: UIView {
-    private let trackShapeLayer = CAShapeLayer()
-    private let progressShapeLayer = CAShapeLayer()
+    private let trackLayer = CALayer()
+    private let progressLayer = CALayer()
     
-    /// 업데이트하면 자동으로 애니메이션 적용
-    /// 해당 속성 이외의 속성, 함수에 접근 불가능
+    private let progressMaskLayer = CAShapeLayer()
+
     var progress: CGFloat = 0 {
-        didSet { updateProgressShapeLayer() }
+        didSet {
+            self.updateProgress()
+        }
     }
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupLayer()
-        setupStyle()
+        setupLayers()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setupLayer()
-        setupStyle()
+        setupLayers()
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
-        trackShapeLayer.frame = bounds
-        progressShapeLayer.frame = CGRect(
-            origin: .zero,
-            size: CGSize(width: progressShapeLayer.frame.width, height: bounds.height)
+
+        trackLayer.frame = bounds
+        trackLayer.cornerRadius = bounds.height / 2
+
+        let width = bounds.width * progress
+        progressLayer.frame = CGRect(x: 0, y: 0, width: width, height: bounds.height)
+
+        updateProgressMask()
+    }
+
+    private func setupLayers() {
+        trackLayer.backgroundColor = UIColor.systemGray5.cgColor
+        layer.addSublayer(trackLayer)
+
+        progressLayer.backgroundColor = UIColor.darkGray.cgColor
+        layer.addSublayer(progressLayer)
+
+        progressLayer.mask = progressMaskLayer
+    }
+
+    private func updateProgress() {
+        let clamped = min(max(progress, 0.01), 1)
+        let newWidth = bounds.width * clamped
+        let newFrame = CGRect(x: 0, y: 0, width: newWidth, height: bounds.height)
+
+        let positionAnimation = CABasicAnimation(keyPath: "position")
+        positionAnimation.fromValue = NSValue(cgPoint: progressLayer.presentation()?.position ?? progressLayer.position)
+        positionAnimation.toValue = NSValue(cgPoint: CGPoint(x: newWidth / 2, y: bounds.height / 2))
+        positionAnimation.duration = 0.25
+        positionAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+
+        let boundsAnimation = CABasicAnimation(keyPath: "bounds")
+        boundsAnimation.fromValue = NSValue(cgRect: progressLayer.presentation()?.bounds ?? progressLayer.bounds)
+        boundsAnimation.toValue = NSValue(cgRect: CGRect(x: 0, y: 0, width: newWidth, height: bounds.height))
+        boundsAnimation.duration = 0.25
+        boundsAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+
+        progressLayer.add(positionAnimation, forKey: "position")
+        progressLayer.add(boundsAnimation, forKey: "bounds")
+
+        progressLayer.position = CGPoint(x: newWidth / 2, y: bounds.height / 2)
+        progressLayer.bounds = CGRect(x: 0, y: 0, width: newWidth, height: bounds.height)
+
+        updateProgressMask()
+    }
+
+    private func updateProgressMask() {
+        let height = bounds.height
+        let minWidth = progressLayer.bounds.width
+        
+        guard progress > 0 else {
+            progressMaskLayer.path = nil
+            return
+        }
+        
+        /// 최소 width 보장 (둥글게 보이기 위해)
+        let displayWidth = max(minWidth, height)
+        let corners: UIRectCorner = (progress >= 1.0) ? .allCorners : [.topLeft, .bottomLeft]
+        
+        let bezierPath = UIBezierPath(
+            roundedRect: CGRect(x: 0, y: 0, width: displayWidth, height: height),
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: height / 2, height: height / 2)
         )
-    }
-}
 
-// MARK: - Private Methods
-
-extension PlayProgressView {
-    private func setupLayer() {
-        layer.addSublayer(trackShapeLayer)
-        layer.addSublayer(progressShapeLayer)
-    }
-    
-    private func setupStyle() {
-        trackShapeLayer.backgroundColor = UIColor.systemGray5.cgColor
-        trackShapeLayer.cornerRadius = .responsiveWidth(4)
-        trackShapeLayer.masksToBounds = true
-        
-        progressShapeLayer.backgroundColor = UIColor.darkGray.cgColor
-        progressShapeLayer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
-        progressShapeLayer.cornerRadius = .responsiveWidth(4)
-    }
-    
-    private func updateProgressShapeLayer() {
-        let targetWidth = bounds.width * min(progress, 1)
-        let rect = CGRect(x: .responsiveWidth(0), y: .responsiveWidth(0), width: targetWidth, height: bounds.height)
-
-        let path = UIBezierPath(
-            roundedRect: rect,
-            byRoundingCorners: progress == 1 ? [.allCorners] : [.topLeft, .bottomLeft],
-            cornerRadii: CGSize(width: .responsiveWidth(4), height: .responsiveHeight(4))
-        )
-        
-        let maskLayer = CAShapeLayer()
-        maskLayer.path = path.cgPath
-        progressShapeLayer.mask = maskLayer
-        
-        let animation = CABasicAnimation(keyPath: "bounds.size.width")
-        animation.fromValue = progressShapeLayer.bounds.width
-        animation.toValue = targetWidth
-        
-        progressShapeLayer.add(animation, forKey: "widthAnimation")
-        progressShapeLayer.bounds.size.width = targetWidth
+        progressMaskLayer.path = bezierPath.cgPath
     }
 }

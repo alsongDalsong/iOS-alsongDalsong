@@ -1,6 +1,6 @@
 import UIKit
 
-class SettingViewController: UIViewController {
+final class SettingViewController: UIViewController {
     var settingView = ASPanel()
     var stackView = UIStackView()
     var titleLabel = UILabel()
@@ -151,4 +151,9 @@ class SettingViewController: UIViewController {
     @objc func changeEffectSlider() {
         EffectAudioHelper.shared.changeVolume(effectSlider.value)
     }
+}
+
+@available(iOS 17.0, *)
+#Preview {
+    SettingViewController()
 }

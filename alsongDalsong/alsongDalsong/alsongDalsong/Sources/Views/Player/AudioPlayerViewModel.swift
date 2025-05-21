@@ -1,5 +1,6 @@
 import ASAudioKit
 import ASEntity
+import ASLogKit
 import ASRepositoryProtocol
 import Combine
 import Foundation
@@ -16,6 +17,7 @@ final class AudioPlayerViewModel: @unchecked Sendable {
 
     private var cancellables = Set<AnyCancellable>()
 
+    /// 플레이어 init
     init(
         music: Music?,
         dataDownloadRepository: DataDownloadRepositoryProtocol
@@ -24,9 +26,9 @@ final class AudioPlayerViewModel: @unchecked Sendable {
         self.dataDownloadRepository = dataDownloadRepository
         getPreviewData()
         getArtworkData()
-        bindAudioHelper()
     }
 
+    /// 결과화면 init
     init(
         previewData: Data?,
         artworkData: Data?
@@ -39,7 +41,7 @@ final class AudioPlayerViewModel: @unchecked Sendable {
     @MainActor
     func togglePlay() {
         if isPlaying {
-            isPlaying = false
+            self.isPlaying = false
             GameAudioHelper.shared.stopEngine()
             unbindAudioHelper()
         } else {
@@ -68,6 +70,8 @@ final class AudioPlayerViewModel: @unchecked Sendable {
     }
 
     private func bindAudioHelper() {
+        Logger.debug("Bind AudioHelper")
+        
         GameAudioHelper.shared.playerEnginePrgressPublisher
             .receive(on: DispatchQueue.main)
             .sink { self.progress = $0 }
@@ -81,11 +85,15 @@ final class AudioPlayerViewModel: @unchecked Sendable {
         GameAudioHelper.shared.engineStatePublisher
             .receive(on: DispatchQueue.main)
             .sink { state in
-                if self.isPlaying, !state {
+                Logger.debug("Engine State: \(state) | isPlaying: \(self.isPlaying)")
+                
+                if self.isPlaying && !state {
+                    Logger.debug("Unbind AudioHelper")
                     self.unbindAudioHelper()
                 }
 
                 self.isPlaying = state
+                Logger.debug("isPlaying: \(self.isPlaying)")
             }
             .store(in: &cancellables)
     }

@@ -77,6 +77,9 @@ struct SelectAnswerView: View {
                     }
                 }
             }
+            .onDisappear {
+                viewModel.isPlaying.toggle()
+            }
         }
     }
 }

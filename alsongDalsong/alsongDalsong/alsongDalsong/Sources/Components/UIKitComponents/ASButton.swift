@@ -11,13 +11,11 @@ final class ASButton: UIButton {
     init() {
         super.init(frame: .zero)
         setupButton()
-        addTarget(self, action: #selector(playClickSound), for: .touchUpInside)
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupButton()
-        addTarget(self, action: #selector(playClickSound), for: .touchUpInside)
     }
 
     /// 버튼의 UI 관련한 Configuration을 설정하는 메서드
@@ -39,7 +37,8 @@ final class ASButton: UIButton {
         shadowColor: UIColor = .buttonShadowOfDefault,
         shadowHeight: CGFloat = .responsiveHeight(8),
         strokeColor: UIColor? = nil,
-        strokeWidth: CGFloat = .responsiveWidth(0)
+        strokeWidth: CGFloat = .responsiveWidth(0),
+        hasSound: Bool = true
     ) {
         configurationData = ASButtonConfiguration(
             systemImageName: systemImageName,
@@ -55,6 +54,7 @@ final class ASButton: UIButton {
             shadowHeight: shadowHeight
         )
         setShadow(color: shadowColor, width: .responsiveWidth(0), height: shadowHeight)
+        if hasSound { addTarget(self, action: #selector(playClickSound), for: .touchUpInside) }
         applyConfiguration()
     }
 
@@ -73,6 +73,9 @@ final class ASButton: UIButton {
             shadowHeight: shadowHeight
         )
         setShadow(color: (type?.shadowColor) ?? .buttonShadowOfDefault, width: .responsiveWidth(0), height: shadowHeight)
+        if type?.hasSound == true {
+            addTarget(self, action: #selector(playClickSound), for: .touchUpInside)
+        }
         applyConfiguration()
     }
 
@@ -168,6 +171,13 @@ final class ASButton: UIButton {
             case .submit, .complete:
                 .buttonShadowOfBlue
             default: nil
+            }
+        }
+
+        var hasSound: Bool {
+            switch self {
+            case .recording, .reRecord, .startRecord: false
+            default: true
             }
         }
     }

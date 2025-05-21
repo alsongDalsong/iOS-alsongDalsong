@@ -16,7 +16,8 @@ extension ASButton {
         let strokeWidth: CGFloat
         let shadowColor: UIColor?
         let shadowHeight: CGFloat
-      
+        let hasSound: Bool
+        
         init(
             systemImageName: String? = nil,
             imageSize: CGFloat = .responsiveWidth(20),
@@ -29,7 +30,8 @@ extension ASButton {
             strokeColor: UIColor? = nil,
             strokeWidth: CGFloat = .responsiveWidth(0),
             shadowColor: UIColor? = nil,
-            shadowHeight: CGFloat = .responsiveHeight(8)
+            shadowHeight: CGFloat = .responsiveHeight(8),
+            hasSound: Bool = true
         ) {
             self.systemImageName = systemImageName
             self.imageSize = imageSize
@@ -43,6 +45,7 @@ extension ASButton {
             self.strokeWidth = strokeWidth
             self.shadowColor = shadowColor
             self.shadowHeight = shadowHeight
+            self.hasSound = hasSound
         }
         
         /// 버튼의 스타일을 만드는 메소드

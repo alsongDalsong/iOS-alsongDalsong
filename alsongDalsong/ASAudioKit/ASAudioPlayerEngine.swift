@@ -52,10 +52,6 @@ public class ASAudioPlayerEngine: @unchecked Sendable {
     public func bind(data: Data, sampleCount: Int = 6) {
         self.sampleCount = sampleCount
 
-        let session = AVAudioSession.sharedInstance()
-        try? session.setCategory(.playback, mode: .default, options: [])
-        try? session.setActive(true, options: .notifyOthersOnDeactivation)
-        
         let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".m4a")
         try? data.write(to: tempURL)
 

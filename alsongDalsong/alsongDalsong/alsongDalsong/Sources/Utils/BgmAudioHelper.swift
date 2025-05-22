@@ -1,5 +1,6 @@
 import ASAudioKit
 import ASLogKit
+import AVFoundation
 import Combine
 import Foundation
 
@@ -7,7 +8,11 @@ final class BgmAudioHelper: @unchecked Sendable {
     // MARK: - Singleton
 
     static let shared = BgmAudioHelper()
-    private init() {}
+    private init() {
+        do {
+            try configureAudioSession()
+        } catch {}
+    }
 
     // MARK: - Private properties
 
@@ -95,6 +100,17 @@ final class BgmAudioHelper: @unchecked Sendable {
         Logger.debug(#function)
         cancellable?.cancel()
         cancellable = nil
+    }
+
+    private func configureAudioSession() throws {
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker])
+            try session.setActive(true, options: .notifyOthersOnDeactivation)
+        } catch {
+            // TODO: 세션 설정 실패에 따른 처리
+            ErrorHandler.handle(error)
+        }
     }
 }
 

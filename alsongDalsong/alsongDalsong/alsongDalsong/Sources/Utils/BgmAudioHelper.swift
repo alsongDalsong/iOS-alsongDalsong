@@ -104,7 +104,7 @@ extension BgmAudioHelper {
     func playBgm() {
         Task {
             print(#function)
-            await startPlaying(bgmDatas[bgmState], option: .loop, volume: volume)
+            await startPlaying(bgmDatas[bgmState], option: .loop)
         }
     }
 
@@ -130,7 +130,6 @@ extension BgmAudioHelper {
     func startPlaying(_ file: Data?,
                       sourceType type: FileSource = .imported(.large),
                       option: PlayType = .full,
-                      volume: Float = 1.0,
                       needsWaveUpdate: Bool = false) async
     {
         guard await checkPlayerState() else { return }
@@ -149,10 +148,10 @@ extension BgmAudioHelper {
             updatePlayIndex()
         }
 
-        await play(file: file, option: option, volume: volume)
+        await play(file: file, option: option)
     }
 
-    private func play(file: Data, option: PlayType, volume: Float) async {
+    private func play(file: Data, option: PlayType) async {
         switch option {
         case .full:
             do {
@@ -171,6 +170,7 @@ extension BgmAudioHelper {
         case .loop:
             do {
                 try await player?.startPlaying(data: file, fade: true, isLoop: true)
+                await player?.setVolume(volume)
             } catch {
                 ErrorHandler.handle(error)
             }

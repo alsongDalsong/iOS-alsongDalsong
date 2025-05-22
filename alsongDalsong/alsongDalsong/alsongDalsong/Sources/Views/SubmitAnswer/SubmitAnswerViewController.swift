@@ -30,6 +30,8 @@ final class SubmitAnswerViewController: UIViewController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        selectAnswerButton.unbind()
+        largeAudioPlayerView.unbind()
         viewModel.cancelSubscriptions()
     }
 

@@ -114,4 +114,16 @@ final class HummingViewModel: @unchecked Sendable {
             }
             .store(in: &cancellables)
     }
+    
+    func stopMusic() {
+        Task {
+            await GameAudioHelper.shared.stopPlaying()
+            GameAudioHelper.shared.stopEngine()
+        }
+    }
+    
+    func cancelSubscriptions() {
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
+    }
 }

@@ -35,7 +35,7 @@ class HummingResultViewController: UIViewController {
 
     override func viewDidDisappear(_ animation: Bool) {
         super.viewDidDisappear(animation)
-        
+        answerView.unbind()
         viewModel?.cancelSubscriptions()
     }
 

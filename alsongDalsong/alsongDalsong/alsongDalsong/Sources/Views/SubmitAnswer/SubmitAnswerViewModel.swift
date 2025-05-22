@@ -117,6 +117,7 @@ final class SubmitAnswerViewModel: ObservableObject, @unchecked Sendable {
     func stopMusic() {
         Task {
             await GameAudioHelper.shared.stopPlaying()
+            GameAudioHelper.shared.stopEngine()
         }
     }
 
@@ -214,6 +215,7 @@ final class SubmitAnswerViewModel: ObservableObject, @unchecked Sendable {
     }
 
     func cancelSubscriptions() {
+        cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
     }
 

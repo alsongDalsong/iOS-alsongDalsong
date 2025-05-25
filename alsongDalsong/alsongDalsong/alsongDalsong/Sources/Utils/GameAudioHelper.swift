@@ -144,6 +144,7 @@ extension GameAudioHelper {
         playType: PlayType = .full
     ) {
         Task {
+            guard await checkRecorderState() else { return }
             engineStateSubject.send(false)
             
             if playerEngine.playState == .play {

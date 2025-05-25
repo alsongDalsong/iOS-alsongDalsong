@@ -118,7 +118,6 @@ extension BgmAudioHelper {
         await player?.setOnPlaybackFinished { [weak self] in
             await self?.stopPlaying()
         }
-
         await play(file: file, volume: volume)
     }
 

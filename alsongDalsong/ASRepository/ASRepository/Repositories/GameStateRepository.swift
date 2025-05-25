@@ -16,6 +16,7 @@ final class GameStateRepository: GameStateRepositoryProtocol {
                 guard let mode, let round, let players = self.mainRepository.players.value else { return nil }
                 return ASEntity.GameState(mode: mode, recordOrder: recordOrder, status: status, round: round, players: players)
             }
+            .removeDuplicates()
             .eraseToAnyPublisher()
     }
     

@@ -83,7 +83,7 @@ extension BgmAudioHelper {
     func playBgm() {
         Task {
             print(#function)
-            await startPlaying(bgmDatas[bgmState], volume: volume)
+            await startPlaying(bgmDatas[bgmState])
         }
     }
 
@@ -105,11 +105,7 @@ extension BgmAudioHelper {
     /// - Parameters:
     ///   - file: 재생할 오디오 데이터
     ///   - source: 녹음 파일/url에서 가져온 파일
-    func startPlaying(_ file: Data?,
-                      sourceType type: FileSource = .imported(.large),
-                      volume: Float = 1.0,
-                      needsWaveUpdate: Bool = false) async
-    {
+    func startPlaying(_ file: Data?, sourceType type: FileSource = .imported(.large)) async {
         guard let file else { return }
 
         sourceType(type)
@@ -118,12 +114,13 @@ extension BgmAudioHelper {
         await player?.setOnPlaybackFinished { [weak self] in
             await self?.stopPlaying()
         }
-        await play(file: file, volume: volume)
+        await play(file: file)
     }
 
-    private func play(file: Data, volume: Float) async {
+    private func play(file: Data) async {
         do {
             try await player?.startPlaying(data: file, fade: true, isLoop: true)
+            await player?.setVolume(volume)
         } catch {
             ErrorHandler.handle(error)
         }

@@ -191,8 +191,12 @@ final class GameNavigationController: @unchecked Sendable {
             }
         }
         
-        if viewType != .lobby{
+        if viewType != .lobby {
             BgmAudioHelper.shared.changeState(to: .ingame)
+        }
+        
+        if viewType == .lobby {
+            BgmAudioHelper.shared.changeState(to: .lobby)
         }
     }
 

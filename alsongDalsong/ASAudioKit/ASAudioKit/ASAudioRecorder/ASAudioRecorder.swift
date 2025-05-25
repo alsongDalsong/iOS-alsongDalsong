@@ -5,6 +5,7 @@ public actor ASAudioRecorder {
     private var audioRecorder: AVAudioRecorder?
 
     public init() {}
+
     /// 녹음 후 저장될 파일의 위치를 지정하여 녹음합니다.
     public func startRecording(url: URL) throws {
         do {

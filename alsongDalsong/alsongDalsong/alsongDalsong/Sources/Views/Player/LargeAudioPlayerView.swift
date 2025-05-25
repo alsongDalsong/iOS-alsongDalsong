@@ -79,22 +79,30 @@ final class LargeAudioPlayerView: UIView {
     private func bindViewModel() {
         viewModel?.$artworkData
             .receive(on: DispatchQueue.main)
-            .sink { self.configure(imageData: $0) }
+            .sink { [weak self] in
+                self?.configure(imageData: $0)
+            }
             .store(in: &cancellables)
 
         viewModel?.$progress
             .receive(on: DispatchQueue.main)
-            .sink { self.configure(progress: $0) }
+            .sink { [weak self] in
+                self?.configure(progress: $0)
+            }
             .store(in: &cancellables)
 
         viewModel?.$normalizedFrequencyAmplitudes
             .receive(on: DispatchQueue.main)
-            .sink { self.configure(normalizedFrequencyAmplitudes: $0) }
+            .sink { [weak self] in
+                self?.configure(normalizedFrequencyAmplitudes: $0)
+            }
             .store(in: &cancellables)
 
         viewModel?.$isPlaying
             .receive(on: DispatchQueue.main)
-            .sink { self.configure(with: $0) }
+            .sink { [weak self] in
+                self?.configure(with: $0)
+            }
             .store(in: &cancellables)
     }
 
@@ -203,6 +211,12 @@ final class LargeAudioPlayerView: UIView {
         controlButton.addAction(UIAction { [weak self] _ in
             self?.controlButtonDidTapped?()
         }, for: .touchUpInside)
+    }
+    
+    func unbind() {
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
+        viewModel?.unbindAudioHelper()
     }
 }
 

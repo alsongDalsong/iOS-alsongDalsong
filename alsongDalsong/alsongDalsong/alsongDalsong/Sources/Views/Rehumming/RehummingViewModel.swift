@@ -10,12 +10,12 @@ final class RehummingViewModel: @unchecked Sendable {
     @Published private(set) var music: Music?
     @Published private(set) var recordedData: Data?
     @Published private(set) var isRecording: Bool = false
-
+    
     private let gameStatusRepository: GameStatusRepositoryProtocol
     private let playersRepository: PlayersRepositoryProtocol
     private let recordsRepository: RecordsRepositoryProtocol
     private var cancellables: Set<AnyCancellable> = []
-
+    
     init(
         gameStatusRepository: GameStatusRepositoryProtocol,
         playersRepository: PlayersRepositoryProtocol,
@@ -26,7 +26,7 @@ final class RehummingViewModel: @unchecked Sendable {
         self.recordsRepository = recordsRepository
         bindGameStatus()
     }
-
+    
     func submitHumming() async throws {
         do {
             let dataToUpload: Data
@@ -51,13 +51,13 @@ final class RehummingViewModel: @unchecked Sendable {
             throw ASError.submitRehumming
         }
     }
-
+    
     func startRecording() {
         if !isRecording {
             isRecording = true
         }
     }
-
+    
     func updateRecordedData(with data: Data) {
         // TODO: - data가 empty일 때(녹음이 제대로 되지 않았을 때 사용자 오류처리 필요
         guard !data.isEmpty else {
@@ -67,14 +67,14 @@ final class RehummingViewModel: @unchecked Sendable {
         recordedData = data
         isRecording = false
     }
-
+    
     private func bindRecord(on recordOrder: UInt8) {
         recordsRepository.getHumming(on: recordOrder)
             .compactMap { $0 }
             .map { Music($0) }
             .assign(to: &$music)
     }
-
+    
     private func bindGameStatus() {
         gameStatusRepository.getDueTime()
             .receive(on: DispatchQueue.main)
@@ -90,11 +90,11 @@ final class RehummingViewModel: @unchecked Sendable {
             }
             .store(in: &cancellables)
     }
-
+    
     private func bindSubmissionStatus(with recordOrder: UInt8) {
         let playerPublisher = playersRepository.getPlayersCount()
         let recordsPublisher = recordsRepository.getRecordsCount(on: recordOrder)
-
+        
         playerPublisher.combineLatest(recordsPublisher)
             .sink { [weak self] playersCount, recordsCount in
                 let submitStatus = (submits: String(recordsCount), total: String(playersCount))
@@ -104,5 +104,14 @@ final class RehummingViewModel: @unchecked Sendable {
     }
     
     func cancelSubscriptions() {
+        cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
-    }}
+    }
+    
+    func stopMusic() {
+        Task {
+            await GameAudioHelper.shared.stopPlaying()
+            GameAudioHelper.shared.stopEngine()
+        }
+    }
+}

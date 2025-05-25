@@ -114,6 +114,7 @@ final class HummingResultViewModel: @unchecked Sendable {
     }
 
     func cancelSubscriptions() {
+        cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
     }
 

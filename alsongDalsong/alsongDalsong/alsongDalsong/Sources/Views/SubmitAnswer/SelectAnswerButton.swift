@@ -77,16 +77,16 @@ final class SelectAnswerButton: UIButton {
     private func bindViewModel() {
         viewModel?.$isPlaying
             .receive(on: DispatchQueue.main)
-            .sink { self.configure(with: $0) }
+            .sink { [weak self] in self?.configure(with: $0) }
             .store(in: &cancellables)
 
         viewModel?.$artworkData
             .receive(on: DispatchQueue.main)
-            .sink { self.configure(imageData: $0) }
+            .sink { [weak self] in self?.configure(imageData: $0) }
             .store(in: &cancellables)
 
         viewModel?.$normalizedFrequencyAmplitudes
-            .sink { self.configure(normalizedFrequencyAmplitudes: $0) }
+            .sink { [weak self] in self?.configure(normalizedFrequencyAmplitudes: $0) }
             .store(in: &cancellables)
     }
 
@@ -235,6 +235,12 @@ final class SelectAnswerButton: UIButton {
     func configure(with isPlaying: Bool) {
         let buttonState: AudioControlButtonState = isPlaying ? .stop : .play
         controlButton.configuration?.image = buttonState.symbol
+    }
+    
+    func unbind() {
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
+        viewModel?.unbindAudioHelper()
     }
 }
 

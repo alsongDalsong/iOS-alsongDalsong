@@ -26,6 +26,7 @@ final class SelectMusicViewController: UIViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         viewModel.cancelSubscriptions()
     }
 

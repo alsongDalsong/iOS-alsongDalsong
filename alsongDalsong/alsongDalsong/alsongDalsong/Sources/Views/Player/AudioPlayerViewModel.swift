@@ -74,17 +74,18 @@ final class AudioPlayerViewModel: @unchecked Sendable {
         
         GameAudioHelper.shared.playerEnginePrgressPublisher
             .receive(on: DispatchQueue.main)
-            .sink { self.progress = $0 }
+            .sink { [weak self] in self?.progress = $0 }
             .store(in: &cancellables)
 
         GameAudioHelper.shared.normalizedFrequencyAmplitudesPublisher
             .receive(on: DispatchQueue.main)
-            .sink { self.normalizedFrequencyAmplitudes = $0 }
+            .sink { [weak self] in self?.normalizedFrequencyAmplitudes = $0 }
             .store(in: &cancellables)
 
         GameAudioHelper.shared.engineStatePublisher
             .receive(on: DispatchQueue.main)
-            .sink { state in
+            .sink { [weak self] state in
+                guard let self else { return }
                 Logger.debug("Engine State: \(state) | isPlaying: \(self.isPlaying)")
                 
                 if self.isPlaying && !state {
@@ -98,7 +99,8 @@ final class AudioPlayerViewModel: @unchecked Sendable {
             .store(in: &cancellables)
     }
 
-    private func unbindAudioHelper() {
+    func unbindAudioHelper() {
+        Logger.debug("Unbind AudioHelper in Function")
         progress = 0
         normalizedFrequencyAmplitudes = [0, 0, 0, 0, 0, 0]
         cancellables.forEach { $0.cancel() }

@@ -1,5 +1,6 @@
 import ASAudioKit
 import ASLogKit
+import AVFoundation
 import Combine
 import Foundation
 
@@ -7,7 +8,11 @@ final class BgmAudioHelper: @unchecked Sendable {
     // MARK: - Singleton
 
     static let shared = BgmAudioHelper()
-    private init() {}
+    private init() {
+        do {
+            try configureAudioSession()
+        } catch {}
+    }
 
     // MARK: - Private properties
 
@@ -42,43 +47,6 @@ final class BgmAudioHelper: @unchecked Sendable {
 
     private let queue = DispatchQueue(label: "alsongDalsong.AudioHelper")
 
-    // MARK: - Publishers
-
-    private let amplitudeSubject = PassthroughSubject<Float, Never>()
-    private let playerStateSubject = PassthroughSubject<(FileSource, Bool), Never>()
-    private let waveformUpdateSubject = PassthroughSubject<Int, Never>()
-    private let recorderStateSubject = PassthroughSubject<Bool, Never>()
-    private let recorderDataSubject = PassthroughSubject<Data, Never>()
-    private let normalizedFrequencyAmplitudes = PassthroughSubject<[Float], Never>()
-    private let playerEnginePrgress = PassthroughSubject<Double, Never>()
-    var amplitudePublisher: AnyPublisher<Float, Never> {
-        amplitudeSubject.eraseToAnyPublisher()
-    }
-
-    var playerStatePublisher: AnyPublisher<(FileSource, Bool), Never> {
-        playerStateSubject.eraseToAnyPublisher()
-    }
-
-    var waveformUpdatePublisher: AnyPublisher<Int, Never> {
-        waveformUpdateSubject.eraseToAnyPublisher()
-    }
-
-    var recorderStatePublisher: AnyPublisher<Bool, Never> {
-        recorderStateSubject.eraseToAnyPublisher()
-    }
-
-    var recorderDataPublisher: AnyPublisher<Data, Never> {
-        recorderDataSubject.eraseToAnyPublisher()
-    }
-
-    var normalizedFrequencyAmplitudesPublisher: AnyPublisher<[Float], Never> {
-        normalizedFrequencyAmplitudes.eraseToAnyPublisher()
-    }
-
-    var playerEnginePrgressPublisher: AnyPublisher<Double, Never> {
-        playerEnginePrgress.eraseToAnyPublisher()
-    }
-
     var isPlaying: Bool {
         get async {
             guard let player else { return false }
@@ -96,6 +64,17 @@ final class BgmAudioHelper: @unchecked Sendable {
         cancellable?.cancel()
         cancellable = nil
     }
+
+    private func configureAudioSession() throws {
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker])
+            try session.setActive(true, options: .notifyOthersOnDeactivation)
+        } catch {
+            // TODO: 세션 설정 실패에 따른 처리
+            ErrorHandler.handle(error)
+        }
+    }
 }
 
 // MARK: - BGM
@@ -104,7 +83,7 @@ extension BgmAudioHelper {
     func playBgm() {
         Task {
             print(#function)
-            await startPlaying(bgmDatas[bgmState], option: .loop)
+            await startPlaying(bgmDatas[bgmState])
         }
     }
 
@@ -126,13 +105,7 @@ extension BgmAudioHelper {
     /// - Parameters:
     ///   - file: 재생할 오디오 데이터
     ///   - source: 녹음 파일/url에서 가져온 파일
-    ///   - playType: 전체 또는 부분 재생
-    func startPlaying(_ file: Data?,
-                      sourceType type: FileSource = .imported(.large),
-                      option: PlayType = .full,
-                      needsWaveUpdate: Bool = false) async
-    {
-        guard await checkPlayerState() else { return }
+    func startPlaying(_ file: Data?, sourceType type: FileSource = .imported(.large)) async {
         guard let file else { return }
 
         sourceType(type)
@@ -141,40 +114,15 @@ extension BgmAudioHelper {
         await player?.setOnPlaybackFinished { [weak self] in
             await self?.stopPlaying()
         }
-
-        playerStateSubject.send((source, true))
-
-        if needsWaveUpdate {
-            updatePlayIndex()
-        }
-
-        await play(file: file, option: option)
+        await play(file: file)
     }
 
-    private func play(file: Data, option: PlayType) async {
-        switch option {
-        case .full:
-            do {
-                try await player?.startPlaying(data: file)
-            } catch {
-                ErrorHandler.handle(error)
-            }
-        case let .partial(time):
-            do {
-                try await player?.startPlaying(data: file)
-                try await Task.sleep(for: .seconds(time))
-                await stopPlaying()
-            } catch {
-                ErrorHandler.handle(error)
-            }
-        case .loop:
-            do {
-                try await player?.startPlaying(data: file, fade: true, isLoop: true)
-                await player?.setVolume(volume)
-            } catch {
-                ErrorHandler.handle(error)
-            }
-        @unknown default: break
+    private func play(file: Data) async {
+        do {
+            try await player?.startPlaying(data: file, fade: true, isLoop: true)
+            await player?.setVolume(volume)
+        } catch {
+            ErrorHandler.handle(error)
         }
     }
 
@@ -185,8 +133,6 @@ extension BgmAudioHelper {
 
         removePlayer()
         removeTimer()
-
-        playerStateSubject.send((source, false))
     }
 
     func pause() async {
@@ -201,28 +147,8 @@ extension BgmAudioHelper {
         }
     }
 
-    private func updatePlayIndex() {
-        cancellable = Timer.publish(every: 0.25, on: .main, in: .common)
-            .autoconnect()
-            .scan(0) { count, _ in
-                count + 1
-            }
-            .sink { [weak self] value in
-                self?.waveformUpdateSubject.send(value - 1)
-            }
-    }
-
     private func makePlayer() {
         player = ASAudioPlayer()
-    }
-
-    private func checkPlayerState() async -> Bool {
-        if await isPlaying {
-            await player?.stopPlaying()
-            removePlayer()
-            playerStateSubject.send((source, false))
-        }
-        return true
     }
 }
 
@@ -237,12 +163,6 @@ extension BgmAudioHelper {
     @discardableResult
     private func sourceType(_ type: FileSource) -> Self {
         source = type
-        return self
-    }
-
-    @discardableResult
-    func isConcurrent(_ isTrue: Bool) -> Self {
-        isConcurrent = isTrue
         return self
     }
 }

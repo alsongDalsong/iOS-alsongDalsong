@@ -1,6 +1,5 @@
 import ASAudioKit
 import ASLogKit
-import AVFoundation
 import Combine
 import Foundation
 
@@ -8,11 +7,7 @@ final class GameAudioHelper: @unchecked Sendable {
     // MARK: - Singleton
 
     static let shared = GameAudioHelper()
-    private init() {
-        do {
-            try configureAudioSession()
-        } catch {}
-    }
+    private init() {}
 
     // MARK: - Private properties
 
@@ -75,17 +70,6 @@ final class GameAudioHelper: @unchecked Sendable {
         playerEnginePrgress.eraseToAnyPublisher()
     }
 
-    private func configureAudioSession() throws {
-        do {
-            let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker])
-            try session.setActive(true, options: .notifyOthersOnDeactivation)
-        } catch {
-            // TODO: 세션 설정 실패에 따른 처리
-            ErrorHandler.handle(error)
-        }
-    }
-
     var isRecording: Bool {
         get async {
             guard let recorder else { return false }
@@ -145,7 +129,7 @@ extension GameAudioHelper {
     ) {
         Task {
             engineStateSubject.send(false)
-            
+
             if playerEngine.playState == .play {
                 stopEngine()
             }
@@ -153,7 +137,7 @@ extension GameAudioHelper {
             if await player?.isPlaying() ?? false {
                 await stopPlaying()
             }
-            
+
             if await BgmAudioHelper.shared.isPlaying {
                 await BgmAudioHelper.shared.stopPlaying()
             }

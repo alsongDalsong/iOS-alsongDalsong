@@ -145,26 +145,26 @@ final class GameNavigationController: @unchecked Sendable {
         guard let gameInfo else { return "" }
         let viewType = gameInfo.resolveViewType()
         switch viewType {
-            case .submitMusic:
-                return String(localized: "노래 선택")
-            case .humming:
-                return String(localized: "허밍")
-            case .rehumming:
-                guard let recordOrder = gameInfo.recordOrder else { return "" }
-                let maxRehummingRounds = gameInfo.players.count <= 3 ? 1 : 2
-                return String(localized: "리허밍") + "\(recordOrder)/\(maxRehummingRounds)"
-            case .submitAnswer:
-                return String(localized: "정답 맞추기")
-            case .result:
-                guard let recordOrder = gameInfo.recordOrder else { return "" }
-                let playerCount = gameInfo.players.count
-                let baseResult: UInt8 = (playerCount == 2) ? 0 : (playerCount == 3 ? 1 : 2)
-                let currentRound = recordOrder - baseResult
-                return String(localized: "결과 확인") + " \(currentRound)/\(playerCount)"
-            case .lobby:
-                return "#\(roomNumber)"
-            default:
-                return ""
+        case .submitMusic:
+            return String(localized: "노래 선택")
+        case .humming:
+            return String(localized: "허밍")
+        case .rehumming:
+            guard let recordOrder = gameInfo.recordOrder else { return "" }
+            let maxRehummingRounds = gameInfo.players.count <= 3 ? 1 : 2
+            return String(localized: "리허밍") + "\(recordOrder)/\(maxRehummingRounds)"
+        case .submitAnswer:
+            return String(localized: "정답 맞추기")
+        case .result:
+            guard let recordOrder = gameInfo.recordOrder else { return "" }
+            let playerCount = gameInfo.players.count
+            let baseResult: UInt8 = (playerCount == 2) ? 0 : (playerCount == 3 ? 1 : 2)
+            let currentRound = recordOrder - baseResult
+            return String(localized: "결과 확인") + " \(currentRound)/\(playerCount)"
+        case .lobby:
+            return "#\(roomNumber)"
+        default:
+            return ""
         }
     }
 
@@ -176,7 +176,7 @@ final class GameNavigationController: @unchecked Sendable {
         guard let viewType = state.resolveViewType() else {
             return
         }
-        
+
         switch viewType {
         case .submitMusic: navigateToSelectMusic()
         case .humming: navigateToHumming()
@@ -186,15 +186,9 @@ final class GameNavigationController: @unchecked Sendable {
         case .lobby: navigateToLobby()
         default: break
         }
-        
+
         if viewType != .lobby {
-            Task {
-                BgmAudioHelper.shared.changeState(to: .ingame)
-            }
-        }
-        
-        if viewType == .lobby {
-            BgmAudioHelper.shared.changeState(to: .lobby)
+            BgmAudioHelper.shared.changeState(to: .ingame)
         }
     }
 
@@ -205,6 +199,7 @@ final class GameNavigationController: @unchecked Sendable {
 
         if let vc = navigationController.viewControllers.first(where: { $0 is LobbyViewController }) {
             navigationController.popToViewController(vc, animated: true)
+            BgmAudioHelper.shared.changeState(to: .lobby)
             return
         }
 
@@ -222,6 +217,7 @@ final class GameNavigationController: @unchecked Sendable {
         let vc = LobbyViewController(lobbyViewModel: vm)
         setupNavigationBar(for: vc)
         navigationController.pushViewController(vc, animated: true)
+        BgmAudioHelper.shared.changeState(to: .lobby)
     }
 
     private func navigateToSelectMusic() {

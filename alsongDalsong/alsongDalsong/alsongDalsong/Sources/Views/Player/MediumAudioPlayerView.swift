@@ -195,6 +195,7 @@ final class MediumAudioPlayerView: UIView {
     }
     
     func unbind() {
+        controlButton.isEnabled = false
         cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
         viewModel?.unbindAudioHelper()

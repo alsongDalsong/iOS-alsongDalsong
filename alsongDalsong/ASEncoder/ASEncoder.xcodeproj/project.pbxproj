@@ -11,7 +11,6 @@
 		1B1327F12CE5F26400EF706D /* ASEncoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1B702E2F2CE5152600124F73 /* ASEncoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1B702E382CE5152600124F73 /* ASEncoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B702E2F2CE5152600124F73 /* ASEncoder.framework */; };
 		29978F202DA3C5B0003D37F0 /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9EE2D9157E4009343BB /* ASLogKit.framework */; };
-		29978F212DA3C5B0003D37F0 /* ASLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9EE2D9157E4009343BB /* ASLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		859365972D3F71390086C8C4 /* ASEncoderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859365952D3F71310086C8C4 /* ASEncoderError.swift */; };
 /* End PBXBuildFile section */
 
@@ -40,17 +39,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				1B1327F12CE5F26400EF706D /* ASEncoder.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		29978F222DA3C5B0003D37F0 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				29978F212DA3C5B0003D37F0 /* ASLogKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -162,7 +150,6 @@
 				1B702E2B2CE5152600124F73 /* Sources */,
 				1B702E2C2CE5152600124F73 /* Frameworks */,
 				1B702E2D2CE5152600124F73 /* Resources */,
-				29978F222DA3C5B0003D37F0 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

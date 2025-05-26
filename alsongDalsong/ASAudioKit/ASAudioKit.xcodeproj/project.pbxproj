@@ -15,13 +15,9 @@
 		29978F8A2DA3CB6A003D37F0 /* ASAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; platformFilter = ios; };
 		29978F8C2DA3CBC7003D37F0 /* ASAudioError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8593659C2D3F77F60086C8C4 /* ASAudioError.swift */; };
 		29B308312D9CD16C0032EAA5 /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; };
-		29B308322D9CD16C0032EAA5 /* ASLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		29B308342D9CD2820032EAA5 /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; };
-		29B308352D9CD2820032EAA5 /* ASLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		29B308372D9CD2950032EAA5 /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; };
-		29B308382D9CD2950032EAA5 /* ASLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F22D91582F009343BB /* ASLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4EB1ED372CE88E500012FFBA /* ASAudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; };
-		4EB1ED382CE88E500012FFBA /* ASAudioKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4E89071E2CE23D1B00D5B547 /* ASAudioKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8593659D2D3F77FE0086C8C4 /* ASAudioError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8593659C2D3F77F60086C8C4 /* ASAudioError.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,43 +37,6 @@
 			remoteInfo = ASAudioKit;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		29B308332D9CD16C0032EAA5 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				29B308322D9CD16C0032EAA5 /* ASLogKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		29B308362D9CD2820032EAA5 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				29B308352D9CD2820032EAA5 /* ASLogKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4EB1ED3B2CE88E500012FFBA /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				29B308382D9CD2950032EAA5 /* ASLogKit.framework in Embed Frameworks */,
-				4EB1ED382CE88E500012FFBA /* ASAudioKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1B7EB01A2CFDA83B00B2BE2A /* ASAudioAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASAudioAnalyzer.swift; sourceTree = "<group>"; };
@@ -231,7 +190,6 @@
 				4E89071A2CE23D1B00D5B547 /* Sources */,
 				4E89071B2CE23D1B00D5B547 /* Frameworks */,
 				4E89071C2CE23D1B00D5B547 /* Resources */,
-				29B308332D9CD16C0032EAA5 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -254,7 +212,6 @@
 				4E8907BA2CE2489A00D5B547 /* Sources */,
 				4E8907BB2CE2489A00D5B547 /* Frameworks */,
 				4E8907BC2CE2489A00D5B547 /* Resources */,
-				29B308362D9CD2820032EAA5 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -278,7 +235,6 @@
 				4EB1EC7C2CE7AA160012FFBA /* Sources */,
 				4EB1EC7D2CE7AA160012FFBA /* Frameworks */,
 				4EB1EC7E2CE7AA160012FFBA /* Resources */,
-				4EB1ED3B2CE88E500012FFBA /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

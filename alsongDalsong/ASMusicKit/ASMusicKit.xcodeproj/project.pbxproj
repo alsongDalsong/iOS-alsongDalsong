@@ -8,10 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		296360AB2D96C278007C4E14 /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 296360AA2D96C278007C4E14 /* ASLogKit.framework */; };
-		296360AC2D96C278007C4E14 /* ASLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 296360AA2D96C278007C4E14 /* ASLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		859365942D3F709D0086C8C4 /* ASMusicError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859365912D3F70960086C8C4 /* ASMusicError.swift */; };
 		8D7F5A862CF88C32002EAB0F /* ASEntity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7F5A852CF88C25002EAB0F /* ASEntity.framework */; };
-		8D7F5A872CF88C32002EAB0F /* ASEntity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7F5A852CF88C25002EAB0F /* ASEntity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,21 +21,6 @@
 			remoteInfo = ASEntity;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		8D7F5A882CF88C32002EAB0F /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				296360AC2D96C278007C4E14 /* ASLogKit.framework in Embed Frameworks */,
-				8D7F5A872CF88C32002EAB0F /* ASEntity.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1635A4282CE59833002246E0 /* ASMusicKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ASMusicKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,7 +98,6 @@
 				8D9402E82CE37DA1009D21C4 /* Sources */,
 				8D9402E92CE37DA1009D21C4 /* Frameworks */,
 				8D9402EA2CE37DA1009D21C4 /* Resources */,
-				8D7F5A882CF88C32002EAB0F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -229,6 +211,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp9.ASMusicKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_VERSION = 5.0;
@@ -263,6 +249,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = kr.codesquad.boostcamp9.ASMusicKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_VERSION = 5.0;

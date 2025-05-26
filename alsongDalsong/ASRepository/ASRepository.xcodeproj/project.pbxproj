@@ -8,13 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		160109612CEB7AFD00FB3182 /* ASNetworkKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1601095C2CEB7AF700FB3182 /* ASNetworkKit.framework */; };
-		160109622CEB7AFD00FB3182 /* ASNetworkKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1601095C2CEB7AF700FB3182 /* ASNetworkKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		16E107582CFD7DD200F57CE1 /* ASEntity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E107572CFD7DD200F57CE1 /* ASEntity.framework */; };
-		16E107592CFD7DD200F57CE1 /* ASEntity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 16E107572CFD7DD200F57CE1 /* ASEntity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1B7EA85E2CFAA0AE00B2BE2A /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B7EA85D2CFAA0AE00B2BE2A /* ASLogKit.framework */; };
-		1B7EA85F2CFAA0AE00B2BE2A /* ASLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1B7EA85D2CFAA0AE00B2BE2A /* ASLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1B7EA8712CFAA2D400B2BE2A /* ASRepositoryProtocol.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B7EA8652CFAA2B600B2BE2A /* ASRepositoryProtocol.framework */; };
-		1B7EA8722CFAA2D400B2BE2A /* ASRepositoryProtocol.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1B7EA8652CFAA2B600B2BE2A /* ASRepositoryProtocol.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,33 +29,6 @@
 			remoteInfo = ASRepositoryProtocol;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		160109542CEB7AAE00FB3182 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				1B7EA85F2CFAA0AE00B2BE2A /* ASLogKit.framework in Embed Frameworks */,
-				1B7EA8722CFAA2D400B2BE2A /* ASRepositoryProtocol.framework in Embed Frameworks */,
-				160109622CEB7AFD00FB3182 /* ASNetworkKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		16E1075A2CFD7DD200F57CE1 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				16E107592CFD7DD200F57CE1 /* ASEntity.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1601093E2CEB79E500FB3182 /* ASRepository.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ASRepository.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -202,7 +171,6 @@
 				1601093A2CEB79E500FB3182 /* Sources */,
 				1601093B2CEB79E500FB3182 /* Frameworks */,
 				1601093C2CEB79E500FB3182 /* Resources */,
-				160109542CEB7AAE00FB3182 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -227,7 +195,6 @@
 				1B7EA8612CFAA2B600B2BE2A /* Sources */,
 				1B7EA8622CFAA2B600B2BE2A /* Frameworks */,
 				1B7EA8632CFAA2B600B2BE2A /* Resources */,
-				16E1075A2CFD7DD200F57CE1 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

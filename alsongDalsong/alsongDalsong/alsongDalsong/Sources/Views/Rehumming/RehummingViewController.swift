@@ -30,7 +30,6 @@ final class RehummingViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        largeAudioPlayerView.unbind()
         viewModel.cancelSubscriptions()
     }
 
@@ -121,6 +120,7 @@ final class RehummingViewController: UIViewController {
     }
 
     private func submitHumming() async throws {
+        largeAudioPlayerView.unbind()
         viewModel.stopMusic()
         progressBar.cancelCompletion()
         try await viewModel.submitHumming()

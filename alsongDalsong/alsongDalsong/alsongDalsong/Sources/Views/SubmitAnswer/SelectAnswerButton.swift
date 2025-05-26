@@ -238,6 +238,7 @@ final class SelectAnswerButton: UIButton {
     }
     
     func unbind() {
+        controlButton.isEnabled = false
         cancellables.forEach { $0.cancel() }
         cancellables.removeAll()
         viewModel?.unbindAudioHelper()

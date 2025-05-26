@@ -106,6 +106,8 @@ final class SubmitAnswerViewController: UIViewController {
     }
 
     private func submitAnswer() async throws {
+        selectAnswerButton.unbind()
+        largeAudioPlayerView.unbind()
         viewModel.stopMusic()
         progressBar.cancelCompletion()
         try await viewModel.submitAnswer()

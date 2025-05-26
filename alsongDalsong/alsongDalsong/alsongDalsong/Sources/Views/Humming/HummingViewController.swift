@@ -30,7 +30,6 @@ final class HummingViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        largeAudioPlayerView.unbind()
         viewModel.cancelSubscriptions()
     }
 
@@ -122,6 +121,7 @@ final class HummingViewController: UIViewController {
 
     private func submitHumming() async throws {
         viewModel.stopMusic()
+        largeAudioPlayerView.unbind()
         progressBar.cancelCompletion()
         try await viewModel.submitHumming()
         submitButton.setConfiguration(.submitted)

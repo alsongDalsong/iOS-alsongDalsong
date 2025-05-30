@@ -62,13 +62,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Humming!"
+            "value" : "The humming recording function requires microphone access. The recorded audio is only used for game functions that deliver songs to other players."
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "허밍해보세요!"
+            "value" : "허밍 녹음 기능을 위해 마이크 접근이 필요합니다. 녹음된 오디오는 다른 플레이어에게 노래를 전달하는 게임 기능에만 사용됩니다."
           }
         }
       }

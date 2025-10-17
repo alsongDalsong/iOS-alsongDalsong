@@ -33,7 +33,11 @@ final class ASFirebaseStorage: ASFirebaseStorageProtocol {
                 guard let lobbyURL = lobbyDict[key] else { return nil }
                 return AvatarPair(onboarding: onboardingURL, lobby: lobbyURL)
             }
-
+            
+            if pairs.isEmpty {
+                throw ASNetworkError.getAvatarUrls
+            }
+            
             return pairs
             
         } catch {
@@ -70,7 +74,7 @@ final class ASFirebaseStorage: ASFirebaseStorageProtocol {
     
     private func extractFileNumber(from url: URL) -> Int? {
         let filename = url.lastPathComponent
-        let baseFilename = filename.split(separator: "?").first ?? ""
+        let baseFilename = filename.split(separator: "/").last ?? ""
         let numberString = baseFilename.split(separator: ".").first ?? ""
         return Int(numberString)
     }

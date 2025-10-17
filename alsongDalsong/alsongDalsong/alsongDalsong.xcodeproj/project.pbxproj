@@ -476,6 +476,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "알쏭달쏭";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music-games";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "알쏭달쏭은 Apple Music을 이용하여 음악을 찾는 것을 돕습니다";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "허밍해보세요!";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
@@ -514,6 +515,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "알쏭달쏭";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music-games";
 				INFOPLIST_KEY_NSAppleMusicUsageDescription = "알쏭달쏭은 Apple Music을 이용하여 음악을 찾는 것을 돕습니다";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "허밍해보세요!";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;

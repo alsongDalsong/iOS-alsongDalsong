@@ -8,10 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1B06307A2CE64E7C005300BF /* ASDecoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B702E612CE5193F00124F73 /* ASDecoder.framework */; };
-		1B06307B2CE64E7C005300BF /* ASDecoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1B702E612CE5193F00124F73 /* ASDecoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1B702E6A2CE5193F00124F73 /* ASDecoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B702E612CE5193F00124F73 /* ASDecoder.framework */; };
 		29978F232DA3C5B3003D37F0 /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F02D915817009343BB /* ASLogKit.framework */; };
-		29978F242DA3C5B3003D37F0 /* ASLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 85A0E9F02D915817009343BB /* ASLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8593659A2D3F71E80086C8C4 /* ASDecoderError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859365982D3F71E40086C8C4 /* ASDecoderError.swift */; };
 /* End PBXBuildFile section */
 
@@ -31,31 +29,6 @@
 			remoteInfo = ASDecoder;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		1B06307E2CE64E7C005300BF /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				1B06307B2CE64E7C005300BF /* ASDecoder.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		29978F252DA3C5B3003D37F0 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				29978F242DA3C5B3003D37F0 /* ASLogKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1B06306B2CE64E74005300BF /* ASDecoderDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ASDecoderDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -161,7 +134,6 @@
 				1B0630672CE64E74005300BF /* Sources */,
 				1B0630682CE64E74005300BF /* Frameworks */,
 				1B0630692CE64E74005300BF /* Resources */,
-				1B06307E2CE64E7C005300BF /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -186,7 +158,6 @@
 				1B702E5D2CE5193F00124F73 /* Sources */,
 				1B702E5E2CE5193F00124F73 /* Frameworks */,
 				1B702E5F2CE5193F00124F73 /* Resources */,
-				29978F252DA3C5B3003D37F0 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

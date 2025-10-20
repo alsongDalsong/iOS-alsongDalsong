@@ -7,43 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		167E2BC62EA5F9DD007CA192 /* ASEntity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 167E2BC52EA5F9DD007CA192 /* ASEntity.framework */; };
 		296360AB2D96C278007C4E14 /* ASLogKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 296360AA2D96C278007C4E14 /* ASLogKit.framework */; };
-		296360AC2D96C278007C4E14 /* ASLogKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 296360AA2D96C278007C4E14 /* ASLogKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		859365942D3F709D0086C8C4 /* ASMusicError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 859365912D3F70960086C8C4 /* ASMusicError.swift */; };
-		8D7F5A862CF88C32002EAB0F /* ASEntity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7F5A852CF88C25002EAB0F /* ASEntity.framework */; };
-		8D7F5A872CF88C32002EAB0F /* ASEntity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8D7F5A852CF88C25002EAB0F /* ASEntity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		8D7F5A842CF88C25002EAB0F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8D7F5A802CF88C25002EAB0F /* ASEntity.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1B9D3FF12CE3AD62004C79EE;
-			remoteInfo = ASEntity;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		8D7F5A882CF88C32002EAB0F /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				296360AC2D96C278007C4E14 /* ASLogKit.framework in Embed Frameworks */,
-				8D7F5A872CF88C32002EAB0F /* ASEntity.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
-		1635A4282CE59833002246E0 /* ASMusicKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ASMusicKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		163F91072EA5FA0300E94BDE /* ASMusicKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = ASMusicKit.framework; path = "/Users/seungjae/Projects/iOS-alsongDalsong/alsongDalsong/ASMusicKit/build/Debug-iphoneos/ASMusicKit.framework"; sourceTree = "<absolute>"; };
+		167E2BC52EA5F9DD007CA192 /* ASEntity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ASEntity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		296360AA2D96C278007C4E14 /* ASLogKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ASLogKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		859365912D3F70960086C8C4 /* ASMusicError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASMusicError.swift; sourceTree = "<group>"; };
-		8D7F5A802CF88C25002EAB0F /* ASEntity.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ASEntity.xcodeproj; path = ../ASEntity/ASEntity.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -60,7 +33,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				296360AB2D96C278007C4E14 /* ASLogKit.framework in Frameworks */,
-				8D7F5A862CF88C32002EAB0F /* ASEntity.framework in Frameworks */,
+				167E2BC62EA5F9DD007CA192 /* ASEntity.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,18 +43,10 @@
 		8D7F5A7F2CF88C25002EAB0F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				167E2BC52EA5F9DD007CA192 /* ASEntity.framework */,
 				296360AA2D96C278007C4E14 /* ASLogKit.framework */,
-				8D7F5A802CF88C25002EAB0F /* ASEntity.xcodeproj */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		8D7F5A812CF88C25002EAB0F /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				8D7F5A852CF88C25002EAB0F /* ASEntity.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		8D9402E22CE37DA1009D21C4 = {
@@ -89,7 +54,6 @@
 			children = (
 				859365912D3F70960086C8C4 /* ASMusicError.swift */,
 				8D4F31732CE3805D00E13720 /* ASMusicKit */,
-				1635A4282CE59833002246E0 /* ASMusicKit.framework */,
 				8D7F5A7F2CF88C25002EAB0F /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -115,7 +79,6 @@
 				8D9402E82CE37DA1009D21C4 /* Sources */,
 				8D9402E92CE37DA1009D21C4 /* Frameworks */,
 				8D9402EA2CE37DA1009D21C4 /* Resources */,
-				8D7F5A882CF88C32002EAB0F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -128,7 +91,7 @@
 			packageProductDependencies = (
 			);
 			productName = ASMusicKit;
-			productReference = 1635A4282CE59833002246E0 /* ASMusicKit.framework */;
+			productReference = 163F91072EA5FA0300E94BDE /* ASMusicKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -157,28 +120,12 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8D9402E22CE37DA1009D21C4;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 8D7F5A812CF88C25002EAB0F /* Products */;
-					ProjectRef = 8D7F5A802CF88C25002EAB0F /* ASEntity.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				8D9402EB2CE37DA1009D21C4 /* ASMusicKit */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		8D7F5A852CF88C25002EAB0F /* ASEntity.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = ASEntity.framework;
-			remoteRef = 8D7F5A842CF88C25002EAB0F /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		8D9402EA2CE37DA1009D21C4 /* Resources */ = {

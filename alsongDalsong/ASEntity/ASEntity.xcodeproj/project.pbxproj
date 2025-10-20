@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		1B9D3FF12CE3AD62004C79EE /* ASEntity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ASEntity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B9D3FF12CE3AD62004C79EE /* ASEntity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = ASEntity.framework; path = "/Users/seungjae/Projects/iOS-alsongDalsong/alsongDalsong/ASEntity/build/Debug-iphoneos/ASEntity.framework"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,17 +32,8 @@
 		1B9D3FE72CE3AD62004C79EE = {
 			isa = PBXGroup;
 			children = (
-				1B9D3FF22CE3AD62004C79EE /* Products */,
 				1B9D43712CE3B1AD004C79EE /* ASEntity */,
 			);
-			sourceTree = "<group>";
-		};
-		1B9D3FF22CE3AD62004C79EE /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				1B9D3FF12CE3AD62004C79EE /* ASEntity.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -107,7 +98,7 @@
 			mainGroup = 1B9D3FE72CE3AD62004C79EE;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 1B9D3FF22CE3AD62004C79EE /* Products */;
+			productRefGroup = 1B9D3FE72CE3AD62004C79EE;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
